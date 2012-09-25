@@ -1,0 +1,47 @@
+- if @flash
+  .alert.alert-error
+    %strong Error!
+    = @flash
+%h2 User
+.tabbable.tabs-left
+  = haml :_left_tab
+  .tab-content
+    #list.tab-pane.active
+      %form{action:url("/user"), method:"post"}
+        %input{name:"_method", type:"hidden", value:"delete"}
+        %input.btn.btn-mini.btn-danger{type:"submit", value:"delete"}
+        %table.table.table-condensed
+          %thead
+            %tr
+              %th
+              %th id
+              %th username
+              %th created_at
+              %th updated_at
+          %tbody
+            - @users.each do |user|
+              %tr
+                %td
+                  %input{type:"checkbox", name:"id_collection[]", value:user.id}
+                %td
+                  =user.id
+                %td
+                  %a{href:url("/user/#{user.id}")}
+                    =user.username
+                %td
+                  =user.created_at
+                %td
+                  =user.updated_at
+
+    #new.tab-pane
+      %form.form-horizontal{action:url("/user"), method:"POST"}
+        .control-group
+          %label.control-label username
+          .controls
+            %input{type:"text", name:"username"}
+        .control-group
+          %label.control-label password
+          .controls
+            %input{type:"password", name:"password"}
+        .form-actions
+          %input.btn.btn-primary{type:"submit"}

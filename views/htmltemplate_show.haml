@@ -1,0 +1,13 @@
+%h2 Edit HTML Templates ##{@htmltemplate.id}
+%form.form-horizontal{action:url("/html_template/#{@htmltemplate.id}"), method:"post"}
+  %input{type:"hidden", name:"_method", value:"put"}
+  .control-group
+    %label.control-label name
+    .controls
+      %input{type:"text", name:"name", value:@htmltemplate.name}
+  .control-group
+    %label.control-label html template
+    .controls
+      %textarea.input-large{rows:10, name:"contents"}= @htmltemplate.contents
+  .form-actions
+    %input.btn.btn-primary{type:"submit"}

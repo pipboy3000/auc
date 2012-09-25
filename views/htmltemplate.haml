@@ -1,0 +1,43 @@
+%h2 HTML Template
+.tabbable.tabs-left
+  = haml :_left_tab
+  .tab-content
+    #list.tab-pane.active
+      %form{action:url("/html_template"), method:"post"}
+        %input{name:"_method", type:"hidden", value:"delete"}
+        %input.btn.btn-mini.btn-danger{type:"submit", value:"delete"}
+        %table.table.table-condensed
+          %thead
+            %tr
+              %th
+              %th id
+              %th name
+              %th created_at
+              %th updated_at
+          %tbody
+            - @htmltemplates.each do |htmltemplate|
+              %tr
+                %td
+                  %input{type:"checkbox", name:"id_collection[]", value:htmltemplate.id}
+                %td
+                  = htmltemplate.id
+                %td
+                  %a{href:url("/html_template/#{htmltemplate.id}")}
+                    = htmltemplate.name
+                %td
+                  = htmltemplate.created_at
+                %td
+                  = htmltemplate.updated_at
+
+    #new.tab-pane
+      %form.form-horizontal{action:url("/html_template"), method:"post"}
+        .control-group
+          %label.control-label name
+          .controls
+            %input{type:"text", name:"name"}
+        .control-group
+          %label.control-label html template
+          .controls
+            %textarea.input-large{rows:10, name:"contents"}
+        .form-actions
+          %input.btn.btn-primary{type:"submit"}

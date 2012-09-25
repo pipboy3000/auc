@@ -1,0 +1,26 @@
+%h2 Edit Text Template ##{@texttemplate.id}
+%form.form-horizontal{action:url("/text_template"), method:"post"}
+  %input{type:"hidden", name:"user", value:@texttemplate.user_id}
+  .control-group
+    %label.control-label name
+    .controls
+      %input{type:"text", name:"name", value:@texttemplate.name}
+  .control-group
+    %label.control-label header
+    .controls
+      %textarea{name:"header"}= @texttemplate.header
+  - (1..5).each do |i|
+    .control-group
+      %label.control-label col#{i}_title
+      .controls
+        %input{type:"text", name:"col#{i}_title", value:@texttemplate["col#{i}_title"]}
+    .control-group
+      %label.control-label col#{i}_text
+      .controls
+        %textarea{name:"col#{i}_text"}= @texttemplate["col#{i}_text"]
+  .control-group
+    %label.control-label footer
+    .controls
+      %textarea{name:"footer"}= @texttemplate.footer
+  .form-actions
+    %input.btn.btn-primary{type:"submit"}

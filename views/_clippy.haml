@@ -1,0 +1,13 @@
+:javascript
+  var getSource = function(){ return $("#preview").html(); }
+%object{classid:"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000", width:"110", height:"14", id:"clippy"}
+  %param{name:"movie", value:url("/clippy.swf")}
+  %param{name:"allowScriptAccess", value:"always"}
+  %param{name:"quality", value:"high"}
+  %param{name:"scale", value:"noscale"}
+  %param{name:"FlashVars", value:"call=getSource"}
+  %param{name:"bgcolor", value:"#ffffff"}
+  %embed{src:url("/clippy.swf"), width:110, height:14, name:"clippy",
+    quality:"high", allowScriptAccess:"always",
+    type:"application/x-shockwave-flash", FlashVars:"call=getSource", bgcolor:"#ffffff"}
+%br

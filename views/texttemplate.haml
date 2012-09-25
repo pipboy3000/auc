@@ -1,0 +1,56 @@
+%h2 Text Template
+.tabbable.tabs-left
+  = haml :_left_tab
+  .tab-content
+    #list.tab-pane.active
+      %form{action:url("/text_template"), method:"post"}
+        %input{name:"_method", type:"hidden", value:"delete"}
+        %input.btn.btn-mini.btn-danger{type:"submit", value:"delete"}
+        %table.table.table-condensed
+          %thead
+            %tr
+              %th
+              %th id
+              %th name
+              %th created_at
+              %th updated_at
+          %tbody
+            - @texttemplates.each do |texttemplate|
+              %tr
+                %td
+                  %input{type:"checkbox", name:"id_collection[]", value:texttemplate.id}
+                %td
+                  = texttemplate.id
+                %td
+                  %a{href:url("/text_template/#{texttemplate.id}")}
+                    = texttemplate.name
+                %td
+                  = texttemplate.created_at
+                %td
+                  = texttemplate.updated_at
+    #new.tab-pane
+      %form.form-horizontal{action:url("/text_template"), method:"post"}
+        %input{type:"hidden", name:"user", value:session[:auth]}
+        .control-group
+          %label.control-label name
+          .controls
+            %input{type:"text", name:"name"}
+        .control-group
+          %label.control-label header
+          .controls
+            %textarea{name:"header"}
+        - (1..5).each do |i|
+          .control-group
+            %label.control-label col#{i}_title
+            .controls
+              %input{type:"text", name:"col#{i}_title"}
+          .control-group
+            %label.control-label col#{i}_text
+            .controls
+              %textarea{name:"col#{i}_text"}
+        .control-group
+          %label.control-label footer
+          .controls
+            %textarea{name:"footer"}
+        .form-actions
+          %input.btn.btn-primary{type:"submit"}

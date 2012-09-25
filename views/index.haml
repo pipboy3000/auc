@@ -1,0 +1,57 @@
+.btn-toolbar
+  .btn-group
+    %button.btn.btn-small Color
+    %button.btn.btn-small.dropdown-toggle{data:{toggle:"dropdown"}}
+      %span.caret
+    %ul#color.dropdown-menu
+      - @colors.each do |color|
+        %li
+          %a{href:"#", data:{color:color.id}}
+            = color.name
+            .colortip
+              %span{style:"background:#{color.title}"}
+              %span{style:"background:#{color.frame}"}
+              %span{style:"background:#{color.text1}"}
+              %span{style:"background:#{color.text2}"}
+              %span{style:"background:#{color.bg1}"}
+              %span{style:"background:#{color.bg2}"}
+  .btn-group
+    %button.btn.btn-small HTML Template
+    %button.btn.btn-small.dropdown-toggle{data:{toggle:"dropdown"}}
+      %span.caret
+    %ul#html_template.dropdown-menu
+      - @htmltemplates.each do |htmltemplate|
+        %li
+          %a{href:"#", data:{html_template:htmltemplate.id}}= htmltemplate.name
+  .btn-group
+    %button.btn.btn-small Text Template
+    %button.btn.btn-small.dropdown-toggle{data:{toggle:"dropdown"}}
+      %span.caret
+    %ul#text_template.dropdown-menu
+      - @texttemplates.each do |texttemplate|
+        %li
+          %a{href:"#", data:{text_template:texttemplate.id}}= texttemplate.name
+  %a.btn.btn-small.btn-danger#cookie-clear{href:"#"} cookie clear
+%p#info
+  - unless request.cookies["color"] && request.cookies["html_template"] && request.cookies["text_template"]
+    color, html_template, text_templateを選択してください。
+
+
+%ul.nav.nav-tabs
+  %li.active
+    %a{href:"#input", data:{toggle:"tab"}} input
+  %li
+    %a{href:"#preview", data:{toggle:"tab"}} preview
+  %li
+    %a{href:"#htmlsource", data:{toggle:"tab"}} html source
+.tab-content
+  #input.tab-pane.active
+    %form{action:"", name:""}
+      %label{for:"shohin_title"} 商品名
+      %input.input-xxlarge{type:"text", name:"shohin_title"}
+      %label{for:"shohin_detail"} 商品詳細
+      %textarea.input-xxlarge{name:"shogin_detail", rows:10}
+  #preview.tab-pane
+  #htmlsource.tab-pane
+    =haml :_clippy
+    %textarea.input-xxlarge{rows:20}

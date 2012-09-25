@@ -1,0 +1,62 @@
+%h2 Color
+.tabbable.tabs-left
+  = haml :_left_tab
+  .tab-content
+    #list.tab-pane.active
+      %form{action:url("/color"), method:"post"}
+        %input{name:"_method", type:"hidden", value:"delete"}
+        %input.btn.btn-mini.btn-danger{type:"submit", value:"delete"}
+        %table.table.table-condensed
+          %thead
+            %tr
+              %th
+              %th id
+              %th name
+              %th created_at
+              %th updated_at
+          %tbody
+            - @colors.each do |color|
+              %tr
+                %td
+                  %input{type:"checkbox", name:"id_collection[]", value:color.id}
+                %td
+                  = color.id
+                %td
+                  %a{href:url("/color/#{color.id}")}
+                    = color.name
+                %td
+                  = color.created_at
+                %td
+                  = color.updated_at
+    #new.tab-pane
+      %form.form-horizontal{action:url("/color"), method:"post"}
+        .control-group
+          %label.control-label name
+          .controls
+            %input{type:"text", name:"name"}
+        .control-group
+          %label.control-label title
+          .controls
+            %input.color-picker{type:"text", name:"title"}
+        .control-group
+          %label.control-label frame
+          .controls
+            %input.color-picker{type:"text", name:"frame"}
+        .control-group
+          %label.control-label text1
+          .controls
+            %input.color-picker{type:"text", name:"text1"}
+        .control-group
+          %label.control-label text2
+          .controls
+            %input.color-picker{type:"text", name:"text2"}
+        .control-group
+          %label.control-label bg1
+          .controls
+            %input.color-picker{type:"text", name:"bg1"}
+        .control-group
+          %label.control-label bg2
+          .controls
+            %input.color-picker{type:"text", name:"bg2"}
+        .form-actions
+          %input.btn.btn-primary{type:"submit"}

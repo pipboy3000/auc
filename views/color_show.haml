@@ -1,0 +1,33 @@
+%h2 Edit Color ##{@color.id}
+%form.form-horizontal{action:url("/color/#{@color.id}"), method:"post"}
+  %input{name:"_method", type:"hidden", value:"put"}
+  .control-group
+    %label.control-label name
+    .controls
+      %input{type:"text", name:"name", value:@color.name}
+  .control-group
+    %label.control-label title
+    .controls
+      %input.color-picker{type:"text", name:"title", value:@color.title}
+  .control-group
+    %label.control-label frame
+    .controls
+      %input.color-picker{type:"text", name:"frame", value:@color.frame}
+  .control-group
+    %label.control-label text1
+    .controls
+      %input.color-picker{type:"text", name:"text1", value:@color.text1}
+  .control-group
+    %label.control-label text2
+    .controls
+      %input.color-picker{type:"text", name:"text2", value:@color.text2}
+  .control-group
+    %label.control-label bg1
+    .controls
+      %input.color-picker{type:"text", name:"bg1", value:@color.bg1}
+  .control-group
+    %label.control-label bg2
+    .controls
+      %input.color-picker{type:"text", name:"bg2", value:@color.bg2}
+  .form-actions
+    %input.btn.btn-primary{type:"submit"}

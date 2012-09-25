@@ -1,0 +1,14 @@
+%h2 Edit User ##{@user.id}
+%form.form-horizontal{actions:url("/user"), method:"post"}
+  %input{type:"hidden", name:"_method", value:"put"}
+  .control-group
+    %label.control-label Username
+    .controls
+      %input{type:"text", name:"username", value:@user.username, placeholder:"username"}
+  .control-group
+    %label.control-label password
+    .controls
+      %input{type:"password", name:"password", placeholder:"password"}
+      %p.help-block if you change password
+  .form-actions
+    %input.btn.btn-primary{type:"submit", value:"update"}
