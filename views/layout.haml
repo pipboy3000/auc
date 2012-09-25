@@ -2,15 +2,9 @@
 %html
   %head
     %meta{name:"viewport", content:"width=device-width, initial-scale=1.0"}
-    %link{rel:"stylesheet", href:url("/bootstrap/css/bootstrap.min.css")}
-    %link{rel:"stylesheet", href:url("/jquery.miniColors.css")}
-    %link{rel:"stylesheet", href:url("/web.css")}
-    %script{type:"text/javascript", src:url("/jquery-1.8.0.min.js")}
-    %script{type:"text/javascript", src:url("/bootstrap/js/bootstrap.min.js")}
-    %script{type:"text/javascript", src:url("/jquery.miniColors.min.js")}
-    %script{type:"text/javascript", src:url("/jquery.mustache.js")}
-    %script{type:"text/javascript", src:url("/jquery.cookie.js")}
-    %script{type:"text/javascript", src:url("/web.js")}
+    %title auc
+    %link{rel:"stylesheet", href:url("/css/auc.css")}
+    %script{type:"text/javascript", src:url("/js/auc.js")}
   %body
     .navbar.navbar-fixed-top
       .navbar-inner
@@ -18,20 +12,24 @@
           %a.brand{href:url("/")}auc
           %ul.nav.pull-right
             %li
-              %a{href:url("/user/#{session[:auth]}")}
+              %a{href:"#"}
+                %i.icon-user
                 = session[:username]
             %li
               %a{href:url("/logout")}
                 %i.icon-off
-                Logout
-          %ul.nav
-            %li
-              %a{href:url("/user")}User
-            %li
-              %a{href:url("/color")}Color
-            %li
-              %a{href:url("/html_template")}Html Template
-            %li
-              %a{href:url("/text_template")}Text Template
+                ログアウト
+          - if session[:is_admin]
+            %ul.nav
+              %li
+                %a{href:url("/user")}ユーザー
+              %li
+                %a{href:url("/shop")}店舗
+              %li
+                %a{href:url("/color")}カラー
+              %li
+                %a{href:url("/html_template")}HTMLテンプレート
+              %li
+                %a{href:url("/text_template")}テキストテンプレート
     .container
       = yield

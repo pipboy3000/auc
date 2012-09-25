@@ -2,22 +2,23 @@
   .alert.alert-error
     %strong Error!
     = @flash
-%h2 User
+%h2 ユーザー
 .tabbable.tabs-left
   = haml :_left_tab
   .tab-content
     #list.tab-pane.active
       %form{action:url("/user"), method:"post"}
         %input{name:"_method", type:"hidden", value:"delete"}
-        %input.btn.btn-mini.btn-danger{type:"submit", value:"delete"}
+        %input.btn.btn-mini.btn-danger{type:"submit", value:"チェックしたユーザーを削除"}
         %table.table.table-condensed
           %thead
             %tr
               %th
               %th id
-              %th username
-              %th created_at
-              %th updated_at
+              %th ユーザー名
+              %th 管理者
+              %th 作成日
+              %th 更新日
           %tbody
             - @users.each do |user|
               %tr
@@ -29,6 +30,11 @@
                   %a{href:url("/user/#{user.id}")}
                     =user.username
                 %td
+                  - if user.is_admin
+                    = "YES"
+                  - else
+                    = "NO"
+                %td
                   =user.created_at
                 %td
                   =user.updated_at
@@ -36,12 +42,16 @@
     #new.tab-pane
       %form.form-horizontal{action:url("/user"), method:"POST"}
         .control-group
-          %label.control-label username
+          %label.control-label ユーザー名
           .controls
             %input{type:"text", name:"username"}
         .control-group
-          %label.control-label password
+          %label.control-label パスワード
           .controls
             %input{type:"password", name:"password"}
+        .control-group
+          .controls
+            %label.checkbox
+              %input{type:"checkbox", name:"is_admin", value:"true"} 管理者権限
         .form-actions
           %input.btn.btn-primary{type:"submit"}

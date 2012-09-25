@@ -1,26 +1,32 @@
-%h2 Edit Text Template ##{@texttemplate.id}
-%form.form-horizontal{action:url("/text_template"), method:"post"}
-  %input{type:"hidden", name:"user", value:@texttemplate.user_id}
+%h2 テキストテンプレート ##{@texttemplate.id} を編集
+%form.form-horizontal{action:url("/text_template/#{@texttemplate.id}"), method:"post"}
+  %input{type:"hidden", name:"_method", value:"put"}
   .control-group
-    %label.control-label name
+    %label.control-label テンプレート名
     .controls
-      %input{type:"text", name:"name", value:@texttemplate.name}
+      %input.span9{type:"text", name:"name", value:@texttemplate.name}
   .control-group
-    %label.control-label header
+    %label.control-label ヘッダー
     .controls
-      %textarea{name:"header"}= @texttemplate.header
+      %textarea.span9{rows:8,name:"header"}= @texttemplate.header
+      %span.help-block
+        改行は&lt;br&gt;で表現してください。
   - (1..5).each do |i|
     .control-group
-      %label.control-label col#{i}_title
+      %label.control-label タイトル#{i}
       .controls
-        %input{type:"text", name:"col#{i}_title", value:@texttemplate["col#{i}_title"]}
+        %input.span9{type:"text", name:"col#{i}_title", value:@texttemplate["col#{i}_title"]}
     .control-group
-      %label.control-label col#{i}_text
+      %label.control-label テキスト#{i}
       .controls
-        %textarea{name:"col#{i}_text"}= @texttemplate["col#{i}_text"]
+        %textarea.span9{rows:8, name:"col#{i}_text"}= br2nl @texttemplate["col#{i}_text"]
+        %span.help-block
+          改行は自動的に&lt;br&gt;に変換されます。
   .control-group
-    %label.control-label footer
+    %label.control-label フッター
     .controls
-      %textarea{name:"footer"}= @texttemplate.footer
+      %textarea.span9{rows:8, name:"footer"}= @texttemplate.footer
+      %span.help-block
+        改行は&lt;br&gt;で表現してください。
   .form-actions
     %input.btn.btn-primary{type:"submit"}

@@ -1,11 +1,16 @@
 (function() {
-  var auc;
+  var nl2br;
 
-  auc = {
+  nl2br = function(text) {
+    return text.replace(/\r\n|\n/g, "<br>");
+  };
+
+  window.auc = {
     cookie_opt: {
       path: '/'
     },
     root_uri: location.protocol + "//" + location.host,
+    shop: false,
     color: false,
     html_template: false,
     text_template: false,
@@ -14,13 +19,18 @@
   };
 
   $(document).on("click", "#cookie-clear", function(e) {
-    $.each(["color", "html_template", "text_template"], function(index, namespace) {
+    $.each(["color", "html_template", "text_template", "shop"], function(index, namespace) {
       if ($.cookie(namespace)) {
         auc[namespace] = false;
         return $.removeCookie(namespace, auc.cookie_opt);
       }
     });
     return $("#info").triggerHandler("auc_update");
+  });
+
+  $(document).on("click", "#clear-input", function(e) {
+    $("#input textarea").attr("value", "");
+    return false;
   });
 
   $(function() {
@@ -39,8 +49,8 @@
       }
     };
     update_preview = function() {
-      auc.shohin_title = $("#input input").attr("value");
-      auc.shohin_detail = $("#input textarea").attr("value");
+      auc.shohin_title = nl2br($("#input #shohin_title").attr("value"));
+      auc.shohin_detail = nl2br($("#input #shohin_detail").attr("value"));
       if (auc.html_template) {
         $("#htmlsource textarea").attr("value", $.mustache(auc.html_template.contents, auc));
         return $("#preview").html($.mustache(auc.html_template.contents, auc));
@@ -50,10 +60,9 @@
       index
     */
 
-    $.each(["#color", "#html_template", "#text_template"], function(index, selector) {
+    $.each(["#shop", "#color", "#html_template", "#text_template"], function(index, selector) {
       var namespace;
       namespace = selector.replace("#", "");
-      get_json_data(namespace);
       return $(selector).on("click", "a", function(e) {
         var id;
         id = $(this).attr("data-" + namespace);
@@ -66,7 +75,7 @@
       var $this, template;
       $this = $(this);
       $this.empty();
-      template = "{{#color}}\n  <span class='label'>color</span> {{name}}\n{{/color}}\n{{#html_template}}\n  <span class='label'>html_template</span> {{name}}\n{{/html_template}}\n{{#text_template}}\n  <span class='label'>text_template</span> {{name}}\n{{/text_template}}";
+      template = "{{#shop}}\n  <span class='label'>shop</span> {{name}}\n{{/shop}}\n{{#color}}\n  <span class='label'>color</span> {{name}}\n{{/color}}\n{{#html_template}}\n  <span class='label'>html_template</span> {{name}}\n{{/html_template}}\n{{#text_template}}\n  <span class='label'>text_template</span> {{name}}\n{{/text_template}}";
       $this.html($.mustache(template, auc));
       return update_preview();
     });

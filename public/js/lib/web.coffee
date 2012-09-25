@@ -1,8 +1,12 @@
+nl2br = (text)->
+  text.replace(/\r\n|\n/g, "<br>")
+
 # auc object
-auc =
+window.auc =
   cookie_opt:
     path: '/'
   root_uri: location.protocol + "//" + location.host
+  shop: false
   color: false
   html_template: false
   text_template: false
@@ -11,12 +15,18 @@ auc =
 
 # cookie clear
 $(document).on("click", "#cookie-clear", (e)->
-  $.each(["color", "html_template", "text_template"], (index, namespace)->
+  $.each(["color", "html_template", "text_template", "shop"], (index, namespace)->
     if $.cookie(namespace)
       auc[namespace] = false
       $.removeCookie(namespace, auc.cookie_opt)
   )
   $("#info").triggerHandler("auc_update")
+)
+
+# input clear
+$(document).on("click", "#clear-input", (e)->
+  $("#input textarea").attr("value", "")
+  return false
 )
 
 $ ->
@@ -27,7 +37,7 @@ $ ->
   helper
   ###
 
-  # namespace -> color, html_template, text_template
+  # namespace -> shop, color, html_template, text_template
   get_json_data = (namespace)->
     if $.cookie(namespace)
       $.getJSON(auc.root_uri + "/" + namespace + "/" + $.cookie(namespace) + "/json", (data)->
@@ -36,8 +46,8 @@ $ ->
       )
 
   update_preview = ->
-    auc.shohin_title = $("#input input").attr("value")
-    auc.shohin_detail = $("#input textarea").attr("value")
+    auc.shohin_title = nl2br $("#input #shohin_title").attr("value")
+    auc.shohin_detail = nl2br $("#input #shohin_detail").attr("value")
     if auc.html_template
       $("#htmlsource textarea").attr("value", $.mustache(auc.html_template.contents, auc))
       $("#preview").html $.mustache(auc.html_template.contents, auc)
@@ -45,12 +55,12 @@ $ ->
   ###
   index
   ###
-  $.each(["#color", "#html_template", "#text_template"], (index, selector)->
-    # namespace -> color, html_template, text_template
+  $.each(["#shop", "#color", "#html_template", "#text_template"], (index, selector)->
+    # namespace -> shop, color, html_template, text_template
     namespace = selector.replace("#", "")
 
     # initialize check cookie, get data
-    get_json_data(namespace)
+    # get_json_data(namespace)
 
     # select action
     $(selector).on("click", "a", (e)->
@@ -66,6 +76,9 @@ $ ->
     $this.empty()
 
     template = """
+      {{#shop}}
+        <span class='label'>shop</span> {{name}}
+      {{/shop}}
       {{#color}}
         <span class='label'>color</span> {{name}}
       {{/color}}
@@ -84,7 +97,4 @@ $ ->
   $('a[data-toggle="tab"]').on('shown', (e)->
     update_preview()
   )
-
-
-
 

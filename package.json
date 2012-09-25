@@ -1,0 +1,12 @@
+{
+  "name": "auc",
+  "version": "0.0.1",
+  "description": "auc web app js file.",
+  "main": "auc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Asai Masami",
+  "license": "BSD"
+}
