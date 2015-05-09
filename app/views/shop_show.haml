@@ -1,0 +1,17 @@
+%h2 店舗 ##{@shop.id} を編集
+%form.form-horizontal{action:url("/shop/#{@shop.id}"), method:"post"}
+  %input.form-control{type:"hidden", name:"_method", value:"put"}
+  .form-group
+    %label.col-sm-3.control-label 店舗名
+    .col-sm-9
+      %input.form-control{type:"text", name:"name", value:@shop.name}
+  - (1..9).each do |i|
+    .form-group
+      %label.col-sm-3.control-label テンプレートの内容#{i}
+      .col-sm-9
+        %textarea.form-control{rows:15, name:"contents#{i}"}= @shop["contents#{i}"]
+        %span.help-block
+          テンプレートの内容で改行は&lt;br&gt;で表現してください。
+  .form-group
+    .col-sm-9.col-sm-offset-3
+      %input.btn.btn-primary{type:"submit"}

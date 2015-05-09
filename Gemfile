@@ -1,10 +1,10 @@
-source:rubygems
+source "https://rubygems.org"
 
 gem 'sinatra'
 gem 'haml'
-gem 'sass'
 gem 'rake'
 gem 'rack-flash3', :require => 'rack/flash'
+gem "sinatra-contrib"
 
 group :production do
   gem 'pg'

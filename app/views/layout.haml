@@ -1,0 +1,61 @@
+!!!5
+%html
+  %head
+    %meta{name:"viewport", content:"width=device-width, initial-scale=1.0"}
+    %title auc
+    %link{rel:"stylesheet", href:url("/css/auc.css")}
+    %script{type:"text/javascript", src:url("/js/bundle.js")}
+  %body
+    %nav.navbar.navbar-default.navbar-static-top
+      .container-fluid
+        .navbar-header
+          %button.navbar-toggle.collapsed{type: "button", data:{toggle:"collapse", target:"#global-navbar-collapse"}}
+            %span.sr-only Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.navbar-brand{href:url("/")}auc
+        #global-navbar-collapse.collapse.navbar-collapse
+          - if session[:is_admin]
+            %ul.nav.navbar-nav
+              %li
+                %a{href:url("/shop")}店舗
+              %li
+                %a{href:url("/color")}カラー
+              %li
+                %a{href:url("/html_template")}HTML
+              %li
+                %a{href:url("/text_template")}テキスト
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              %a{href:url("/user")}
+                %span.glyphicon.glyphicon-user
+                = session[:username]
+            %li
+              %a{href:url("/logout")}
+                %span.glyphicon.glyphicon-off
+                ログアウト
+    .container-fluid
+      = yield
+    .footer
+      .container-fluid
+        .infobar
+          %span.label.label-danger 店舗
+          %span.shop
+          %span.label.label-danger カラー
+          %span.color
+          %span.label.label-danger HTML
+          %span.html_template
+          %span.label.label-danger テキスト
+          %span.text_template
+          %span.label.label-danger 消費税
+          %span.tax
+          %span.label.label-danger 開催期間
+          %span.term
+          %span.label.label-danger 決済方法
+          %span.payment
+          %span.label.label-danger 管理番号頭文字
+          %span.kanri_no_prefix
+          %span.label.label-danger 管理番号開始
+          %span.kanri_no_start
+

@@ -26,3 +26,7 @@ doc/
 
 # Node
 node_modules
+
+# public
+public/js/*.js
+public/js/*.map

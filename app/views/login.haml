@@ -1,0 +1,23 @@
+!!!5
+%html
+  %head
+    %meta{name:"viewport", content:"width=device-width, initial-scale=1.0"}
+    %link{rel:"stylesheet", href:url("/css/auc.css")}
+    %script{type:"text/javascript", src:url("/js/auc.min.js")}
+  %body
+    .container
+      .col-sm-6.col-sm-offset-4
+        .well{style: "margin-top: 100px;"}
+          %legend aucにログイン
+          %form{action:url("/login"), method:"POST"}
+            - if @flash
+              .alert.alert-danger
+                %strong Error!
+                = @flash
+            .form-group
+              %input.form-control{type:"text", name:"username", placeholder:"username"}
+            .form-group
+              %input.form-control{type:"password", name:"password", placeholder:"password"}
+            .form-group
+              %button.btn.btn-primary{type:"submit"} ログイン
+

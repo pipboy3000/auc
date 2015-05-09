@@ -1,0 +1,33 @@
+%h2 テキストテンプレート ##{@texttemplate.id} を編集
+%form.form-horizontal{action:url("/text_template/#{@texttemplate.id}"), method:"post"}
+  %input{type:"hidden", name:"_method", value:"put"}
+  .form-group
+    %label.col-sm-3.control-label テンプレート名
+    .col-sm-9
+      %input.form-control{type:"text", name:"name", value:@texttemplate.name}
+  .form-group
+    %label.col-sm-3.control-label ヘッダー
+    .col-sm-9
+      %textarea.form-control{rows:8,name:"header"}= @texttemplate.header
+      %span.help-block
+        改行は&lt;br&gt;で表現してください。
+  - (1..5).each do |i|
+    .form-group
+      %label.col-sm-3.control-label タイトル#{i}
+      .col-sm-9
+        %input.form-control{type:"text", name:"col#{i}_title", value:@texttemplate["col#{i}_title"]}
+    .form-group
+      %label.col-sm-3.control-label テキスト#{i}
+      .col-sm-9
+        %textarea.form-control{rows:8, name:"col#{i}_text"}= br2nl @texttemplate["col#{i}_text"]
+        %span.help-block
+          改行は自動的に&lt;br&gt;に変換されます。
+  .form-group
+    %label.col-sm-3.control-label フッター
+    .col-sm-9
+      %textarea.form-control{rows:8, name:"footer"}= @texttemplate.footer
+      %span.help-block
+        改行は&lt;br&gt;で表現してください。
+  .form-group
+    .col-sm-9.col-sm-offset-3
+      %input.btn.btn-primary{type:"submit"}

@@ -1,0 +1,73 @@
+%h2 HTMLテンプレート
+.tabbable.tabs-left
+  = haml :_left_tab
+  .tab-content
+    #list.tab-pane.active
+      %form.form{action:url("/html_template"), method:"post"}
+        %input{name:"_method", type:"hidden", value:"delete"}
+        %table.table
+          %thead
+            %tr
+              %th
+              %th id
+              %th テンプレート名
+              %th 作成日
+              %th 更新日
+          %tbody
+            - @htmltemplates.each do |htmltemplate|
+              %tr
+                %td
+                  %input{type:"checkbox", name:"id_collection[]", value:htmltemplate.id}
+                %td
+                  = htmltemplate.id
+                %td
+                  %a{href:url("/html_template/#{htmltemplate.id}")}
+                    = htmltemplate.name
+                %td
+                  = htmltemplate.created_at
+                %td
+                  = htmltemplate.updated_at
+        .form-group
+          %input.btn.btn-mini.btn-danger{type:"submit", value:"チェックしたテンプレートを削除"}
+
+    #new.tab-pane
+      %form.form{action:url("/html_template"), method:"post"}
+        .form-group
+          %label.control-label テンプレート名
+          %input.form-control{type:"text", name:"name"}
+        .form-group
+          %label.control-label テンプレートの内容
+          %textarea.form-control{rows:15, name:"contents"}
+          %br
+          .panel.panel-info
+            .panel-heading
+              使えるテンプレート変数
+            .panel-body
+              %dl
+                %dt {{{shop.name}}} <!-- 店舗名 -->
+                %dd 店舗名
+                %dt {{{text_template.header}}} <!-- ヘッダー -->
+                %dd ヘッダー
+                %dt {{{color.frame}}}
+                %dt {{{color.title}}}
+                %dt {{{shohin_title}}} <!-- 商品名 -->
+                %dt {{{color.frame}}}
+                %dt {{{color.bg1}}}
+                %dt {{{color.text1}}}
+                %dt {{{text_template.col1_title}}} <!-- タイトル1（商品詳細） -->
+                %dt {{{color.bg2}}}
+                %dt {{{color.text2}}}
+                %dt {{{shohin_detail}}} <!-- 商品詳細 -->
+                %dt {{{text_template.col1_text}}} <!-- 商品詳細フッター -->
+                %dt {{{text_template.col2_title}}} <!-- タイトル2（発送詳細） -->
+                %dt {{{text_template.col2_text}}} <!-- テキスト2（発送詳細） -->
+                %dt {{{text_template.col3_title}}} <!-- タイトル3（支払詳細） -->
+                %dt {{{text_template.col3_text}}} <!-- テキスト3（支払詳細） -->
+                %dt {{{text_template.col4_title}}} <!-- タイトル4（注意事項） -->
+                %dt {{{text_template.col4_text}}} <!-- テキスト4（注意事項） -->
+                %dt {{{text_template.col5_title}}} <!-- タイトル5（店舗詳細・古物取扱証明に関して） -->
+                %dt {{{shop.contents1}}} <!-- 店舗1（店舗情報） -->
+                %dt {{{text_template.col5_text}}} <!-- テキスト5（店舗詳細・古物取扱証明に関して） -->
+                %dt {{{text_template.footer}}}
+        .form-group
+          %input.btn.btn-primary{type:"submit"}

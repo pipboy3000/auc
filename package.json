@@ -1,12 +1,51 @@
 {
   "name": "auc",
   "version": "0.0.1",
-  "description": "auc web app js file.",
-  "main": "auc.js",
+  "description": "auc is auction helper tool",
+  "directories": {
+    "test": "test/"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:espower-babel/guess test/**/*.js"
   },
   "repository": "",
   "author": "Asai Masami",
-  "license": "BSD"
+  "license": "BSD",
+  "devDependencies": {
+    "babelify": "^6.1.1",
+    "browser-sync": "^2.7.13",
+    "browserify": "^10.2.1",
+    "espower-babel": "^3.1.1",
+    "gulp": "^3.8.11",
+    "gulp-autoprefixer": "^2.2.0",
+    "gulp-mocha": "^2.1.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.0.0",
+    "gulp-sass": "^2.0.1",
+    "gulp-sourcemaps": "^1.5.2",
+    "karma": "^0.12.33",
+    "karma-browserify": "^4.2.1",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-safari-launcher": "^0.1.1",
+    "mocha": "^2.2.5",
+    "phantomjs": "^1.9.17",
+    "power-assert": "^0.11.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.1"
+  },
+  "dependencies": {
+    "baconjs": "^0.7.58",
+    "bootstrap": "^3.3.4",
+    "encoding-japanese": "^1.0.23",
+    "jquery": "^2.1.4",
+    "lodash": "^3.9.1",
+    "mustache": "^2.0.0",
+    "visualwidth": "^0.1.0",
+    "zeroclipboard": "^2.2.0"
+  }
 }

@@ -1,0 +1,11 @@
+%h2 HTMLテンプレート ##{@htmltemplate.id} を編集
+%form.form{action:url("/html_template/#{@htmltemplate.id}"), method:"post"}
+  %input{type:"hidden", name:"_method", value:"put"}
+  .form-group
+    %label.control-label テンプレート名
+    %input.form-control{type:"text", name:"name", value:@htmltemplate.name}
+  .form-group
+    %label.control-label テンプレートの内容
+    %textarea.form-control{rows:15, name:"contents"}= @htmltemplate.contents
+  .form-group
+    %input.btn.btn-primary{type:"submit"}

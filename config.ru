@@ -1,11 +1,8 @@
 # encoding:utf-8
 
-require "rubygems"
 require "bundler"
 Bundler.require
-require "./web.rb"
+require "./app/main.rb"
 
-use Rack::Session::Cookie, secret: 'toystoystoys'
-use Rack::Flash
-
+use Rack::Session::Cookie, secret: 'aucaucauc'
 run Sinatra::Application

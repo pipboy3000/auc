@@ -1,0 +1,34 @@
+%h2 カラー ##{@color.id} を編集
+%form.form-horizontal{action:url("/color/#{@color.id}"), method:"post"}
+  %input{name:"_method", type:"hidden", value:"put"}
+  .form-group
+    %label.col-sm-3.control-label 名前
+    .col-sm-9
+      %input.form-control{type:"text", name:"name", value:@color.name}
+  .form-group
+    %label.col-sm-3.control-label 商品名の文字色
+    .col-sm-9
+      %input.form-control.color-picker{type:"text", name:"title", value:@color.title}
+  .form-group
+    %label.col-sm-3.control-label 枠の色
+    .col-sm-9
+      %input.form-control.color-picker{type:"text", name:"frame", value:@color.frame}
+  .form-group
+    %label.col-sm-3.control-label 見出しの色
+    .col-sm-9
+      %input.form-control.color-picker{type:"text", name:"text1", value:@color.text1}
+  .form-group
+    %label.col-sm-3.control-label テキストの色
+    .col-sm-9
+      %input.form-control.color-picker{type:"text", name:"text2", value:@color.text2}
+  .form-group
+    %label.col-sm-3.control-label 見出しの背景色
+    .col-sm-9
+      %input.form-control.color-picker{type:"text", name:"bg1", value:@color.bg1}
+  .form-group
+    %label.col-sm-3.control-label テキストの背景色
+    .col-sm-9
+      %input.form-control.color-picker{type:"text", name:"bg2", value:@color.bg2}
+  .form-group
+    .cols-sm-9.col-sm-offset-3
+      %input.btn.btn-primary{type:"submit"}

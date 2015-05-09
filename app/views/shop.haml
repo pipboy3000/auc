@@ -1,0 +1,52 @@
+- if @flash
+  .alert.alert-danger
+    %strong Error!
+    = @flash
+%h2 店舗
+.tabbable.tabs-left
+  = haml :_left_tab
+  .tab-content
+    #list.tab-pane.active
+      %form.form{action:url("/shop"), method:"post"}
+        %input{name:"_method", type:"hidden", value:"delete"}
+        %table.table
+          %thead
+            %tr
+              %th
+              %th id
+              %th 店舗名
+              %th 作成日
+              %th 更新日
+          %tbody
+            - @shops.each do |shop|
+              %tr
+                %td
+                  %input{type:"checkbox", name:"id_collection[]", value:shop.id}
+                %td
+                  =shop.id
+                %td
+                  %a{href:url("shop/#{shop.id}")}
+                    =shop.name
+                %td
+                  =shop.created_at
+                %td
+                  =shop.updated_at
+        .form-group
+          %input.btn.btn-mini.btn-danger{type:"submit", value:"チェックした店舗を削除"}
+
+    #new.tab-pane
+      %form.form-horizontal{action:url("/shop"), method:"POST"}
+        .form-group
+          %label.col-sm-3.control-label 店舗名
+          .col-sm-9
+            %input.form-control{type:"text", name:"name"}
+        - (1..9).each do |i|
+          .form-group
+            %label.col-sm-3.control-label テンプレートの内容#{i}
+            .col-sm-9
+              %textarea.form-control{name:"contents#{i}", rows:10}
+              %span.help-block
+                改行は&lt;br&gt;で表現してください。
+        .form-group
+          .col-sm-9.col-sm-offset-3
+            %input.btn.btn-primary{type:"submit"}

@@ -1,0 +1,191 @@
+.page-header.shop
+  %h4
+.btn-toolbar
+  .btn-group.btn-group-sm.info-select
+    .btn-group.btn-group-sm
+      %button.btn.btn-default.dropdown-toggle{type:'button', data:{toggle:"dropdown"}}
+        店舗
+        %span.caret
+      %ul#shop.dropdown-menu{role:"menu"}
+        - @shops.each do |shop|
+          %li{role:"presentation"}
+            %a{href:"#", data:{shop:shop.id}, role: "menuitem", tabindex: "-1"}
+              = shop.name
+    .btn-group.btn-group-sm
+      %button.btn.btn-default.dropdown-toggle{type:'button', data:{toggle:"dropdown"}}
+        カラー
+        %span.caret
+      %ul#color.dropdown-menu{role:"menu"}
+        - @colors.each do |color|
+          %li{role:"presentation"}
+            %a{href:"#", data:{color:color.id}, role: "menuitem", tabindex: "-1"}
+              = color.name
+              .colortip
+                %span{style:"background:#{color.title}"}
+                %span{style:"background:#{color.frame}"}
+                %span{style:"background:#{color.text1}"}
+                %span{style:"background:#{color.text2}"}
+                %span{style:"background:#{color.bg1}"}
+                %span{style:"background:#{color.bg2}"}
+    .btn-group.btn-group-sm
+      %button.btn.btn-default.dropdown-toggle{type:'button', data:{toggle:"dropdown"}}
+        HTML
+        %span.caret
+      %ul#html_template.dropdown-menu{role:"menu"}
+        - @htmltemplates.each do |htmltemplate|
+          %li{role:"presentation"}
+            %a{href:"#", data:{html_template:htmltemplate.id}, role: "menuitem", tabindex: "-1"}
+              = htmltemplate.name
+    .btn-group.btn-group-sm
+      %button.btn.btn-default.dropdown-toggle{type:'button', data:{toggle:"dropdown"}}
+        テキスト
+        %span.caret
+      %ul#text_template.dropdown-menu{role:"menu"}
+        - @texttemplates.each do |texttemplate|
+          %li{role:"presentation"}
+            %a{href:"#", data:{text_template:texttemplate.id}, role: "menuitem", tabindex: "-1"}
+              = texttemplate.name
+    .btn-group.btn-group-sm
+      %button.btn.btn-default.dropdown-toggle{type:'button', data:{toggle:"dropdown"}}
+        消費税
+        %span.caret
+      %ul#tax.dropdown-menu{role:"menu"}
+        - (1..5).each do |num|
+          %li{role:"presentation"}
+            %a{href:"#", data:{tax: "T#{num}"}, role: "menuitem", tabindex: "-1"}
+              = "T#{num}"
+    .btn-group.btn-group-sm
+      %button.btn.btn-default.dropdown-toggle{type:'button', data:{toggle:"dropdown"}}
+        開催期間
+        %span.caret
+      %ul#term.dropdown-menu{role:"menu"}
+        - (2..7).each do |num|
+          %li{role:"presentation"}
+            %a{href:"#", data:{term: "#{num}"}, role: "menuitem", tabindex: "-1"}
+              = "#{num}日"
+    .btn-group.btn-group-sm
+      %button.btn.btn-default{data: {toggle: "modal", target: "#payment-modal"}}
+        決済方法
+    .btn-group.btn-group-sm
+      %button.btn.btn-default{data: {toggle: "modal", target: "#kanri-no-modal"}}
+        管理番号
+  .btn-group.btn-group-sm
+    %button.btn.btn-default.copy-button
+      %span.glyphicon.glyphicon-duplicate
+      HTMLコピー
+  .btn-group.btn-group-sm
+    %button#clear-input.btn.btn-default
+      %span.glyphicon.glyphicon-erase
+      入力クリア
+  .btn-group.btn-group-sm
+    %button#add-list.btn.btn-default
+      %span.glyphicon.glyphicon-floppy-disk
+      リストに追加
+  .btn-group.btn-group-sm
+    %a.btn.btn-small.btn-success#download{href:"#", download: "data"}
+      %span.glyphicon.glyphicon-download-alt
+      CSV
+
+%ul.nav.nav-tabs.nav-justified
+  %li.active
+    %a{href:"#input", data:{toggle:"tab"}}
+      %span.glyphicon.glyphicon-pencil
+      入力
+  %li
+    %a{href:"#preview", data:{toggle:"tab"}}
+      %span.glyphicon.glyphicon-eye-open
+      プレビュー
+  %li
+    %a{href:"#item-list", data:{toggle:"tab"}}
+      %span.glyphicon.glyphicon-list
+      リスト
+      %span#list-badge.badge 0
+
+.tab-content
+  #input.tab-pane.active
+    .col-sm-6
+      %form{action:"", name:""}
+        .form-group
+          %textarea#shohin_title.form-control{name:"shohin_title", rows:2, placeholder: "商品名"}
+        .form-group
+          %textarea#shohin_detail.form-control{name:"shohin_detail", rows:13, placeholder: "商品詳細"}
+        .form-group
+          %input#category.form-control{name: "category", placeholder: "ヤフオク カテゴリID"}
+    .col-sm-6
+      %div#dropzone.well.well-large
+        %p 商品画像をここにDrag &amp; Drop
+    .col-sm-12
+      .panel.panel-info
+        .panel-heading
+          キーボードショートカット
+        %table.table
+          %tr
+            %th
+              リストに追加
+            %td
+              %kbd ctrl + enter
+            %th
+              入力クリア
+            %td
+              %kbd ctrl + .
+
+  #preview.tab-pane
+  #item-list.tab-pane
+    .content
+    .btn-group
+      %button.clear-list.btn.btn-danger
+        %span.glyphicon.glyphicon-trash
+        リスト全削除
+
+.modal#payment-modal.fade{role: "dialog"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{type:"button", data:{dismiss:"modal"}}
+          %span &times;
+        %h4 落札ナビ決済方法設定
+      .modal-body
+        .row
+          .col-sm-3
+            - (1..6).each do |num|
+              .checkbox
+                %label
+                  %input{type:"checkbox", value:"A#{num}"} A#{num}
+          .col-sm-3
+            - (1..3).each do |num|
+              .checkbox
+                %label
+                  %input{type:"checkbox", value:"B#{num}"} B#{num}
+          .col-sm-3
+            - (1..1).each do |num|
+              .checkbox
+                %label
+                  %input{type:"checkbox", value:"C#{num}"} C#{num}
+          .col-sm-3
+            - (1..3).each do |num|
+              .checkbox
+                %label
+                  %input{type:"checkbox", value:"D#{num}"} D#{num}
+      .modal-footer
+        %button.btn.btn-default{data: {dismiss:"modal"}} 閉じる
+
+.modal#kanri-no-modal.fade{role: "dialog"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{type:"button", data:{dismiss:"modal"}}
+          %span &times;
+        %h4 管理番号設定
+      .modal-body
+        .row
+          .col-sm-12
+            %p 管理番号はCSVダウンロード時に<code>頭文字 + 開始番号から連番</code>で割り振られます。
+            %form.form-inline
+              .form-group
+                %label 頭文字
+                %input#kanri-no-prefix.form-control{type: "text", placeholder: "例: ASとかKKとか"}
+              .form-group
+                %label 開始番号
+                %input#kanri-no-start.form-control{type: "text", value: 1}
+      .modal-footer
+        %button.btn.btn-default{data: {dismiss:"modal"}} 閉じる

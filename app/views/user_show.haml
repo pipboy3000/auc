@@ -1,0 +1,23 @@
+%h2 ユーザー ##{@user.id} を編集
+%form.form-horizontal{actions:url("/user"), method:"post"}
+  %input{type:"hidden", name:"_method", value:"put"}
+  .form-group
+    %label.col-sm-3.control-label ユーザー名
+    .col-sm-9
+      %input.form-control{type:"text", name:"username", value:@user.username, placeholder:"username"}
+  .form-group
+    %label.col-sm-3.control-label パスワード
+    .col-sm-9
+      %input.form-control{type:"password", name:"password", placeholder:"password"}
+      %p.help-block パスワードを変更する時だけ入力してください。
+  .form-group
+    .col-sm-9.col-sm-offset-3
+      .checkbox
+        %label
+          - if @user.is_admin
+            %input{type:"checkbox", name:"is_admin", value:"true", checked:"checked"} 管理者権限
+          - else
+            %input{type:"checkbox", name:"is_admin", value:"true"} 管理者権限
+  .form-group
+    .col-sm-9.col-sm-offset-3
+      %input.btn.btn-primary{type:"submit", value:"更新"}
