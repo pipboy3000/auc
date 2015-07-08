@@ -4,8 +4,8 @@ require "sinatra/activerecord/rake"
 require File.join(File.dirname(__FILE__), "app/main")
 require File.join(File.dirname(__FILE__), "app/database")
 
+desc "Add initial data"
 task :add_data => [
-  "add_slave",
   "add_admin",
   "add_color",
   "add_shop",
@@ -13,20 +13,11 @@ task :add_data => [
   "add_html_template"
 ]
 
-task :add_slave do
-  @slave = User.new
-  @slave.username = "user1"
-  @slave.salt = Time.now.to_s
-  @slave.crypted_password = @slave.hexdigest("user1", @slave.salt)
-  @slave.is_admin = false
-  @slave.save
-end
-
 task :add_admin do
   @admin = User.new
   @admin.username = "master"
   @admin.salt = Time.now.to_s
-  @admin.crypted_password = @admin.hexdigest("2381", @admin.salt)
+  @admin.crypted_password = @admin.hexdigest("password", @admin.salt)
   @admin.is_admin = true
   @admin.save
 end

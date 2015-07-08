@@ -243,8 +243,8 @@ class AucCSV {
     data[2]  = `"${auc.shohin_title}"`;
     data[3]  = `"${detail}"`;
     data[9]  = auc.term;
-    data[15] = auc.tax;
-    data[16] = auc.payment;
+    data[15] = auc.payment;
+    data[16] = auc.tax;
     
     var images = _.take(auc.attachments.map(a => a.name), 10);
     

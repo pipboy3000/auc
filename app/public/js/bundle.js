@@ -25,7 +25,7 @@ var Auc = (function () {
     this.tax = false;
     this.term = 5;
     this.payment = false;
-    this.kanri_prefix = false;
+    this.kanri_no_prefix = false;
     this.kanri_no_index = 1;
   }
 
@@ -279,8 +279,8 @@ var AucCSV = (function () {
       data[2] = '"' + auc.shohin_title + '"';
       data[3] = '"' + detail + '"';
       data[9] = auc.term;
-      data[15] = auc.tax;
-      data[16] = auc.payment;
+      data[15] = auc.payment;
+      data[16] = auc.tax;
 
       var images = _.take(auc.attachments.map(function (a) {
         return a.name;
@@ -496,6 +496,31 @@ require('../vendor/jquery.minicolors');
     });
   }
 
+  function attachDownloadData() {
+    var button = $('#download');
+    var csv = new AucCSV();
+    var kanri_no_index = aucInfo.kanri_no_start;
+    _.forEach(aucList.toJSON(), function (auc) {
+      auc.__proto__ = Auc.prototype;
+      auc.kanri_no_index = kanri_no_index;
+      csv.push(auc);
+      kanri_no_index += 1;
+    });
+
+    button.attr({
+      'href': csv.url(),
+      'download': 'data.csv'
+    });
+
+    if (window.navigator.msSaveBlob) {
+      button.off('click');
+      button.on('click', function (e) {
+        e.preventDefault();
+        csv.msDownload();
+      });
+    }
+  }
+
   /**
    * 情報、設定の更新
    */
@@ -553,6 +578,7 @@ require('../vendor/jquery.minicolors');
       if (input.length > 0 && input.val().length === 0) input.val(val);
       label.attr('class', 'label label-primary');
       el.text(val);
+      auc.kanri_no_prefix = val;
       return;
     }
 
@@ -603,9 +629,7 @@ require('../vendor/jquery.minicolors');
     var value = function value() {
       return input.val();
     };
-    var notEmpty = function notEmpty(val) {
-      return val.replace(/[\n\r]/g, '').length > 0;
-    };
+    // var notEmpty = val => val.replace(/[\n\r]/g, '').length > 0;
     return input.asEventStream(event).map(value)
     // .filter(notEmpty)
     .map(Util.nl2br).toProperty('');
@@ -884,10 +908,7 @@ require('../vendor/jquery.minicolors');
     });
 
     // リストのカウント処理
-    var listCountUp = addItemStream.map(1);
-    var listCountDown = removeItemStream.map(-1);
-    var listCountReset = removeAllItemStream.map(0);
-    var listCountResult = Bacon.mergeAll(listCountUp, listCountDown, listCountReset).scan(aucList.count(), function (current, v) {
+    var listCountResult = Bacon.mergeAll(addItemStream.map(1), removeItemStream.map(-1), removeAllItemStream.map(0)).scan(aucList.count(), function (current, v) {
       if (v === 0) return 0;
       return _.add(current, v);
     });
@@ -963,29 +984,8 @@ require('../vendor/jquery.minicolors');
     csvBus.onError(function (error) {
       return console.log(error);
     });
-    csvBus.onValue(function () {
-      var button = $('#download');
-      var csv = new AucCSV();
-      var kanri_no_index = aucInfo.kanri_no_start;
-      _.forEach(aucList.toJSON(), function (auc) {
-        auc.__proto__ = Auc.prototype;
-        auc.kanri_no_prefix = aucInfo.kanri_no_prefix;
-        auc.kanri_no_index = kanri_no_index;
-        csv.push(auc);
-        kanri_no_index += 1;
-      });
-
-      button.attr('href', csv.url());
-      button.attr('download', 'data.csv');
-
-      if (window.navigator.msSaveBlob) {
-        button.off('click');
-        button.on('click', function (e) {
-          e.preventDefault();
-          csv.msDownload();
-        });
-      }
-    });
+    csvBus.onValue(attachDownloadData);
+    attachDownloadData();
 
     // 画像が追加されたら表示
     var fileDropBus = new Bacon.Bus();

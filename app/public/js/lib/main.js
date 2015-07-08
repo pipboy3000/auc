@@ -36,6 +36,31 @@ function updatePaymentInput() {
   });
 }
 
+function attachDownloadData() {
+  var button = $('#download');
+  var csv = new AucCSV();
+  var kanri_no_index = aucInfo.kanri_no_start;
+  _.forEach(aucList.toJSON(), auc => {
+    auc.__proto__ = Auc.prototype;
+    auc.kanri_no_index = kanri_no_index;
+    csv.push(auc);
+    kanri_no_index += 1;
+  });
+
+  button.attr({
+    'href': csv.url(),
+    'download': 'data.csv'
+  });
+
+  if (window.navigator.msSaveBlob) {
+    button.off('click');
+    button.on('click', e => {
+      e.preventDefault();
+      csv.msDownload();
+    });
+  }
+}
+
 /**
  * 情報、設定の更新
  */
@@ -103,6 +128,7 @@ function getAucData(obj) {
     if (input.length > 0 && input.val().length === 0) input.val(val);
     label.attr('class', 'label label-primary');
     el.text(val);
+    auc.kanri_no_prefix = val;
     return;
   }
 
@@ -151,7 +177,7 @@ function getAucData(obj) {
 
 function inputValue(input, event) {
   var value = () => input.val();
-  var notEmpty = val => val.replace(/[\n\r]/g, '').length > 0;
+  // var notEmpty = val => val.replace(/[\n\r]/g, '').length > 0;
   return input.asEventStream(event)
                .map(value)
                // .filter(notEmpty)
@@ -461,13 +487,10 @@ $(function() {
   .map(() => aucList.clear());
 
   // リストのカウント処理
-  var listCountUp = addItemStream.map(1);
-  var listCountDown = removeItemStream.map(-1);
-  var listCountReset = removeAllItemStream.map(0);
   var listCountResult = Bacon.mergeAll(
-                               listCountUp,
-                               listCountDown,
-                               listCountReset
+                               addItemStream.map(1),
+                               removeItemStream.map(-1),
+                               removeAllItemStream.map(0)
                              )
                              .scan(aucList.count(), (current, v) => {
                                if (v === 0) return 0;
@@ -550,29 +573,8 @@ $(function() {
   csvBus.plug(kanriNoStart);
   csvBus.plug(listCountResult);
   csvBus.onError(error => console.log(error));
-  csvBus.onValue(() => {
-    var button = $('#download');
-    var csv = new AucCSV();
-    var kanri_no_index = aucInfo.kanri_no_start;
-    _.forEach(aucList.toJSON(), auc => {
-      auc.__proto__ = Auc.prototype;
-      auc.kanri_no_prefix = aucInfo.kanri_no_prefix;
-      auc.kanri_no_index = kanri_no_index;
-      csv.push(auc);
-      kanri_no_index += 1;
-    });
-
-    button.attr('href', csv.url());
-    button.attr('download', 'data.csv');
-
-    if (window.navigator.msSaveBlob) {
-      button.off('click');
-      button.on('click', e => {
-        e.preventDefault();
-        csv.msDownload();
-      });
-    }
-  });
+  csvBus.onValue(attachDownloadData);
+  attachDownloadData();
 
   // 画像が追加されたら表示
   var fileDropBus = new Bacon.Bus();

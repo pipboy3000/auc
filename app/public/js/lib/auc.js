@@ -16,7 +16,7 @@ class Auc {
     this.tax            = false;
     this.term           = 5;
     this.payment        = false;
-    this.kanri_prefix   = false;
+    this.kanri_no_prefix   = false;
     this.kanri_no_index = 1;
   }
 
