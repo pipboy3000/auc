@@ -994,6 +994,7 @@ require('../vendor/jquery.minicolors');
       var template = '\n    <a href="#">\n      <img src="{{src}}" data-name="{{name}}" data-uuid="{{uuid}}">\n    </a>\n    ';
       $dropzone.append(mustache.render(template, obj));
       auc.attachments.push({ name: obj.name, uuid: obj.uuid });
+      auc.attachments = _.sortBy(auc.attachments, 'name');
     });
   });
 })(jQuery);

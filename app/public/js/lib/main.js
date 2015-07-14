@@ -587,6 +587,7 @@ $(function() {
     `;
     $dropzone.append(mustache.render(template, obj));
     auc.attachments.push({name: obj.name, uuid: obj.uuid});
+    auc.attachments = _.sortBy(auc.attachments, 'name');
   });
 
 });
