@@ -236,7 +236,7 @@ class AucCSV {
       'いいえ', // '海外発送'
     ];
     var data = [];
-    var detail = auc.render().replace(/"/g, "'");
+    var detail = auc.render().replace(/"/g, '""');
 
     data[0]  = auc.kanri_no_prefix + _.padLeft(String(auc.kanri_no_index), 6, '0');
     data[1]  = auc.category;
