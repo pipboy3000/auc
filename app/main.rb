@@ -41,6 +41,15 @@ end
 #
 # CONTROLLER
 #
+before do
+  if ENV['GATEWAY']
+    halt 403 unless request.referrer
+
+    unless request.referrer.match(/#{ENV['GATEWAY']}|#{request.host}/)
+      halt 403
+    end
+  end
+end
 
 before %r{/(?!login|logout)} do
   redirect '/login' unless login?(session["auth"])
