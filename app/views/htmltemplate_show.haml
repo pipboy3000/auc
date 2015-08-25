@@ -9,3 +9,135 @@
     %textarea.form-control{rows:15, name:"contents"}= @htmltemplate.contents
   .form-group
     %input.btn.btn-primary{type:"submit"}
+%h4 テンプレート変数
+.row
+  .col-md-6
+    .panel.panel-info
+      .panel-heading 商品入力
+      %table.table
+        %tr
+          %th 管理番号の頭文字
+          %td
+            %code {{kanri_no_prefix}}
+          %td ASやKINなどの文字
+        %tr
+          %th 商品タイトル
+          %td
+            %code {{shohin_title}}
+          %td 文字列
+        %tr
+          %th 商品詳細
+          %td
+            %code {{shohin_detail}}
+          %td 文字列
+  .col-md-6
+    .panel.panel-info
+      .panel-heading 店舗
+      %table.table
+        %tr
+          %th 店舗名
+          %td
+            %code {{shop.name}}
+          %td 文字列
+        %tr
+          %th テンプレートの内容1〜9
+          %td
+            %code {{{shop.contents1}}}
+            %br
+            ・
+            %br
+            ・
+            %br
+            ・
+            %br
+            %code {{{shop.contents9}}}
+          %td HTML含む文字列
+  .col-md-6
+    .panel.panel-info
+      .panel-heading テキスト
+      %table.table
+        %tr
+          %th ヘッダー
+          %td
+            %code {{text_template.header}}
+          %td
+            HTML含む文字列
+        %tr
+          %th フッター
+          %td
+            %code {{text_template.footer}}
+          %td
+            HTML含む文字列
+        %tr
+          %th タイトル1〜5
+          %td
+            %code {{text_template.col1_title}}
+            %br
+            ・
+            %br
+            ・
+            %br
+            ・
+            %br
+            %code {{text_template.col1_title}}
+          %td
+            HTML含む文字列
+        %tr
+          %th タイトル1〜5
+          %td
+            %code {{text_template.col1_text}}
+            %br
+            ・
+            %br
+            ・
+            %br
+            ・
+            %br
+            %code {{text_template.col5_text}}
+          %td HTML含む文字列
+
+  .col-md-6
+    .panel.panel-info
+      .panel-heading カラー
+      %table.table
+        %tr
+          %th 名前
+          %td
+            %code {{color.name}}
+          %td 文字列
+        %tr
+          %th 商品名の文字色
+          %td
+            %code {{color.title}}
+          %td
+            カラーコード(#ffffffなど)
+        %tr
+          %th 枠の色
+          %td
+            %code {{color.frame}}
+          %td
+            カラーコード(#ffffffなど)
+        %tr
+          %th 見出しの色
+          %td
+            %code {{color.text1}}
+          %td
+            カラーコード(#ffffffなど)
+        %tr
+          %th テキストの色
+          %td
+            %code {{color.text2}}
+          %td
+            カラーコード(#ffffffなど)
+        %tr
+          %th 見出しの背景色
+          %td
+            %code {{color.bg1}}
+          %td
+            カラーコード(#ffffffなど)
+        %tr
+          %th テキストの背景色
+          %td
+            %code {{color.bg2}}
+          %td
+            カラーコード(#ffffffなど)
