@@ -5,9 +5,6 @@ var Auc = require('../app/public/js/lib/auc');
 
 describe('Auc test', () => {
   it('isEntered', () => {
-
-describe('Auc test', () => {
-  it('isEntered', () => {
     var auc = new Auc();
 
     auc.shohin_title = "title";
