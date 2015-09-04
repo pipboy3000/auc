@@ -6,7 +6,7 @@ gem 'rake'
 gem 'rack-flash3', :require => 'rack/flash'
 gem "sinatra-contrib"
 
-group :development do
+group :development, :test do
   gem 'sqlite3'
 end
 

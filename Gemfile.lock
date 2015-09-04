@@ -1,32 +1,31 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (4.2.3)
-      activesupport (= 4.2.3)
+    activemodel (4.2.4)
+      activesupport (= 4.2.4)
       builder (~> 3.1)
-    activerecord (4.2.3)
-      activemodel (= 4.2.3)
-      activesupport (= 4.2.3)
+    activerecord (4.2.4)
+      activemodel (= 4.2.4)
+      activesupport (= 4.2.4)
       arel (~> 6.0)
-    activesupport (4.2.3)
+    activesupport (4.2.4)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    arel (6.0.0)
-    backports (3.6.4)
+    arel (6.0.3)
+    backports (3.6.6)
     builder (3.2.2)
-    haml (4.0.6)
+    haml (4.0.7)
       tilt
     i18n (0.7.0)
     json (1.8.3)
-    minitest (5.7.0)
+    minitest (5.8.0)
     multi_json (1.11.2)
-    pg (0.18.2)
+    pg (0.18.3)
     rack (1.6.4)
     rack-flash3 (1.0.5)
-      activesupport (= 4.2.2)
       rack
     rack-protection (1.5.3)
       rack
@@ -37,7 +36,7 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
-    sinatra-activerecord (2.0.6)
+    sinatra-activerecord (2.0.8)
       activerecord (>= 3.2)
       sinatra (~> 1.0)
     sinatra-contrib (1.4.6)
@@ -69,4 +68,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.10.5
+   1.10.6

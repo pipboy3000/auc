@@ -6,7 +6,8 @@
     "test": "test/"
   },
   "scripts": {
-    "test": "karma start"
+    "test": "karma start --no-auto-watch --single-run",
+    "testing": "karma start"
   },
   "repository": "",
   "author": "Asai Masami",

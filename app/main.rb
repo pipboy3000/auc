@@ -12,7 +12,7 @@ enable :method_override
 set :root, File.dirname(__FILE__)
 set :haml, :hyphenate_data_attrs => false
 
-configure :development, :production do
+configure :development, :test, :production do
   enable :logging
 end
 
