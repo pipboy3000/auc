@@ -3,7 +3,7 @@
 require File.join(File.dirname(__FILE__), '/database')
 require "digest/sha1"
 require "json"
-require "sinatra/reloader" if development?
+require "sinatra/reloader" if settings.development?
 
 #
 # Setting
@@ -16,9 +16,11 @@ configure :development, :test, :production do
   enable :logging
 end
 
+#
+# Helpers
+#
 helpers do
   include Rack::Utils
-  alias_method :h, :escape_html
 
   def login?(auth)
     return auth ? true : false
@@ -36,10 +38,14 @@ helpers do
     defaults = {1 => "商品詳細", 2 => "発送詳細", 3 => "支払詳細", 4 => "注意事項", 5 => "店舗詳細・古物取扱証明に関して"}
     defaults[index]
   end
+
+  def error_message(messages)
+    messages.map {|i, m| "#{i.to_s} #{m.join(', ')}"}.join(' ')
+  end
 end
 
 #
-# CONTROLLER
+# Controller
 #
 before do
   if ENV['GATEWAY']
@@ -52,7 +58,13 @@ before do
 end
 
 before %r{/(?!login|logout)} do
-  redirect '/login' unless login?(session["auth"])
+  unless settings.test?
+    redirect '/login' unless login?(session["auth"])
+  end
+end
+
+error do
+  env['sinatra.error'].message
 end
 
 get '/' do
@@ -83,8 +95,6 @@ post '/login' do
       raise "Password incorrect."
     end
   rescue
-    puts $!
-    puts "ユーザー名かパスワードが間違っています"
     redirect "/login"
   end
 end
@@ -95,31 +105,34 @@ get '/user' do
 end
 
 get '/user/:id' do
-  @user = User.find(params[:id])
+  begin
+    @user = User.find(params[:id])
+  rescue Exception
+    redirect  '/user'
+  end
+
   haml :user_show
 end
 
 post '/user' do
+  redirect '/user' if params[:password].empty?
+
   @user = User.new
   @user.username = params[:username]
   @user.salt = Time.now.to_s
-  @user.crypted_password = @user.hexdigest(params[:password], @user.salt)
+  @user.crypted_password = User.hexdigest(params[:password], @user.salt)
   @user.is_admin = params[:is_admin] == "true" ? true : false
-  unless @user.save
-    @user.errors.messages.each do |index, message|
-      puts "#{index.to_s} #{message.join(',')}"
-    end
-  end
+  halt 406, error_message(@user.errors.messages) unless @user.save
   redirect '/user'
 end
 
 put '/user/:id' do
   @user = User.find(params[:id])
-  @user.username = paarams[:username] if @user.username != params[:username]
+  @user.username = params[:username] if @user.username != params[:username]
   @user.is_admin = params[:is_admin] == "true" ? true : false
   unless params[:password].empty?
     @user.salt = Time.now.to_s
-    @user.crypted_password = @user.hexdigest(params[:password], @user.salt)
+    @user.crypted_password = User.hexdigest(params[:password], @user.salt)
   end
 
   redirect '/user' if @user.save

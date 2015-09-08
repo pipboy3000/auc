@@ -14,6 +14,11 @@ group :production do
   gem 'pg'
 end
 
+group :test do
+  gem 'test-unit'
+  gem 'rack-test'
+end
+
 gem 'activerecord'
 gem 'activesupport', :require => 'active_support/all'
 gem 'sinatra-activerecord', :require => 'sinatra/activerecord'

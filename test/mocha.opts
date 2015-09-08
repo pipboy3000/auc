@@ -1,3 +1,0 @@
---require power-assert
---reporter dot
---ui bdd

@@ -8,7 +8,7 @@ class CreateColors < ActiveRecord::Migration
       t.string :text2, null:false
       t.string :bg1, null:false
       t.string :bg2, null:false
-      t.timestamps
+      t.timestamps null: false
     end
   end
 

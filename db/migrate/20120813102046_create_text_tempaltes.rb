@@ -16,7 +16,7 @@ class CreateTextTempaltes < ActiveRecord::Migration
       t.text :footer
 
       t.references :user
-      t.timestamps
+      t.timestamps null: false
     end
   end
 
