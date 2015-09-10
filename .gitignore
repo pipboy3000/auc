@@ -30,3 +30,11 @@ node_modules
 # public
 public/js/*.js
 public/js/*.map
+
+### Vim ###
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~

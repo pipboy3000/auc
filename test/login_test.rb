@@ -16,6 +16,9 @@ class LoginTest < Test::Unit::TestCase
 
   test "Login success" do
     post '/login', username: "admin", password: "password"
+    assert session[:auth] == 1
+    assert session[:username] == "admin"
+    assert session[:is_admin] == true
     follow_redirect!
     assert_equal "http://example.org/", last_request.url
   end

@@ -8,50 +8,59 @@ class UserTest < Test::Unit::TestCase
     include TestHelper::PrepareDatabase
   end
 
-  test "access /user list users" do
+  def setup
+    with_auth_session
+  end
+
+  test 'access /user list users' do
     get '/user'
-    assert last_response.body.include? "admin"
+    assert last_response.body.include? 'admin'
   end
 
-  test "specific user find" do
+  test 'specific user find' do
     get '/user/1'
-    assert last_response.body.include? "admin"
+    assert last_response.body.include? 'admin'
   end
 
-  test "redirect to /user when user not found" do
+  test 'redirect to /user when user not found' do
     get '/user/100000'
     follow_redirect!
-    assert_equal "http://example.org/user", last_request.url
+    assert_equal 'http://example.org/user', last_request.url
   end
 
-  test "add user" do
-    post '/user', username: "user2", password: "password", is_admin: false
+  test 'add user' do
+    params = { username: 'user2', password: 'password', is_admin: false }
+    post '/user', params
     follow_redirect!
-    assert last_response.body.include? "user1"
+    assert last_response.body.include? 'user1'
     delete '/user', id_collection: [3]
   end
 
-  test "fail add user, password missing" do
-    post '/user', username: "user3", password: "", is_admin: false
+  test 'fail add user when password missing' do
+    params = { username: 'user3', password: '', is_admin: false }
+    post '/user', params
     follow_redirect!
-    assert !(last_response.body.include? "user3")
+    assert !(last_response.body.include? 'user3')
   end
 
-  test "fail add user, same username " do
-    post '/user', username: "user1", password: "user1", is_admin: false
-    assert last_response.body.include? "already been taken"
+  test 'fail add user when same username ' do
+    params = { username: 'user1', password: 'user1', is_admin: false }
+    post '/user', params
+    assert last_response.body.include? 'already been taken'
   end
 
-  test "update username" do
-    put '/user/100', username: "user50", password: "", is_admin: false
+  test 'update username' do
+    params = { username: 'user50', password: '', is_admin: false }
+    put '/user/100', params
     follow_redirect!
-    assert last_response.body.include? "user50"
+    assert last_response.body.include? 'user50'
   end
-  
-  test "delete user" do
-    delete '/user', id_collection: ["998", "999"]
+
+  test 'delete user' do
+    params = { id_collection: %w(998 999) }
+    delete '/user', params
     follow_redirect!
-    assert !(last_response.body.include? "user998")
-    assert !(last_response.body.include? "user999")
+    assert !(last_response.body.include? 'user998')
+    assert !(last_response.body.include? 'user999')
   end
 end

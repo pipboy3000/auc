@@ -14,7 +14,7 @@ user1:
   created_at: 2015-07-08 05:42:37.304817
   updated_at: 2015-07-08 05:42:37.304817
   is_admin: f
-user100:
+will_be_update:
   id: 100
   username: user100
   crypted_password: <%= User.hexdigest("password", "2015-07-08 05:42:37.304817") %>
@@ -22,7 +22,7 @@ user100:
   created_at: 2015-07-08 05:42:37.304817
   updated_at: 2015-07-08 05:42:37.304817
   is_admin: f
-user998:
+delete_target:
   id: 998
   username: user998
   crypted_password: <%= User.hexdigest("password", "2015-07-08 05:42:37.304817") %>
@@ -30,7 +30,7 @@ user998:
   created_at: 2015-07-08 05:42:37.304817
   updated_at: 2015-07-08 05:42:37.304817
   is_admin: f
-user999:
+delete_target:
   id: 999
   username: user999
   crypted_password: <%= User.hexdigest("password", "2015-07-08 05:42:37.304817") %>

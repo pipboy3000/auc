@@ -1,4 +1,20 @@
-shop1:
+default:
+  id: 1
   name: Shop 1
   contents1: Awesome shop no 1
+  contents2: "Tel: 000-0000-0000"
+will_be_update:
+  id: 100
+  name: Shop 100
+  contents1: Awesome shop no 100
+  contents2: "Tel: 000-0000-0000"
+delete_target:
+  id: 998
+  name: Shop 998
+  contents1: Awesome shop no 998
+  contents2: "Tel: 000-0000-0000"
+delete_target:
+  id: 999
+  name: Shop 999
+  contents1: Awesome shop no 999
   contents2: "Tel: 000-0000-0000"
