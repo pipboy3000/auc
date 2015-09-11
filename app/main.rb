@@ -62,7 +62,7 @@ before do
   end
 end
 
-before %r{/(?!login|logout)} do
+before %r{/(?!login|logout|welcome)} do
   redirect '/login' unless login?(session['auth'])
 end
 
@@ -77,6 +77,10 @@ get '/' do
   @shops = Shop.all
 
   haml :index
+end
+
+get '/welcome' do
+  haml :welcome, layout: false
 end
 
 ['/login', '/logout'].each do |path|

@@ -1,5 +1,5 @@
 User.create(
-  username: "master",
+  username: "admin",
   salt: Time.now.to_s,
   crypted_password: User.hexdigest("must_change_password", Time.now.to_s),
   is_admin: true
@@ -7,34 +7,34 @@ User.create(
 
 Color.create(
   name: "default",
-  title: "333333",
-  frame: "aed9e6",
-  text1: "ffffff",
-  text2: "444444",
-  bg1: "444444",
-  bg2: "ffffff"
+  title: "#333333",
+  frame: "#aed9e6",
+  text1: "#ffffff",
+  text2: "#444444",
+  bg1: "#444444",
+  bg2: "#ffffff"
 )
 
 Shop.create(
-  name: "Shop 1",
-  contents1: "Awesome shop no 1",
-  contents2: "Tel: 000-0000-0000"
+  name: "店舗名",
+  contents1: "住所：<br>電話番号：<br>営業時間<br>",
+  contents2: ""
 )
 
 TextTemplate.create(
-  name: "Shop 1 text template",
-  header: "Awesome shop no 1 header",
-  footer: "Awesome shop no 1 footer",
+  name: "店舗出品テキスト",
+  header: "ヘッダー",
+  footer: "フッター",
   col1_title: "商品詳細",
-  col1_text: "",
+  col1_text: "商品詳細の説明",
   col2_title: "発送詳細",
-  col2_text: "すぐ送ります。",
+  col2_text: "発送詳細の説明",
   col3_title: "支払詳細",
-  col3_text: "現金のみです。",
+  col3_text: "支払詳細の説明",
   col4_title: "注意事項",
-  col4_text: "ノークレームノーリターンでお願いします。",
-  col5_title: "店舗詳細",
-  col5_text: "名古屋市にあります。"
+  col4_text: "ノークレーム、ノーリターンでお願いします。",
+  col5_title: "店舗詳細・古物取扱証明に関して",
+  col5_text: "古物商許可証第xxxxxxxxxxxxxx号"
 )
 
 html_template = <<EOT
@@ -166,7 +166,7 @@ html_template = <<EOT
 EOT
 
 HtmlTemplate.create(
-  name: "Shop 1 html template",
+  name: "店舗HTMLテンプレート",
   contents: html_template
 )
 

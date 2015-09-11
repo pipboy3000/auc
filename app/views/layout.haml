@@ -28,13 +28,19 @@
                 %a{href:url("/text_template")}テキスト
           %ul.nav.navbar-nav.navbar-right
             %li
-              %a{href:url("/user")}
-                %span.glyphicon.glyphicon-user
-                = session[:username]
+              - if session[:auth]
+                %a{href:url("/user")}
+                  %span.glyphicon.glyphicon-user
+                  = session[:username]
             %li
-              %a{href:url("/logout")}
-                %span.glyphicon.glyphicon-off
-                ログアウト
+              - if session[:auth]
+                %a{href:url("/logout")}
+                  %span.glyphicon.glyphicon-off
+                  ログアウト
+              - else
+                %a{href:url("/logout")}
+                  %span.glyphicon.glyphicon-log-in
+                  ログイン
     .container-fluid
       = yield
     .footer
