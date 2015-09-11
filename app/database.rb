@@ -54,27 +54,28 @@ end
 class Color < ActiveRecord::Base
   include DBHelper
 
-  hex_num = /[0-9A-F]/i
+  hex_num = /[#0-9A-F]/i
+  length = { minimum: 4, maximum: 7}
 
   validates :name, presence:true, uniqueness:true
   validates :title, format: { with: hex_num },
                     presence: true,
-                    length: { minimum: 3, maximum: 6}
+                    length: length
   validates :frame, format: { with: hex_num },
                     presence: true,
-                    length: { minimum: 3, maximum: 6}
+                    length: length
   validates :text1, format: { with: hex_num },
                     presence: true,
-                    length: { minimum: 3, maximum: 6}
+                    length: length
   validates :text2, format: { with: hex_num },
                     presence: true,
-                    length: { minimum: 3, maximum: 6}
+                    length: length
   validates :bg1, format: { with: hex_num },
                   presence: true,
-                  length: { minimum: 3, maximum: 6}
+                  length: length
   validates :bg2, format: { with: hex_num },
                   presence: true,
-                  length: { minimum: 3, maximum: 6}
+                  length: length
 end
 
 class TextTemplate < ActiveRecord::Base
