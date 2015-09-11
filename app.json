@@ -1,0 +1,8 @@
+{
+  "name": "auc",
+  "repository": "https://github.com/pipboy3000/auc",
+  "addons": ["heroku-postgresql"],
+  "scripts": {
+    "postdeploy": "bundle exec rake bootstrap"
+  }
+}
