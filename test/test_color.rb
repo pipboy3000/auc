@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path('../test_helper', __FILE__)
 
 class ColorTest < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -12,12 +12,96 @@ class ColorTest < Test::Unit::TestCase
     with_auth_session
   end
 
-  test 'access /color list colors' do
+  test 'color name should not same' do
+    color = Color.new
+    color.name = 'default'
+    color.title = 'ffffff'
+    color.frame = 'ffffff'
+    color.text1 = 'ffffff'
+    color.text2 = 'ffffff'
+    color.bg1 = 'ffffff'
+    color.bg2 = 'ffffff'
+    assert !color.valid?
+  end
+
+  test 'color code should start #' do
+    color = Color.new
+    color.name = 'test color'
+    color.title = 'ffffff'
+    color.frame = 'ffffff'
+    color.text1 = 'ffffff'
+    color.text2 = 'ffffff'
+    color.bg1 = 'ffffff'
+    color.bg2 = 'ffffff'
+    assert !color.valid?
+  end
+
+  test 'color code should hexadecimal' do
+    color = Color.new
+    color.name = 'test color'
+    color.title = '#xxx'
+    color.frame = '#ggg'
+    color.text1 = '#xxx'
+    color.text2 = '#ggg'
+    color.bg1 = '#zzz'
+    color.bg2 = '#zzz'
+    assert !color.valid?
+  end
+
+  test 'color code should not empty value' do
+    color = Color.new
+    color.name = 'test color'
+    color.title = ''
+    color.frame = ''
+    color.text1 = ''
+    color.text2 = ''
+    color.bg1 = ''
+    color.bg2 = ''
+    assert !color.valid?
+  end
+
+  test 'color code allow short style' do
+    color = Color.new
+    color.name = 'test color'
+    color.title = '#fff'
+    color.frame = '#fff'
+    color.text1 = '#fff'
+    color.text2 = '#fff'
+    color.bg1 = '#fff'
+    color.bg2 = '#fff'
+    assert color.valid?
+  end
+
+  test 'color code should more than 3characters' do
+    color = Color.new
+    color.name = 'test color'
+    color.title = '#ff'
+    color.frame = '#ff'
+    color.text1 = '#ff'
+    color.text2 = '#ff'
+    color.bg1 = '#ff'
+    color.bg2 = '#ff'
+    assert !color.valid?
+  end
+
+  test 'color code should less than 8characters' do
+    color = Color.new
+    color.name = 'test color'
+    color.title = '#fffffff'
+    color.frame = '#fffffff'
+    color.text1 = '#fffffff'
+    color.text2 = '#fffffff'
+    color.bg1 = '#ffffff'
+    color.bg2 = '#ffffff'
+    assert !color.valid?
+  end
+
+  test 'access /color should list colors' do
     get '/color'
     assert last_response.body.include? 'default'
   end
 
-  test 'specific color find' do
+  test 'specific color can find' do
     get '/color/1'
     assert last_response.body.include? 'default'
   end
@@ -48,7 +132,6 @@ class ColorTest < Test::Unit::TestCase
     }
     post '/color', params
     assert last_response.body.include? 'is too short'
-    delete '/color', id_collection: [2]
   end
 
   test 'fail add color that color code is too long' do
@@ -59,7 +142,6 @@ class ColorTest < Test::Unit::TestCase
     }
     post '/color', params
     assert last_response.body.include? 'is too long'
-    delete '/color', id_collection: [2]
   end
 
   test 'fail add color when same name ' do

@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path('../test_helper', __FILE__)
 
 class UserTest < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -10,6 +10,27 @@ class UserTest < Test::Unit::TestCase
 
   def setup
     with_auth_session
+  end
+
+  test 'user name should be uniq' do
+    u = User.new
+    u.username = 'admin'
+    assert !u.valid?
+  end
+
+  test 'user name should not empty' do
+    u = User.new
+    u.username = ''
+    assert !u.valid?
+  end
+
+  test 'hexdigest method' do
+    assert User.hexdigest("pass", "salt") == "d4589ad4bbaa85a2fc387a9835c8eaf15f9d44c7"
+  end
+
+  test 'auth method' do
+    user = User.find(1)
+    assert = user.auth('password')
   end
 
   test 'access /user list users' do
@@ -43,7 +64,7 @@ class UserTest < Test::Unit::TestCase
     assert !(last_response.body.include? 'user3')
   end
 
-  test 'fail add user when same username ' do
+  test 'fail add user when same username' do
     params = { username: 'user1', password: 'user1', is_admin: false }
     post '/user', params
     assert last_response.body.include? 'already been taken'
