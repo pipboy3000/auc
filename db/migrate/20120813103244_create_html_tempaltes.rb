@@ -3,7 +3,7 @@ class CreateHtmlTempaltes < ActiveRecord::Migration
     create_table :html_templates do |t|
       t.string :name, null:false
       t.text :contents, null:false
-      t.timestamps
+      t.timestamps null: false
     end
   end
 

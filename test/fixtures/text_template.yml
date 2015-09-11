@@ -1,0 +1,60 @@
+default:
+  id: 1
+  name: shop 1 text template
+  header: Awesome shop no 1 header
+  footer: Awesome shop no 1 footer
+  col1_title: 商品詳細
+  col1_text: 
+  col2_title: 発送詳細
+  col2_text: すぐ送ります。
+  col3_title: 支払詳細
+  col3_text: 現金のみです。
+  col4_title: 注意事項
+  col4_text: ノークレームノーリターンでお願いします。
+  col5_title: 店舗詳細
+  col5_text: 名古屋市にあります。
+will_be_update:
+  id: 100
+  name: shop 2 text template
+  header: Awesome shop no 1 header
+  footer: Awesome shop no 1 footer
+  col1_title: 商品詳細
+  col1_text: 
+  col2_title: 発送詳細
+  col2_text: すぐ送ります。
+  col3_title: 支払詳細
+  col3_text: 現金のみです。
+  col4_title: 注意事項
+  col4_text: ノークレームノーリターンでお願いします。
+  col5_title: 店舗詳細
+  col5_text: 名古屋市にあります。
+delete_target:
+  id: 998
+  name: shop 998 text template
+  header: Awesome shop no 1 header
+  footer: Awesome shop no 1 footer
+  col1_title: 商品詳細
+  col1_text: 
+  col2_title: 発送詳細
+  col2_text: すぐ送ります。
+  col3_title: 支払詳細
+  col3_text: 現金のみです。
+  col4_title: 注意事項
+  col4_text: ノークレームノーリターンでお願いします。
+  col5_title: 店舗詳細
+  col5_text: 名古屋市にあります。
+delete_target:
+  id: 999
+  name: shop 999 text template
+  header: Awesome shop no 1 header
+  footer: Awesome shop no 1 footer
+  col1_title: 商品詳細
+  col1_text: 
+  col2_title: 発送詳細
+  col2_text: すぐ送ります。
+  col3_title: 支払詳細
+  col3_text: 現金のみです。
+  col4_title: 注意事項
+  col4_text: ノークレームノーリターンでお願いします。
+  col5_title: 店舗詳細
+  col5_text: 名古屋市にあります。

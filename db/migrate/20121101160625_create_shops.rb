@@ -3,7 +3,7 @@ class CreateShops < ActiveRecord::Migration
     create_table :shops do |t|
       t.string :name, null:false
       t.string :contents, null:false
-      t.timestamps
+      t.timestamps null: false
     end
   end
 

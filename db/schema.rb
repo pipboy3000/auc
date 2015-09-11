@@ -21,22 +21,22 @@ ActiveRecord::Schema.define(version: 20121119150034) do
     t.string   "text2",      null: false
     t.string   "bg1",        null: false
     t.string   "bg2",        null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "html_templates", force: :cascade do |t|
     t.string   "name",       null: false
     t.text     "contents",   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "shops", force: :cascade do |t|
     t.string   "name",       null: false
     t.text     "contents1",  null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text     "contents2"
     t.text     "contents3"
     t.text     "contents4"
@@ -61,16 +61,16 @@ ActiveRecord::Schema.define(version: 20121119150034) do
     t.text     "col4_text"
     t.text     "col5_text"
     t.text     "footer"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string   "username"
     t.string   "crypted_password"
     t.string   "salt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.boolean  "is_admin",         default: false
   end
 

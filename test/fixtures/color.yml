@@ -1,0 +1,36 @@
+default:
+  id: 1
+  name: default
+  title: 333333
+  frame: aed9e6
+  text1: ffffff
+  text2: 444444
+  bg1: 444444
+  bg2: ffffff
+will_be_update:
+  id: 100
+  name: will be update
+  title: 333333
+  frame: aed9e6
+  text1: ffffff
+  text2: 444444
+  bg1: 444444
+  bg2: ffffff
+delete_target:
+  id: 998
+  name: color 998
+  title: 333333
+  frame: aed9e6
+  text1: ffffff
+  text2: 444444
+  bg1: 444444
+  bg2: ffffff
+delete_target:
+  id: 999
+  name: color 999
+  title: 333333
+  frame: aed9e6
+  text1: ffffff
+  text2: 444444
+  bg1: 444444
+  bg2: ffffff
