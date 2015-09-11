@@ -37,7 +37,7 @@ module TestHelper
 
     def shutdown
       puts "\ndrop database"
-      `rake db:drop; rm test.db`
+      `rake db:drop`
     end
   end
 end
