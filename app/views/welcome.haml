@@ -1,0 +1,47 @@
+!!!5
+%html
+  %head
+    %meta{name:"viewport", content:"width=device-width, initial-scale=1.0"}
+    %title auc
+    %link{rel:"stylesheet", href:url("/css/auc.css")}
+    :css
+      table {
+        border-spacing: 0;
+        border-collapse: collapse;
+      }
+      td, th { padding: 0; }
+  %body
+    .container
+      .row
+        .col-md-6.col-md-offset-3
+          .page-header
+            %h1 auc
+
+          %p
+            aucはヤフオクの出品補助ツールです。
+            %br
+            出品する品の説明文をHTMLに整形することに特化しています。
+            %br
+            複数の品をCSVにまとめ、出力することもできます。
+
+          %br
+
+          %table.table
+            %tr
+              %th ユーザー名
+              %td admin
+            %tr
+              %th パスワード
+              %td must_change_password
+      
+          %a.btn-block.btn.btn-lg.btn-primary{ :href => url('/login') }
+            %span.glyphicon.glyphicon-log-in
+            ログイン
+          %br
+          .alert.alert-danger
+            %span.glyphicon.glyphicon-exclamation-sign
+            %span.sr-only 注意点
+            本格的に運用を行う場合、パスワードは必ず変更してください。
+            ログイン後、画面右上
+            %span.glyphicon.glyphicon-user
+            のリンクからユーザー管理画面へ行くことができます。

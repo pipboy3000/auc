@@ -4,5 +4,6 @@
   "addons": ["heroku-postgresql"],
   "scripts": {
     "postdeploy": "bundle exec rake bootstrap"
-  }
+  },
+  "success_url": "/welcome"
 }

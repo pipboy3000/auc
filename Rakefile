@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__), "app/main")
 require 'rake/testtask'
 
 desc 'Bootstrap task'
-task :bootsrap do
+task :bootstrap do
   `bundle exec rake db:migrate;bundle exec rake db:seed`
 end
 

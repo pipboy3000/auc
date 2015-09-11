@@ -7,12 +7,12 @@ User.create(
 
 Color.create(
   name: "default",
-  title: "333333",
-  frame: "aed9e6",
-  text1: "ffffff",
-  text2: "444444",
-  bg1: "444444",
-  bg2: "ffffff"
+  title: "#333333",
+  frame: "#aed9e6",
+  text1: "#ffffff",
+  text2: "#444444",
+  bg1: "#444444",
+  bg2: "#ffffff"
 )
 
 Shop.create(
