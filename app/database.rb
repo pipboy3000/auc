@@ -54,7 +54,7 @@ end
 class Color < ActiveRecord::Base
   include DBHelper
 
-  hex_num = /[#0-9A-F]/i
+  hex_num = /#[0-9A-F]/i
   length = { minimum: 4, maximum: 7}
 
   validates :name, presence:true, uniqueness:true

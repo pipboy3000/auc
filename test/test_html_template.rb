@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path('../test_helper', __FILE__)
 
 class HtmlTemplateTest < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -10,6 +10,27 @@ class HtmlTemplateTest < Test::Unit::TestCase
 
   def setup
     with_auth_session
+  end
+
+  test 'html template name should be uniq' do
+    h = HtmlTemplate.new
+    h.name = 'shop 1 html template'
+    h.contents = 'aaaa'
+    assert !h.valid?
+  end
+
+  test 'html template name should not empty' do
+    h = HtmlTemplate.new
+    h.name = ''
+    h.contents = 'aaaa'
+    assert !h.valid?
+  end
+
+  test 'html template contents should not empty' do
+    h = HtmlTemplate.new
+    h.name = 'test html template'
+    h.contents = ''
+    assert !h.valid?
   end
 
   test 'access /html_template list html_templates' do

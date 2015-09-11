@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path('../test_helper', __FILE__)
 
 class ShopTest < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -10,6 +10,27 @@ class ShopTest < Test::Unit::TestCase
 
   def setup
     with_auth_session
+  end
+
+  test 'shop name should be uniq' do
+    s = Shop.new
+    s.name = "Shop 1"
+    s.contents1 = 'aa'
+    assert !s.valid?
+  end
+
+  test 'shop name should not empty' do
+    s = Shop.new
+    s.name = ''
+    s.contents1 = 'aa'
+    assert !s.valid?
+  end
+
+  test 'shop contents1 should not empty' do
+    s = Shop.new
+    s.name = 'Shop test'
+    s.contents1 = ''
+    assert !s.valid?
   end
 
   test 'access /shop list shops' do

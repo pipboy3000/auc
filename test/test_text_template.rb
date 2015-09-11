@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path('../test_helper', __FILE__)
 
 class TextTemplateTest < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -10,6 +10,18 @@ class TextTemplateTest < Test::Unit::TestCase
 
   def setup
     with_auth_session
+  end
+
+  test 'text template name should be uniq' do
+    t = TextTemplate.new
+    t.name = 'shop 1 text template'
+    assert !t.valid?
+  end
+
+  test 'text template name should not empty' do
+    t = TextTemplate.new
+    t.name = ''
+    assert !t.valid?
   end
 
   test 'access /text_template list shops' do
