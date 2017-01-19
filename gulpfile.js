@@ -12,6 +12,7 @@ var sass         = require('gulp-sass');
 var source       = require('vinyl-source-stream');
 var sourcemaps   = require('gulp-sourcemaps');
 var watchify     = require('watchify');
+var argv         = require('yargs').argv;
 
 function compile(watch) {
   var bundler = watchify(browserify('./app/public/js/lib/main.js', {debug: true})
@@ -46,7 +47,7 @@ gulp.task('jsWatch', function() { return watch(); });
 
 gulp.task('browser-sync', function() {
   browserSync.init({
-    proxy: 'localhost:9292',
+    proxy: 'localhost:' + (argv.proxyPort ? argv.proxyPort : '9292'),
     files: ["app/public/js/*.js"]
   });
 

@@ -1,7 +1,7 @@
-class CreateTextTempaltes < ActiveRecord::Migration
+class CreateTextTempaltes < ActiveRecord::Migration[4.2]
   def up
     create_table :text_templates do |t|
-      t.string :name, :null => false
+      t.string :name, null: false
       t.text :header
       t.string :col1_title
       t.string :col2_title

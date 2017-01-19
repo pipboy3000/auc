@@ -532,9 +532,9 @@ $(function() {
   var inputTitleWrap = $('#shohin_title').parents('.form-group');
   var title = Bacon.mergeAll(inputTitle, inputTitleBlur);
 
-  title.filter(val => vw.width(val) > 60)
+  title.filter(val => vw.width(val) > 130)
        .assign(inputTitleWrap, 'addClass', 'has-error');
-  title.filter(val => vw.width(val) <= 60)
+  title.filter(val => vw.width(val) <= 130)
        .assign(inputTitleWrap, 'removeClass', 'has-error');
 
   // 入力されたらプレビュー更新

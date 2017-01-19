@@ -1,4 +1,4 @@
-class ShopContentsStringToText < ActiveRecord::Migration
+class ShopContentsStringToText < ActiveRecord::Migration[4.2]
   def up
     (1..9).each do |i|
       change_column :shops, "contents#{i}".to_sym, :text

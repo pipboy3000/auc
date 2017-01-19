@@ -141,7 +141,7 @@ put '/user/:id' do
 end
 
 delete '/user' do
-  redirect '/user' if User.destroy_all(id: params[:id_collection])
+  redirect '/user' if User.where(id: params['id_collection']).destroy_all
 end
 
 get '/html_template' do
@@ -178,7 +178,7 @@ put '/html_template/:id' do
 end
 
 delete '/html_template' do
-  if HtmlTemplate.destroy_all(id: params[:id_collection])
+  if HtmlTemplate.where(id: params[:id_collection]).destroy_all
     redirect '/html_template'
   else
     halt 400, error_message(@htmltemplate)
@@ -232,7 +232,7 @@ put '/color/:id' do
 end
 
 delete '/color' do
-  if Color.destroy_all(id: params[:id_collection])
+  if Color.where(id: params[:id_collection]).destroy_all
     redirect '/color'
   else
     halt 400, error_message(@color.errors.message)
@@ -293,7 +293,7 @@ put '/text_template/:id' do
 end
 
 delete '/text_template' do
-  if TextTemplate.destroy_all(id: params[:id_collection])
+  if TextTemplate.where(id: params[:id_collection]).destroy_all
     redirect '/text_template'
   end
 end
@@ -336,5 +336,5 @@ put '/shop/:id' do
 end
 
 delete '/shop' do
-  redirect '/shop' if Shop.destroy_all(id: params[:id_collection])
+  redirect '/shop' if Shop.where(id: params[:id_collection]).destroy_all
 end

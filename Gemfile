@@ -1,11 +1,11 @@
-source "https://rubygems.org"
-ruby '2.3.0'
+source 'https://rubygems.org'
+ruby '2.3.1'
 
 gem 'sinatra'
 gem 'haml'
 gem 'rake'
-gem 'rack-flash3', :require => 'rack/flash'
-gem "sinatra-contrib"
+gem 'rack-flash3', require: 'rack/flash'
+gem 'sinatra-contrib'
 
 group :development, :test do
   gem 'sqlite3'
@@ -21,6 +21,5 @@ group :test do
 end
 
 gem 'activerecord'
-gem 'activesupport', :require => 'active_support/all'
-gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
-
+gem 'activesupport', require: 'active_support/all'
+gem 'sinatra-activerecord', require: 'sinatra/activerecord'

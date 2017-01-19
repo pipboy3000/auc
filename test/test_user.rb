@@ -25,7 +25,7 @@ class UserTest < Test::Unit::TestCase
   end
 
   test 'hexdigest method' do
-    assert User.hexdigest("pass", "salt") == "d4589ad4bbaa85a2fc387a9835c8eaf15f9d44c7"
+    assert User.hexdigest('pass', 'salt') == 'd4589ad4bbaa85a2fc387a9835c8eaf15f9d44c7'
   end
 
   test 'auth method' do

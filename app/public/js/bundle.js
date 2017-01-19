@@ -271,6 +271,7 @@ var AucCSV = (function () {
       '', // '画像10',
       '', // '画像10コメント',
       'いいえ'];
+      // '海外発送'
       var data = [];
       var detail = auc.render().replace(/"/g, '""');
 
@@ -300,7 +301,6 @@ var AucCSV = (function () {
 })();
 
 module.exports = AucCSV;
-// '海外発送'
 
 },{"encoding-japanese":22,"lodash":24}],3:[function(require,module,exports){
 'use strict';
@@ -322,7 +322,7 @@ var AucInfo = (function () {
     this.tax = false;
     this.term = 5;
     this.payment = [];
-    this.kanri_no_prefix = '';
+    this.kanri_no_prefix = "";
     this.kanri_no_start = 1;
     this.restore();
   }
@@ -362,7 +362,7 @@ var AucInfo = (function () {
   }, {
     key: 'jsonURL',
     value: function jsonURL(key) {
-      return '' + location.protocol + '//' + location.host + '/' + key + '/' + this[key] + '/json';
+      return location.protocol + '//' + location.host + '/' + key + '/' + this[key] + '/json';
     }
   }]);
 
@@ -491,7 +491,7 @@ require('../vendor/jquery.minicolors');
     var checkboxs = $('#payment-modal input[type="checkbox"]');
     _.forEach(aucInfo.payment, function (val) {
       _.forEach(checkboxs, function (el) {
-        if (el.value == val) el.checked = 'checked';
+        if (el.value == val) el.checked = "checked";
       });
     });
   }
@@ -538,7 +538,7 @@ require('../vendor/jquery.minicolors');
     function termUpdate(val) {
       auc.term = val;
       label.attr('class', 'label label-primary');
-      el.text('' + val + '日');
+      el.text(val + '日');
       return;
     }
 
@@ -596,11 +596,11 @@ require('../vendor/jquery.minicolors');
       el = $('.infobar .' + key);
       label = el.prev();
 
-      if (key == 'tax') return taxUpdate(val);
-      if (key == 'term') return termUpdate(val);
-      if (key == 'payment') return paymentUpdate(val);
-      if (key == 'kanri_no_prefix') return kanriPrefixUpdate(val);
-      if (key == 'kanri_no_start') return kanriNoStartUpdate(val);
+      if (key == "tax") return taxUpdate(val);
+      if (key == "term") return termUpdate(val);
+      if (key == "payment") return paymentUpdate(val);
+      if (key == "kanri_no_prefix") return kanriPrefixUpdate(val);
+      if (key == "kanri_no_start") return kanriNoStartUpdate(val);
 
       var jsonStream = Bacon.fromPromise($.getJSON(aucInfo.jsonURL(key)));
 
@@ -611,8 +611,8 @@ require('../vendor/jquery.minicolors');
         el.text(error.message);
       });
 
-      if (key == 'color') return jsonStream.onValue(colorUpdate);
-      if (key == 'shop') return jsonStream.onValue(shopUpdate);
+      if (key == "color") return jsonStream.onValue(colorUpdate);
+      if (key == "shop") return jsonStream.onValue(shopUpdate);
 
       jsonStream.onValue(function (data) {
         el = $('.infobar .' + key);
@@ -704,7 +704,7 @@ require('../vendor/jquery.minicolors');
     ZeroClipboard.config({ swfPath: '/ZeroClipboard.swf' });
     var $copyButton = $('.copy-button');
     $copyButton.tooltip({
-      title: 'Copy!!!',
+      title: "Copy!!!",
       trigger: 'manual'
     }).on('shown.bs.tooltip', function () {
       setTimeout(function () {
@@ -765,7 +765,7 @@ require('../vendor/jquery.minicolors');
 
     // infobar操作時
     var infoStream = $('.info-select a').asEventStream('click').doAction('.preventDefault').map(function (e) {
-      var key = $(e.currentTarget).parents('ul').attr('id');
+      var key = $(e.currentTarget).parents("ul").attr('id');
       var id = $(e.currentTarget).data(key);
 
       aucInfo[key] = id;
@@ -849,7 +849,8 @@ require('../vendor/jquery.minicolors');
       var obj = {
         src: e.target.result,
         name: file.name,
-        uuid: Util.uuid() };
+        uuid: Util.uuid()
+      };
       return obj;
     }).toProperty();
 
@@ -946,10 +947,10 @@ require('../vendor/jquery.minicolors');
     var title = Bacon.mergeAll(inputTitle, inputTitleBlur);
 
     title.filter(function (val) {
-      return vw.width(val) > 60;
+      return vw.width(val) > 130;
     }).assign(inputTitleWrap, 'addClass', 'has-error');
     title.filter(function (val) {
-      return vw.width(val) <= 60;
+      return vw.width(val) <= 130;
     }).assign(inputTitleWrap, 'removeClass', 'has-error');
 
     // 入力されたらプレビュー更新
@@ -1021,7 +1022,7 @@ var Util = (function () {
     value: function uuid() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0;
-        var v = c === 'x' ? r : r & 3 | 8;
+        var v = c === 'x' ? r : r & 0x3 | 0x8;
         return v.toString(16);
       });
     }
@@ -1777,8 +1778,8 @@ module.exports = Util;
         return {
             /* jshint ignore:start */
             r: hex >> 16,
-            g: (hex & 65280) >> 8,
-            b: hex & 255
+            g: (hex & 0x00FF00) >> 8,
+            b: hex & 0x0000FF
             /* jshint ignore:end */
         };
     }
@@ -1870,3339 +1871,2992 @@ module.exports = Util;
 },{"jquery":23}],8:[function(require,module,exports){
 (function (global){
 (function() {
-  var Bacon, BufferingSource, Bus, CompositeUnsubscribe, ConsumingSource, Desc, Dispatcher, End, Error, Event, EventStream, Exception, Initial, Next, None, Observable, Property, PropertyDispatcher, Some, Source, UpdateBarrier, _, addPropertyInitValueToStream, assert, assertArray, assertEventStream, assertFunction, assertNoArguments, assertObservable, assertObservableIsProperty, assertString, cloneArray, constantToFunction, containsDuplicateDeps, convertArgsToFunction, describe, endEvent, eventIdCounter, eventMethods, findDeps, findHandlerMethods, flatMap_, former, idCounter, initialEvent, isArray, isFieldKey, isObservable, latter, liftCallback, makeFunction, makeFunctionArgs, makeFunction_, makeObservable, makeSpawner, nextEvent, nop, partiallyApplied, recursionDepth, ref, registerObs, spys, toCombinator, toEvent, toFieldExtractor, toFieldKey, toOption, toSimpleExtractor, valueAndEnd, withDesc, withMethodCallSupport,
-    hasProp = {}.hasOwnProperty,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    slice = [].slice,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var _slice = Array.prototype.slice;
+var Bacon = {
+  toString: function () {
+    return "Bacon";
+  }
+};
 
-  Bacon = {
-    toString: function() {
-      return "Bacon";
+Bacon.version = '0.7.89';
+
+var Exception = (typeof global !== "undefined" && global !== null ? global : this).Error;
+var nop = function () {};
+var latter = function (_, x) {
+  return x;
+};
+var former = function (x, _) {
+  return x;
+};
+var cloneArray = function (xs) {
+  return xs.slice(0);
+};
+var assert = function (message, condition) {
+  if (!condition) {
+    throw new Exception(message);
+  }
+};
+var assertObservableIsProperty = function (x) {
+  if ((x != null ? x._isObservable : void 0) && !(x != null ? x._isProperty : void 0)) {
+    throw new Exception("Observable is not a Property : " + x);
+  }
+};
+var assertEventStream = function (event) {
+  if (!(event != null ? event._isEventStream : void 0)) {
+    throw new Exception("not an EventStream : " + event);
+  }
+};
+
+var assertObservable = function (event) {
+  if (!(event != null ? event._isObservable : void 0)) {
+    throw new Exception("not an Observable : " + event);
+  }
+};
+var assertFunction = function (f) {
+  return assert("not a function : " + f, _.isFunction(f));
+};
+var isArray = Array.isArray || function (xs) {
+  return xs instanceof Array;
+};
+var isObservable = function (x) {
+  return x && x._isObservable;
+};
+var assertArray = function (xs) {
+  if (!isArray(xs)) {
+    throw new Exception("not an array : " + xs);
+  }
+};
+var assertNoArguments = function (args) {
+  return assert("no arguments supported", args.length === 0);
+};
+var assertString = function (x) {
+  if (typeof x === "string") {
+    throw new Exception("not a string : " + x);
+  }
+};
+
+var extend = function (target) {
+  var length = arguments.length;
+  for (var i = 1; 1 < length ? i < length : i > length; 1 < length ? i++ : i--) {
+    for (var prop in arguments[i]) {
+      target[prop] = arguments[i][prop];
     }
-  };
+  }
+  return target;
+};
 
-  Bacon.version = '0.7.65';
-
-  Exception = (typeof global !== "undefined" && global !== null ? global : this).Error;
-
-  nop = function() {};
-
-  latter = function(_, x) {
-    return x;
-  };
-
-  former = function(x, _) {
-    return x;
-  };
-
-  cloneArray = function(xs) {
-    return xs.slice(0);
-  };
-
-  assert = function(message, condition) {
-    if (!condition) {
-      throw new Exception(message);
+var inherit = function (child, parent) {
+  var hasProp = ({}).hasOwnProperty;
+  var ctor = function () {};
+  ctor.prototype = parent.prototype;
+  child.prototype = new ctor();
+  for (var key in parent) {
+    if (hasProp.call(parent, key)) {
+      child[key] = parent[key];
     }
-  };
+  }
+  return child;
+};
 
-  assertObservableIsProperty = function(x) {
-    if (x instanceof Observable && !(x instanceof Property)) {
-      throw new Exception("Observable is not a Property : " + x);
-    }
-  };
-
-  assertEventStream = function(event) {
-    if (!(event instanceof EventStream)) {
-      throw new Exception("not an EventStream : " + event);
-    }
-  };
-
-  assertObservable = function(event) {
-    if (!(event instanceof Observable)) {
-      throw new Exception("not an Observable : " + event);
-    }
-  };
-
-  assertFunction = function(f) {
-    return assert("not a function : " + f, _.isFunction(f));
-  };
-
-  isArray = function(xs) {
-    return xs instanceof Array;
-  };
-
-  isObservable = function(x) {
-    return x instanceof Observable;
-  };
-
-  assertArray = function(xs) {
-    if (!isArray(xs)) {
-      throw new Exception("not an array : " + xs);
-    }
-  };
-
-  assertNoArguments = function(args) {
-    return assert("no arguments supported", args.length === 0);
-  };
-
-  assertString = function(x) {
-    if (typeof x !== "string") {
-      throw new Exception("not a string : " + x);
-    }
-  };
-
-  _ = {
-    indexOf: Array.prototype.indexOf ? function(xs, x) {
-      return xs.indexOf(x);
-    } : function(xs, x) {
-      var i, j, len1, y;
-      for (i = j = 0, len1 = xs.length; j < len1; i = ++j) {
-        y = xs[i];
-        if (x === y) {
-          return i;
-        }
-      }
-      return -1;
-    },
-    indexWhere: function(xs, f) {
-      var i, j, len1, y;
-      for (i = j = 0, len1 = xs.length; j < len1; i = ++j) {
-        y = xs[i];
-        if (f(y)) {
-          return i;
-        }
-      }
-      return -1;
-    },
-    head: function(xs) {
-      return xs[0];
-    },
-    always: function(x) {
-      return function() {
-        return x;
+var _ = {
+  indexOf: (function () {
+    if (Array.prototype.indexOf) {
+      return function (xs, x) {
+        return xs.indexOf(x);
       };
-    },
-    negate: function(f) {
-      return function(x) {
-        return !f(x);
-      };
-    },
-    empty: function(xs) {
-      return xs.length === 0;
-    },
-    tail: function(xs) {
-      return xs.slice(1, xs.length);
-    },
-    filter: function(f, xs) {
-      var filtered, j, len1, x;
-      filtered = [];
-      for (j = 0, len1 = xs.length; j < len1; j++) {
-        x = xs[j];
-        if (f(x)) {
-          filtered.push(x);
+    } else {
+      return function (xs, x) {
+        for (var i = 0, y; i < xs.length; i++) {
+          y = xs[i];
+          if (x === y) {
+            return i;
+          }
         }
+        return -1;
+      };
+    }
+  })(),
+  indexWhere: function (xs, f) {
+    for (var i = 0, y; i < xs.length; i++) {
+      y = xs[i];
+      if (f(y)) {
+        return i;
       }
-      return filtered;
-    },
-    map: function(f, xs) {
-      var j, len1, results, x;
-      results = [];
-      for (j = 0, len1 = xs.length; j < len1; j++) {
-        x = xs[j];
-        results.push(f(x));
+    }
+    return -1;
+  },
+  head: function (xs) {
+    return xs[0];
+  },
+  always: function (x) {
+    return function () {
+      return x;
+    };
+  },
+  negate: function (f) {
+    return function (x) {
+      return !f(x);
+    };
+  },
+  empty: function (xs) {
+    return xs.length === 0;
+  },
+  tail: function (xs) {
+    return xs.slice(1, xs.length);
+  },
+  filter: function (f, xs) {
+    var filtered = [];
+    for (var i = 0, x; i < xs.length; i++) {
+      x = xs[i];
+      if (f(x)) {
+        filtered.push(x);
       }
-      return results;
-    },
-    each: function(xs, f) {
-      var key, value;
-      for (key in xs) {
-        if (!hasProp.call(xs, key)) continue;
-        value = xs[key];
+    }
+    return filtered;
+  },
+  map: function (f, xs) {
+    return (function () {
+      var result = [];
+      for (var i = 0, x; i < xs.length; i++) {
+        x = xs[i];
+        result.push(f(x));
+      }
+      return result;
+    })();
+  },
+  each: function (xs, f) {
+    for (var key in xs) {
+      if (Object.prototype.hasOwnProperty.call(xs, key)) {
+        var value = xs[key];
         f(key, value);
       }
-      return void 0;
-    },
-    toArray: function(xs) {
-      if (isArray(xs)) {
-        return xs;
+    }
+  },
+  toArray: function (xs) {
+    return isArray(xs) ? xs : [xs];
+  },
+  contains: function (xs, x) {
+    return _.indexOf(xs, x) !== -1;
+  },
+  id: function (x) {
+    return x;
+  },
+  last: function (xs) {
+    return xs[xs.length - 1];
+  },
+  all: function (xs) {
+    var f = arguments.length <= 1 || arguments[1] === undefined ? _.id : arguments[1];
+
+    for (var i = 0, x; i < xs.length; i++) {
+      x = xs[i];
+      if (!f(x)) {
+        return false;
+      }
+    }
+    return true;
+  },
+  any: function (xs) {
+    var f = arguments.length <= 1 || arguments[1] === undefined ? _.id : arguments[1];
+
+    for (var i = 0, x; i < xs.length; i++) {
+      x = xs[i];
+      if (f(x)) {
+        return true;
+      }
+    }
+    return false;
+  },
+  without: function (x, xs) {
+    return _.filter(function (y) {
+      return y !== x;
+    }, xs);
+  },
+  remove: function (x, xs) {
+    var i = _.indexOf(xs, x);
+    if (i >= 0) {
+      return xs.splice(i, 1);
+    }
+  },
+  fold: function (xs, seed, f) {
+    for (var i = 0, x; i < xs.length; i++) {
+      x = xs[i];
+      seed = f(seed, x);
+    }
+    return seed;
+  },
+  flatMap: function (f, xs) {
+    return _.fold(xs, [], function (ys, x) {
+      return ys.concat(f(x));
+    });
+  },
+  cached: function (f) {
+    var value = None;
+    return function () {
+      if (typeof value !== "undefined" && value !== null ? value._isNone : undefined) {
+        value = f();
+        f = undefined;
+      }
+      return value;
+    };
+  },
+  bind: function (fn, me) {
+    return function () {
+      return fn.apply(me, arguments);
+    };
+  },
+  isFunction: function (f) {
+    return typeof f === "function";
+  },
+  toString: function (obj) {
+    var internals, key, value;
+    var hasProp = ({}).hasOwnProperty;
+    try {
+      recursionDepth++;
+      if (obj == null) {
+        return "undefined";
+      } else if (_.isFunction(obj)) {
+        return "function";
+      } else if (isArray(obj)) {
+        if (recursionDepth > 5) {
+          return "[..]";
+        }
+        return "[" + _.map(_.toString, obj).toString() + "]";
+      } else if ((obj != null ? obj.toString : void 0) != null && obj.toString !== Object.prototype.toString) {
+        return obj.toString();
+      } else if (typeof obj === "object") {
+        if (recursionDepth > 5) {
+          return "{..}";
+        }
+        internals = (function () {
+          var results = [];
+          for (key in obj) {
+            if (!hasProp.call(obj, key)) continue;
+            value = (function () {
+              var error;
+              try {
+                return obj[key];
+              } catch (error) {
+                return error;
+              }
+            })();
+            results.push(_.toString(key) + ":" + _.toString(value));
+          }
+          return results;
+        })();
+        return "{" + internals + "}";
       } else {
-        return [xs];
+        return obj;
       }
-    },
-    contains: function(xs, x) {
-      return _.indexOf(xs, x) !== -1;
-    },
-    id: function(x) {
-      return x;
-    },
-    last: function(xs) {
-      return xs[xs.length - 1];
-    },
-    all: function(xs, f) {
-      var j, len1, x;
-      if (f == null) {
-        f = _.id;
+    } finally {
+      recursionDepth--;
+    }
+  }
+};
+
+var recursionDepth = 0;
+
+Bacon._ = _;
+
+var UpdateBarrier = Bacon.UpdateBarrier = (function () {
+  var rootEvent;
+  var waiterObs = [];
+  var waiters = {};
+  var afters = [];
+  var aftersIndex = 0;
+  var flushed = {};
+
+  var afterTransaction = function (f) {
+    if (rootEvent) {
+      return afters.push(f);
+    } else {
+      return f();
+    }
+  };
+
+  var whenDoneWith = function (obs, f) {
+    if (rootEvent) {
+      var obsWaiters = waiters[obs.id];
+      if (!(typeof obsWaiters !== "undefined" && obsWaiters !== null)) {
+        obsWaiters = waiters[obs.id] = [f];
+        return waiterObs.push(obs);
+      } else {
+        return obsWaiters.push(f);
       }
-      for (j = 0, len1 = xs.length; j < len1; j++) {
-        x = xs[j];
-        if (!f(x)) {
+    } else {
+      return f();
+    }
+  };
+
+  var flush = function () {
+    while (waiterObs.length > 0) {
+      flushWaiters(0, true);
+    }
+    flushed = {};
+  };
+
+  var flushWaiters = function (index, deps) {
+    var obs = waiterObs[index];
+    var obsId = obs.id;
+    var obsWaiters = waiters[obsId];
+    waiterObs.splice(index, 1);
+    delete waiters[obsId];
+    if (deps && waiterObs.length > 0) {
+      flushDepsOf(obs);
+    }
+    for (var i = 0, f; i < obsWaiters.length; i++) {
+      f = obsWaiters[i];
+      f();
+    }
+  };
+
+  var flushDepsOf = function (obs) {
+    if (flushed[obs.id]) return;
+    var deps = obs.internalDeps();
+    for (var i = 0, dep; i < deps.length; i++) {
+      dep = deps[i];
+      flushDepsOf(dep);
+      if (waiters[dep.id]) {
+        var index = _.indexOf(waiterObs, dep);
+        flushWaiters(index, false);
+      }
+    }
+    flushed[obs.id] = true;
+  };
+
+  var inTransaction = function (event, context, f, args) {
+    if (rootEvent) {
+      return f.apply(context, args);
+    } else {
+      rootEvent = event;
+      try {
+        var result = f.apply(context, args);
+
+        flush();
+      } finally {
+        rootEvent = undefined;
+        while (aftersIndex < afters.length) {
+          var after = afters[aftersIndex];
+          aftersIndex++;
+          after();
+        }
+        aftersIndex = 0;
+        afters = [];
+      }
+      return result;
+    }
+  };
+
+  var currentEventId = function () {
+    return rootEvent ? rootEvent.id : undefined;
+  };
+
+  var wrappedSubscribe = function (obs, sink) {
+    var unsubd = false;
+    var shouldUnsub = false;
+    var doUnsub = function () {
+      shouldUnsub = true;
+      return shouldUnsub;
+    };
+    var unsub = function () {
+      unsubd = true;
+      return doUnsub();
+    };
+    doUnsub = obs.dispatcher.subscribe(function (event) {
+      return afterTransaction(function () {
+        if (!unsubd) {
+          var reply = sink(event);
+          if (reply === Bacon.noMore) {
+            return unsub();
+          }
+        }
+      });
+    });
+    if (shouldUnsub) {
+      doUnsub();
+    }
+    return unsub;
+  };
+
+  var hasWaiters = function () {
+    return waiterObs.length > 0;
+  };
+
+  return { whenDoneWith: whenDoneWith, hasWaiters: hasWaiters, inTransaction: inTransaction, currentEventId: currentEventId, wrappedSubscribe: wrappedSubscribe, afterTransaction: afterTransaction };
+})();
+
+function Source(obs, sync) {
+  var lazy = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
+  this.obs = obs;
+  this.sync = sync;
+  this.lazy = lazy;
+  this.queue = [];
+}
+
+extend(Source.prototype, {
+  _isSource: true,
+
+  subscribe: function (sink) {
+    return this.obs.dispatcher.subscribe(sink);
+  },
+  toString: function () {
+    return this.obs.toString();
+  },
+  markEnded: function () {
+    this.ended = true;
+    return true;
+  },
+  consume: function () {
+    if (this.lazy) {
+      return { value: _.always(this.queue[0]) };
+    } else {
+      return this.queue[0];
+    }
+  },
+  push: function (x) {
+    this.queue = [x];
+    return [x];
+  },
+  mayHave: function () {
+    return true;
+  },
+  hasAtLeast: function () {
+    return this.queue.length;
+  },
+  flatten: true
+});
+
+function ConsumingSource() {
+  Source.apply(this, arguments);
+}
+
+inherit(ConsumingSource, Source);
+extend(ConsumingSource.prototype, {
+  consume: function () {
+    return this.queue.shift();
+  },
+  push: function (x) {
+    return this.queue.push(x);
+  },
+  mayHave: function (c) {
+    return !this.ended || this.queue.length >= c;
+  },
+  hasAtLeast: function (c) {
+    return this.queue.length >= c;
+  },
+  flatten: false
+});
+
+function BufferingSource(obs) {
+  Source.call(this, obs, true);
+}
+
+inherit(BufferingSource, Source);
+extend(BufferingSource.prototype, {
+  consume: function () {
+    var values = this.queue;
+    this.queue = [];
+    return {
+      value: function () {
+        return values;
+      }
+    };
+  },
+  push: function (x) {
+    return this.queue.push(x.value());
+  },
+  hasAtLeast: function () {
+    return true;
+  }
+});
+
+Source.isTrigger = function (s) {
+  if (s != null ? s._isSource : void 0) {
+    return s.sync;
+  } else {
+    return s != null ? s._isEventStream : void 0;
+  }
+};
+
+Source.fromObservable = function (s) {
+  if (s != null ? s._isSource : void 0) {
+    return s;
+  } else if (s != null ? s._isProperty : void 0) {
+    return new Source(s, false);
+  } else {
+    return new ConsumingSource(s, true);
+  }
+};
+
+function Desc(context, method, args) {
+  this.context = context;
+  this.method = method;
+  this.args = args;
+}
+
+extend(Desc.prototype, {
+  _isDesc: true,
+  deps: function () {
+    if (!this.cached) {
+      this.cached = findDeps([this.context].concat(this.args));
+    }
+    return this.cached;
+  },
+  toString: function () {
+    return _.toString(this.context) + "." + _.toString(this.method) + "(" + _.map(_.toString, this.args) + ")";
+  }
+});
+
+var describe = function (context, method) {
+  var ref = context || method;
+  if (ref && ref._isDesc) {
+    return context || method;
+  } else {
+    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      args[_key - 2] = arguments[_key];
+    }
+
+    return new Desc(context, method, args);
+  }
+};
+
+var withDesc = function (desc, obs) {
+  obs.desc = desc;
+  return obs;
+};
+
+var findDeps = function (x) {
+  if (isArray(x)) {
+    return _.flatMap(findDeps, x);
+  } else if (isObservable(x)) {
+    return [x];
+  } else if (typeof x !== "undefined" && x !== null ? x._isSource : undefined) {
+    return [x.obs];
+  } else {
+    return [];
+  }
+};
+
+Bacon.Desc = Desc;
+Bacon.Desc.empty = new Bacon.Desc("", "", []);
+
+var withMethodCallSupport = function (wrapped) {
+  return function (f) {
+    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    if (typeof f === "object" && args.length) {
+      var context = f;
+      var methodName = args[0];
+      f = function () {
+        return context[methodName].apply(context, arguments);
+      };
+      args = args.slice(1);
+    }
+    return wrapped.apply(undefined, [f].concat(args));
+  };
+};
+
+var makeFunctionArgs = function (args) {
+  args = Array.prototype.slice.call(args);
+  return makeFunction_.apply(undefined, args);
+};
+
+var partiallyApplied = function (f, applied) {
+  return function () {
+    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      args[_key3] = arguments[_key3];
+    }
+
+    return f.apply(undefined, applied.concat(args));
+  };
+};
+
+var toSimpleExtractor = function (args) {
+  return function (key) {
+    return function (value) {
+      if (!(typeof value !== "undefined" && value !== null)) {
+        return;
+      } else {
+        var fieldValue = value[key];
+        if (_.isFunction(fieldValue)) {
+          return fieldValue.apply(value, args);
+        } else {
+          return fieldValue;
+        }
+      }
+    };
+  };
+};
+
+var toFieldExtractor = function (f, args) {
+  var parts = f.slice(1).split(".");
+  var partFuncs = _.map(toSimpleExtractor(args), parts);
+  return function (value) {
+    for (var i = 0, f; i < partFuncs.length; i++) {
+      f = partFuncs[i];
+      value = f(value);
+    }
+    return value;
+  };
+};
+
+var isFieldKey = function (f) {
+  return typeof f === "string" && f.length > 1 && f.charAt(0) === ".";
+};
+
+var makeFunction_ = withMethodCallSupport(function (f) {
+  for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+    args[_key4 - 1] = arguments[_key4];
+  }
+
+  if (_.isFunction(f)) {
+    if (args.length) {
+      return partiallyApplied(f, args);
+    } else {
+      return f;
+    }
+  } else if (isFieldKey(f)) {
+    return toFieldExtractor(f, args);
+  } else {
+    return _.always(f);
+  }
+});
+
+var makeFunction = function (f, args) {
+  return makeFunction_.apply(undefined, [f].concat(args));
+};
+
+var convertArgsToFunction = function (obs, f, args, method) {
+  if (typeof f !== "undefined" && f !== null ? f._isProperty : undefined) {
+    var sampled = f.sampledBy(obs, function (p, s) {
+      return [p, s];
+    });
+    return method.call(sampled, function (_ref) {
+      var p = _ref[0];
+      var s = _ref[1];
+      return p;
+    }).map(function (_ref2) {
+      var p = _ref2[0];
+      var s = _ref2[1];
+      return s;
+    });
+  } else {
+    f = makeFunction(f, args);
+    return method.call(obs, f);
+  }
+};
+
+var toCombinator = function (f) {
+  if (_.isFunction(f)) {
+    return f;
+  } else if (isFieldKey(f)) {
+    var key = toFieldKey(f);
+    return function (left, right) {
+      return left[key](right);
+    };
+  } else {
+    throw new Exception("not a function or a field key: " + f);
+  }
+};
+
+var toFieldKey = function (f) {
+  return f.slice(1);
+};
+
+function Some(value) {
+  this.value = value;
+}
+
+extend(Some.prototype, {
+  _isSome: true,
+  getOrElse: function () {
+    return this.value;
+  },
+  get: function () {
+    return this.value;
+  },
+  filter: function (f) {
+    if (f(this.value)) {
+      return new Some(this.value);
+    } else {
+      return None;
+    }
+  },
+  map: function (f) {
+    return new Some(f(this.value));
+  },
+  forEach: function (f) {
+    return f(this.value);
+  },
+  isDefined: true,
+  toArray: function () {
+    return [this.value];
+  },
+  inspect: function () {
+    return "Some(" + this.value + ")";
+  },
+  toString: function () {
+    return this.inspect();
+  }
+});
+
+var None = {
+  _isNone: true,
+  getOrElse: function (value) {
+    return value;
+  },
+  filter: function () {
+    return None;
+  },
+  map: function () {
+    return None;
+  },
+  forEach: function () {},
+  isDefined: false,
+  toArray: function () {
+    return [];
+  },
+  inspect: function () {
+    return "None";
+  },
+  toString: function () {
+    return this.inspect();
+  }
+};
+
+var toOption = function (v) {
+  if ((typeof v !== "undefined" && v !== null ? v._isSome : undefined) || (typeof v !== "undefined" && v !== null ? v._isNone : undefined)) {
+    return v;
+  } else {
+    return new Some(v);
+  }
+};
+
+Bacon.noMore = "<no-more>";
+Bacon.more = "<more>";
+
+var eventIdCounter = 0;
+
+function Event() {
+  this.id = ++eventIdCounter;
+}
+
+Event.prototype._isEvent = true;
+Event.prototype.isEvent = function () {
+  return true;
+};
+Event.prototype.isEnd = function () {
+  return false;
+};
+Event.prototype.isInitial = function () {
+  return false;
+};
+Event.prototype.isNext = function () {
+  return false;
+};
+Event.prototype.isError = function () {
+  return false;
+};
+Event.prototype.hasValue = function () {
+  return false;
+};
+Event.prototype.filter = function () {
+  return true;
+};
+Event.prototype.inspect = function () {
+  return this.toString();
+};
+Event.prototype.log = function () {
+  return this.toString();
+};
+
+function Next(valueF, eager) {
+  if (!(this instanceof Next)) {
+    return new Next(valueF, eager);
+  }
+
+  Event.call(this);
+
+  if (!eager && _.isFunction(valueF) || (valueF != null ? valueF._isNext : void 0)) {
+    this.valueF = valueF;
+    this.valueInternal = void 0;
+  } else {
+    this.valueF = void 0;
+    this.valueInternal = valueF;
+  }
+}
+
+inherit(Next, Event);
+
+Next.prototype.isNext = function () {
+  return true;
+};
+Next.prototype.hasValue = function () {
+  return true;
+};
+Next.prototype.value = function () {
+  var ref;
+  if ((ref = this.valueF) != null ? ref._isNext : void 0) {
+    this.valueInternal = this.valueF.value();
+    this.valueF = void 0;
+  } else if (this.valueF) {
+    this.valueInternal = this.valueF();
+    this.valueF = void 0;
+  }
+  return this.valueInternal;
+};
+
+Next.prototype.fmap = function (f) {
+  var event, value;
+  if (this.valueInternal) {
+    value = this.valueInternal;
+    return this.apply(function () {
+      return f(value);
+    });
+  } else {
+    event = this;
+    return this.apply(function () {
+      return f(event.value());
+    });
+  }
+};
+
+Next.prototype.apply = function (value) {
+  return new Next(value);
+};
+Next.prototype.filter = function (f) {
+  return f(this.value());
+};
+Next.prototype.toString = function () {
+  return _.toString(this.value());
+};
+Next.prototype.log = function () {
+  return this.value();
+};
+Next.prototype._isNext = true;
+
+function Initial(valueF, eager) {
+  if (!(this instanceof Initial)) {
+    return new Initial(valueF, eager);
+  }
+  Next.call(this, valueF, eager);
+}
+
+inherit(Initial, Next);
+Initial.prototype._isInitial = true;
+Initial.prototype.isInitial = function () {
+  return true;
+};
+Initial.prototype.isNext = function () {
+  return false;
+};
+Initial.prototype.apply = function (value) {
+  return new Initial(value);
+};
+Initial.prototype.toNext = function () {
+  return new Next(this);
+};
+
+function End() {
+  if (!(this instanceof End)) {
+    return new End();
+  }
+  Event.call(this);
+}
+
+inherit(End, Event);
+End.prototype.isEnd = function () {
+  return true;
+};
+End.prototype.fmap = function () {
+  return this;
+};
+End.prototype.apply = function () {
+  return this;
+};
+End.prototype.toString = function () {
+  return "<end>";
+};
+
+function Error(error) {
+  if (!(this instanceof Error)) {
+    return new Error(error);
+  }
+  this.error = error;
+  Event.call(this);
+}
+
+inherit(Error, Event);
+Error.prototype.isError = function () {
+  return true;
+};
+Error.prototype.fmap = function () {
+  return this;
+};
+Error.prototype.apply = function () {
+  return this;
+};
+Error.prototype.toString = function () {
+  return "<error> " + _.toString(this.error);
+};
+
+Bacon.Event = Event;
+Bacon.Initial = Initial;
+Bacon.Next = Next;
+Bacon.End = End;
+Bacon.Error = Error;
+
+var initialEvent = function (value) {
+  return new Initial(value, true);
+};
+var nextEvent = function (value) {
+  return new Next(value, true);
+};
+var endEvent = function () {
+  return new End();
+};
+var toEvent = function (x) {
+  if (x && x._isEvent) {
+    return x;
+  } else {
+    return nextEvent(x);
+  }
+};
+
+var idCounter = 0;
+var registerObs = function () {};
+
+function Observable(desc) {
+  this.desc = desc;
+  this.id = ++idCounter;
+  this.initialDesc = this.desc;
+}
+
+extend(Observable.prototype, {
+  _isObservable: true,
+
+  subscribe: function (sink) {
+    return UpdateBarrier.wrappedSubscribe(this, sink);
+  },
+
+  subscribeInternal: function (sink) {
+    return this.dispatcher.subscribe(sink);
+  },
+
+  onValue: function () {
+    var f = makeFunctionArgs(arguments);
+    return this.subscribe(function (event) {
+      if (event.hasValue()) {
+        return f(event.value());
+      }
+    });
+  },
+
+  onValues: function (f) {
+    return this.onValue(function (args) {
+      return f.apply(undefined, args);
+    });
+  },
+
+  onError: function () {
+    var f = makeFunctionArgs(arguments);
+    return this.subscribe(function (event) {
+      if (event.isError()) {
+        return f(event.error);
+      }
+    });
+  },
+
+  onEnd: function () {
+    var f = makeFunctionArgs(arguments);
+    return this.subscribe(function (event) {
+      if (event.isEnd()) {
+        return f();
+      }
+    });
+  },
+
+  name: function (name) {
+    this._name = name;
+    return this;
+  },
+
+  withDescription: function () {
+    this.desc = describe.apply(undefined, arguments);
+    return this;
+  },
+
+  toString: function () {
+    if (this._name) {
+      return this._name;
+    } else {
+      return this.desc.toString();
+    }
+  },
+
+  deps: function () {
+    return this.desc.deps();
+  },
+
+  internalDeps: function () {
+    return this.initialDesc.deps();
+  }
+});
+
+Observable.prototype.assign = Observable.prototype.onValue;
+Observable.prototype.forEach = Observable.prototype.onValue;
+Observable.prototype.inspect = Observable.prototype.toString;
+
+Bacon.Observable = Observable;
+
+function CompositeUnsubscribe() {
+  var ss = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+  this.unsubscribe = _.bind(this.unsubscribe, this);
+  this.unsubscribed = false;
+  this.subscriptions = [];
+  this.starting = [];
+  for (var i = 0, s; i < ss.length; i++) {
+    s = ss[i];
+    this.add(s);
+  }
+}
+
+extend(CompositeUnsubscribe.prototype, {
+  add: function (subscription) {
+    var _this2 = this;
+
+    if (this.unsubscribed) {
+      return;
+    }
+    var ended = false;
+    var unsub = nop;
+    this.starting.push(subscription);
+    var unsubMe = function () {
+      if (_this2.unsubscribed) {
+        return;
+      }
+      ended = true;
+      _this2.remove(unsub);
+      return _.remove(subscription, _this2.starting);
+    };
+    unsub = subscription(this.unsubscribe, unsubMe);
+    if (!(this.unsubscribed || ended)) {
+      this.subscriptions.push(unsub);
+    } else {
+      unsub();
+    }
+    _.remove(subscription, this.starting);
+    return unsub;
+  },
+
+  remove: function (unsub) {
+    if (this.unsubscribed) {
+      return;
+    }
+    if (_.remove(unsub, this.subscriptions) !== undefined) {
+      return unsub();
+    }
+  },
+
+  unsubscribe: function () {
+    if (this.unsubscribed) {
+      return;
+    }
+    this.unsubscribed = true;
+    var iterable = this.subscriptions;
+    for (var i = 0; i < iterable.length; i++) {
+      iterable[i]();
+    }
+    this.subscriptions = [];
+    this.starting = [];
+    return [];
+  },
+
+  count: function () {
+    if (this.unsubscribed) {
+      return 0;
+    }
+    return this.subscriptions.length + this.starting.length;
+  },
+
+  empty: function () {
+    return this.count() === 0;
+  }
+});
+
+Bacon.CompositeUnsubscribe = CompositeUnsubscribe;
+
+function Dispatcher(_subscribe, _handleEvent) {
+  this._subscribe = _subscribe;
+  this._handleEvent = _handleEvent;
+  this.subscribe = _.bind(this.subscribe, this);
+  this.handleEvent = _.bind(this.handleEvent, this);
+  this.pushing = false;
+  this.ended = false;
+  this.prevError = undefined;
+  this.unsubSrc = undefined;
+  this.subscriptions = [];
+  this.queue = [];
+}
+
+Dispatcher.prototype.hasSubscribers = function () {
+  return this.subscriptions.length > 0;
+};
+
+Dispatcher.prototype.removeSub = function (subscription) {
+  this.subscriptions = _.without(subscription, this.subscriptions);
+  return this.subscriptions;
+};
+
+Dispatcher.prototype.push = function (event) {
+  if (event.isEnd()) {
+    this.ended = true;
+  }
+  return UpdateBarrier.inTransaction(event, this, this.pushIt, [event]);
+};
+
+Dispatcher.prototype.pushToSubscriptions = function (event) {
+  try {
+    var tmp = this.subscriptions;
+    var len = tmp.length;
+    for (var i = 0; i < len; i++) {
+      var sub = tmp[i];
+      var reply = sub.sink(event);
+      if (reply === Bacon.noMore || event.isEnd()) {
+        this.removeSub(sub);
+      }
+    }
+    return true;
+  } catch (error) {
+    this.pushing = false;
+    this.queue = [];
+    throw error;
+  }
+};
+
+Dispatcher.prototype.pushIt = function (event) {
+  if (!this.pushing) {
+    if (event === this.prevError) {
+      return;
+    }
+    if (event.isError()) {
+      this.prevError = event;
+    }
+    this.pushing = true;
+    this.pushToSubscriptions(event);
+    this.pushing = false;
+    while (this.queue.length) {
+      event = this.queue.shift();
+      this.push(event);
+    }
+    if (this.hasSubscribers()) {
+      return Bacon.more;
+    } else {
+      this.unsubscribeFromSource();
+      return Bacon.noMore;
+    }
+  } else {
+    this.queue.push(event);
+    return Bacon.more;
+  }
+};
+
+Dispatcher.prototype.handleEvent = function (event) {
+  if (this._handleEvent) {
+    return this._handleEvent(event);
+  } else {
+    return this.push(event);
+  }
+};
+
+Dispatcher.prototype.unsubscribeFromSource = function () {
+  if (this.unsubSrc) {
+    this.unsubSrc();
+  }
+  this.unsubSrc = undefined;
+};
+
+Dispatcher.prototype.subscribe = function (sink) {
+  var subscription;
+  if (this.ended) {
+    sink(endEvent());
+    return nop;
+  } else {
+    assertFunction(sink);
+    subscription = {
+      sink: sink
+    };
+    this.subscriptions.push(subscription);
+    if (this.subscriptions.length === 1) {
+      this.unsubSrc = this._subscribe(this.handleEvent);
+      assertFunction(this.unsubSrc);
+    }
+    return (function (_this) {
+      return function () {
+        _this.removeSub(subscription);
+        if (!_this.hasSubscribers()) {
+          return _this.unsubscribeFromSource();
+        }
+      };
+    })(this);
+  }
+};
+
+Bacon.Dispatcher = Dispatcher;
+
+function EventStream(desc, subscribe, handler) {
+  if (!(this instanceof EventStream)) {
+    return new EventStream(desc, subscribe, handler);
+  }
+  if (_.isFunction(desc)) {
+    handler = subscribe;
+    subscribe = desc;
+    desc = Desc.empty;
+  }
+  Observable.call(this, desc);
+  assertFunction(subscribe);
+  this.dispatcher = new Dispatcher(subscribe, handler);
+  registerObs(this);
+}
+
+inherit(EventStream, Observable);
+extend(EventStream.prototype, {
+  _isEventStream: true,
+
+  toProperty: function (initValue_) {
+    var initValue = arguments.length === 0 ? None : toOption(function () {
+      return initValue_;
+    });
+    var disp = this.dispatcher;
+    var desc = new Bacon.Desc(this, "toProperty", [initValue_]);
+    return new Property(desc, function (sink) {
+      var initSent = false;
+      var subbed = false;
+      var unsub = nop;
+      var reply = Bacon.more;
+      var sendInit = function () {
+        if (!initSent) {
+          return initValue.forEach(function (value) {
+            initSent = true;
+            reply = sink(new Initial(value));
+            if (reply === Bacon.noMore) {
+              unsub();
+              unsub = nop;
+              return nop;
+            }
+          });
+        }
+      };
+
+      unsub = disp.subscribe(function (event) {
+        if (event.hasValue()) {
+          if (event.isInitial() && !subbed) {
+            initValue = new Some(function () {
+              return event.value();
+            });
+            return Bacon.more;
+          } else {
+            if (!event.isInitial()) {
+              sendInit();
+            }
+            initSent = true;
+            initValue = new Some(event);
+            return sink(event);
+          }
+        } else {
+          if (event.isEnd()) {
+            reply = sendInit();
+          }
+          if (reply !== Bacon.noMore) {
+            return sink(event);
+          }
+        }
+      });
+      subbed = true;
+      sendInit();
+      return unsub;
+    });
+  },
+
+  toEventStream: function () {
+    return this;
+  },
+
+  withHandler: function (handler) {
+    return new EventStream(new Bacon.Desc(this, "withHandler", [handler]), this.dispatcher.subscribe, handler);
+  }
+});
+
+Bacon.EventStream = EventStream;
+
+Bacon.never = function () {
+  return new EventStream(describe(Bacon, "never"), function (sink) {
+    sink(endEvent());
+    return nop;
+  });
+};
+
+Bacon.when = function () {
+  if (arguments.length === 0) {
+    return Bacon.never();
+  }
+  var len = arguments.length;
+  var usage = "when: expecting arguments in the form (Observable+,function)+";
+
+  assert(usage, len % 2 === 0);
+  var sources = [];
+  var pats = [];
+  var i = 0;
+  var patterns = [];
+  while (i < len) {
+    patterns[i] = arguments[i];
+    patterns[i + 1] = arguments[i + 1];
+    var patSources = _.toArray(arguments[i]);
+    var f = constantToFunction(arguments[i + 1]);
+    var pat = { f: f, ixs: [] };
+    var triggerFound = false;
+    for (var j = 0, s; j < patSources.length; j++) {
+      s = patSources[j];
+      var index = _.indexOf(sources, s);
+      if (!triggerFound) {
+        triggerFound = Source.isTrigger(s);
+      }
+      if (index < 0) {
+        sources.push(s);
+        index = sources.length - 1;
+      }
+      for (var k = 0, ix; k < pat.ixs.length; k++) {
+        ix = pat.ixs[k];
+        if (ix.index === index) {
+          ix.count++;
+        }
+      }
+      pat.ixs.push({ index: index, count: 1 });
+    }
+
+    assert("At least one EventStream required", triggerFound || !patSources.length);
+
+    if (patSources.length > 0) {
+      pats.push(pat);
+    }
+    i = i + 2;
+  }
+
+  if (!sources.length) {
+    return Bacon.never();
+  }
+
+  sources = _.map(Source.fromObservable, sources);
+  var needsBarrier = _.any(sources, function (s) {
+    return s.flatten;
+  }) && containsDuplicateDeps(_.map(function (s) {
+    return s.obs;
+  }, sources));
+
+  var desc = new Bacon.Desc(Bacon, "when", patterns);
+  var resultStream = new EventStream(desc, function (sink) {
+    var triggers = [];
+    var ends = false;
+    var match = function (p) {
+      for (var i1 = 0, i; i1 < p.ixs.length; i1++) {
+        i = p.ixs[i1];
+        if (!sources[i.index].hasAtLeast(i.count)) {
           return false;
         }
       }
       return true;
-    },
-    any: function(xs, f) {
-      var j, len1, x;
-      if (f == null) {
-        f = _.id;
-      }
-      for (j = 0, len1 = xs.length; j < len1; j++) {
-        x = xs[j];
-        if (f(x)) {
+    };
+    var cannotSync = function (source) {
+      return !source.sync || source.ended;
+    };
+    var cannotMatch = function (p) {
+      for (var i1 = 0, i; i1 < p.ixs.length; i1++) {
+        i = p.ixs[i1];
+        if (!sources[i.index].mayHave(i.count)) {
           return true;
         }
       }
-      return false;
-    },
-    without: function(x, xs) {
-      return _.filter((function(y) {
-        return y !== x;
-      }), xs);
-    },
-    remove: function(x, xs) {
-      var i;
-      i = _.indexOf(xs, x);
-      if (i >= 0) {
-        return xs.splice(i, 1);
-      }
-    },
-    fold: function(xs, seed, f) {
-      var j, len1, x;
-      for (j = 0, len1 = xs.length; j < len1; j++) {
-        x = xs[j];
-        seed = f(seed, x);
-      }
-      return seed;
-    },
-    flatMap: function(f, xs) {
-      return _.fold(xs, [], (function(ys, x) {
-        return ys.concat(f(x));
-      }));
-    },
-    cached: function(f) {
-      var value;
-      value = None;
-      return function() {
-        if (value === None) {
-          value = f();
-          f = void 0;
-        }
-        return value;
-      };
-    },
-    isFunction: function(f) {
-      return typeof f === "function";
-    },
-    toString: function(obj) {
-      var ex, internals, key, value;
-      try {
-        recursionDepth++;
-        if (obj == null) {
-          return "undefined";
-        } else if (_.isFunction(obj)) {
-          return "function";
-        } else if (isArray(obj)) {
-          if (recursionDepth > 5) {
-            return "[..]";
-          }
-          return "[" + _.map(_.toString, obj).toString() + "]";
-        } else if (((obj != null ? obj.toString : void 0) != null) && obj.toString !== Object.prototype.toString) {
-          return obj.toString();
-        } else if (typeof obj === "object") {
-          if (recursionDepth > 5) {
-            return "{..}";
-          }
-          internals = (function() {
-            var results;
-            results = [];
-            for (key in obj) {
-              if (!hasProp.call(obj, key)) continue;
-              value = (function() {
-                try {
-                  return obj[key];
-                } catch (_error) {
-                  ex = _error;
-                  return ex;
+    };
+    var nonFlattened = function (trigger) {
+      return !trigger.source.flatten;
+    };
+    var part = function (source) {
+      return function (unsubAll) {
+        var flushLater = function () {
+          return UpdateBarrier.whenDoneWith(resultStream, flush);
+        };
+        var flushWhileTriggers = function () {
+          if (triggers.length > 0) {
+            var reply = Bacon.more;
+            var trigger = triggers.pop();
+            for (var i1 = 0, p; i1 < pats.length; i1++) {
+              p = pats[i1];
+              if (match(p)) {
+                var events = (function () {
+                  var result = [];
+                  for (var i2 = 0, i; i2 < p.ixs.length; i2++) {
+                    i = p.ixs[i2];
+                    result.push(sources[i.index].consume());
+                  }
+                  return result;
+                })();
+                reply = sink(trigger.e.apply(function () {
+                  var _p;
+
+                  var values = (function () {
+                    var result = [];
+                    for (var i2 = 0, event; i2 < events.length; i2++) {
+                      event = events[i2];
+                      result.push(event.value());
+                    }
+                    return result;
+                  })();
+
+                  return (_p = p).f.apply(_p, values);
+                }));
+                if (triggers.length) {
+                  triggers = _.filter(nonFlattened, triggers);
                 }
-              })();
-              results.push(_.toString(key) + ":" + _.toString(value));
+                if (reply === Bacon.noMore) {
+                  return reply;
+                } else {
+                  return flushWhileTriggers();
+                }
+              }
             }
-            return results;
-          })();
-          return "{" + internals + "}";
-        } else {
-          return obj;
-        }
-      } finally {
-        recursionDepth--;
-      }
-    }
-  };
-
-  recursionDepth = 0;
-
-  Bacon._ = _;
-
-  UpdateBarrier = Bacon.UpdateBarrier = (function() {
-    var afterTransaction, afters, aftersIndex, currentEventId, flush, flushDepsOf, flushWaiters, hasWaiters, inTransaction, rootEvent, waiterObs, waiters, whenDoneWith, wrappedSubscribe;
-    rootEvent = void 0;
-    waiterObs = [];
-    waiters = {};
-    afters = [];
-    aftersIndex = 0;
-    afterTransaction = function(f) {
-      if (rootEvent) {
-        return afters.push(f);
-      } else {
-        return f();
-      }
-    };
-    whenDoneWith = function(obs, f) {
-      var obsWaiters;
-      if (rootEvent) {
-        obsWaiters = waiters[obs.id];
-        if (obsWaiters == null) {
-          obsWaiters = waiters[obs.id] = [f];
-          return waiterObs.push(obs);
-        } else {
-          return obsWaiters.push(f);
-        }
-      } else {
-        return f();
-      }
-    };
-    flush = function() {
-      while (waiterObs.length > 0) {
-        flushWaiters(0);
-      }
-      return void 0;
-    };
-    flushWaiters = function(index) {
-      var f, j, len1, obs, obsId, obsWaiters;
-      obs = waiterObs[index];
-      obsId = obs.id;
-      obsWaiters = waiters[obsId];
-      waiterObs.splice(index, 1);
-      delete waiters[obsId];
-      flushDepsOf(obs);
-      for (j = 0, len1 = obsWaiters.length; j < len1; j++) {
-        f = obsWaiters[j];
-        f();
-      }
-      return void 0;
-    };
-    flushDepsOf = function(obs) {
-      var dep, deps, index, j, len1;
-      deps = obs.internalDeps();
-      for (j = 0, len1 = deps.length; j < len1; j++) {
-        dep = deps[j];
-        flushDepsOf(dep);
-        if (waiters[dep.id]) {
-          index = _.indexOf(waiterObs, dep);
-          flushWaiters(index);
-        }
-      }
-      return void 0;
-    };
-    inTransaction = function(event, context, f, args) {
-      var after, result;
-      if (rootEvent) {
-        return f.apply(context, args);
-      } else {
-        rootEvent = event;
-        try {
-          result = f.apply(context, args);
-          flush();
-        } finally {
-          rootEvent = void 0;
-          while (aftersIndex < afters.length) {
-            after = afters[aftersIndex];
-            aftersIndex++;
-            after();
-          }
-          aftersIndex = 0;
-          afters = [];
-        }
-        return result;
-      }
-    };
-    currentEventId = function() {
-      if (rootEvent) {
-        return rootEvent.id;
-      } else {
-        return void 0;
-      }
-    };
-    wrappedSubscribe = function(obs, sink) {
-      var doUnsub, shouldUnsub, unsub, unsubd;
-      unsubd = false;
-      shouldUnsub = false;
-      doUnsub = function() {
-        return shouldUnsub = true;
-      };
-      unsub = function() {
-        unsubd = true;
-        return doUnsub();
-      };
-      doUnsub = obs.dispatcher.subscribe(function(event) {
-        return afterTransaction(function() {
-          var reply;
-          if (!unsubd) {
-            reply = sink(event);
-            if (reply === Bacon.noMore) {
-              return unsub();
-            }
-          }
-        });
-      });
-      if (shouldUnsub) {
-        doUnsub();
-      }
-      return unsub;
-    };
-    hasWaiters = function() {
-      return waiterObs.length > 0;
-    };
-    return {
-      whenDoneWith: whenDoneWith,
-      hasWaiters: hasWaiters,
-      inTransaction: inTransaction,
-      currentEventId: currentEventId,
-      wrappedSubscribe: wrappedSubscribe,
-      afterTransaction: afterTransaction
-    };
-  })();
-
-  Source = (function() {
-    function Source(obs1, sync, lazy1) {
-      this.obs = obs1;
-      this.sync = sync;
-      this.lazy = lazy1 != null ? lazy1 : false;
-      this.queue = [];
-    }
-
-    Source.prototype.subscribe = function(sink) {
-      return this.obs.dispatcher.subscribe(sink);
-    };
-
-    Source.prototype.toString = function() {
-      return this.obs.toString();
-    };
-
-    Source.prototype.markEnded = function() {
-      return this.ended = true;
-    };
-
-    Source.prototype.consume = function() {
-      if (this.lazy) {
-        return {
-          value: _.always(this.queue[0])
-        };
-      } else {
-        return this.queue[0];
-      }
-    };
-
-    Source.prototype.push = function(x) {
-      return this.queue = [x];
-    };
-
-    Source.prototype.mayHave = function() {
-      return true;
-    };
-
-    Source.prototype.hasAtLeast = function() {
-      return this.queue.length;
-    };
-
-    Source.prototype.flatten = true;
-
-    return Source;
-
-  })();
-
-  ConsumingSource = (function(superClass) {
-    extend(ConsumingSource, superClass);
-
-    function ConsumingSource() {
-      return ConsumingSource.__super__.constructor.apply(this, arguments);
-    }
-
-    ConsumingSource.prototype.consume = function() {
-      return this.queue.shift();
-    };
-
-    ConsumingSource.prototype.push = function(x) {
-      return this.queue.push(x);
-    };
-
-    ConsumingSource.prototype.mayHave = function(c) {
-      return !this.ended || this.queue.length >= c;
-    };
-
-    ConsumingSource.prototype.hasAtLeast = function(c) {
-      return this.queue.length >= c;
-    };
-
-    ConsumingSource.prototype.flatten = false;
-
-    return ConsumingSource;
-
-  })(Source);
-
-  BufferingSource = (function(superClass) {
-    extend(BufferingSource, superClass);
-
-    function BufferingSource(obs) {
-      BufferingSource.__super__.constructor.call(this, obs, true);
-    }
-
-    BufferingSource.prototype.consume = function() {
-      var values;
-      values = this.queue;
-      this.queue = [];
-      return {
-        value: function() {
-          return values;
-        }
-      };
-    };
-
-    BufferingSource.prototype.push = function(x) {
-      return this.queue.push(x.value());
-    };
-
-    BufferingSource.prototype.hasAtLeast = function() {
-      return true;
-    };
-
-    return BufferingSource;
-
-  })(Source);
-
-  Source.isTrigger = function(s) {
-    if (s instanceof Source) {
-      return s.sync;
-    } else {
-      return s instanceof EventStream;
-    }
-  };
-
-  Source.fromObservable = function(s) {
-    if (s instanceof Source) {
-      return s;
-    } else if (s instanceof Property) {
-      return new Source(s, false);
-    } else {
-      return new ConsumingSource(s, true);
-    }
-  };
-
-  Desc = (function() {
-    function Desc(context1, method1, args1) {
-      this.context = context1;
-      this.method = method1;
-      this.args = args1;
-    }
-
-    Desc.prototype.deps = function() {
-      return this.cached || (this.cached = findDeps([this.context].concat(this.args)));
-    };
-
-    Desc.prototype.toString = function() {
-      return _.toString(this.context) + "." + _.toString(this.method) + "(" + _.map(_.toString, this.args) + ")";
-    };
-
-    return Desc;
-
-  })();
-
-  describe = function() {
-    var args, context, method;
-    context = arguments[0], method = arguments[1], args = 3 <= arguments.length ? slice.call(arguments, 2) : [];
-    if ((context || method) instanceof Desc) {
-      return context || method;
-    } else {
-      return new Desc(context, method, args);
-    }
-  };
-
-  withDesc = function(desc, obs) {
-    obs.desc = desc;
-    return obs;
-  };
-
-  findDeps = function(x) {
-    if (isArray(x)) {
-      return _.flatMap(findDeps, x);
-    } else if (isObservable(x)) {
-      return [x];
-    } else if (x instanceof Source) {
-      return [x.obs];
-    } else {
-      return [];
-    }
-  };
-
-  Bacon.Desc = Desc;
-
-  Bacon.Desc.empty = new Bacon.Desc("", "", []);
-
-  withMethodCallSupport = function(wrapped) {
-    return function() {
-      var args, context, f, methodName;
-      f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-      if (typeof f === "object" && args.length) {
-        context = f;
-        methodName = args[0];
-        f = function() {
-          return context[methodName].apply(context, arguments);
-        };
-        args = args.slice(1);
-      }
-      return wrapped.apply(null, [f].concat(slice.call(args)));
-    };
-  };
-
-  makeFunctionArgs = function(args) {
-    args = Array.prototype.slice.call(args);
-    return makeFunction_.apply(null, args);
-  };
-
-  partiallyApplied = function(f, applied) {
-    return function() {
-      var args;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      return f.apply(null, applied.concat(args));
-    };
-  };
-
-  toSimpleExtractor = function(args) {
-    return function(key) {
-      return function(value) {
-        var fieldValue;
-        if (value == null) {
-          return void 0;
-        } else {
-          fieldValue = value[key];
-          if (_.isFunction(fieldValue)) {
-            return fieldValue.apply(value, args);
           } else {
-            return fieldValue;
+            return Bacon.more;
           }
-        }
+        };
+        var flush = function () {
+          var reply = flushWhileTriggers();
+          if (ends) {
+            if (_.all(sources, cannotSync) || _.all(pats, cannotMatch)) {
+              reply = Bacon.noMore;
+              sink(endEvent());
+            }
+          }
+          if (reply === Bacon.noMore) {
+            unsubAll();
+          }
+
+          return reply;
+        };
+        return source.subscribe(function (e) {
+          if (e.isEnd()) {
+            ends = true;
+            source.markEnded();
+            flushLater();
+          } else if (e.isError()) {
+            var reply = sink(e);
+          } else {
+            source.push(e);
+            if (source.sync) {
+              triggers.push({ source: source, e: e });
+              if (needsBarrier || UpdateBarrier.hasWaiters()) {
+                flushLater();
+              } else {
+                flush();
+              }
+            }
+          }
+          if (reply === Bacon.noMore) {
+            unsubAll();
+          }
+          return reply || Bacon.more;
+        });
       };
     };
-  };
 
-  toFieldExtractor = function(f, args) {
-    var partFuncs, parts;
-    parts = f.slice(1).split(".");
-    partFuncs = _.map(toSimpleExtractor(args), parts);
-    return function(value) {
-      var j, len1;
-      for (j = 0, len1 = partFuncs.length; j < len1; j++) {
-        f = partFuncs[j];
-        value = f(value);
+    return new Bacon.CompositeUnsubscribe((function () {
+      var result = [];
+      for (var i1 = 0, s; i1 < sources.length; i1++) {
+        s = sources[i1];
+        result.push(part(s));
       }
-      return value;
-    };
-  };
-
-  isFieldKey = function(f) {
-    return (typeof f === "string") && f.length > 1 && f.charAt(0) === ".";
-  };
-
-  makeFunction_ = withMethodCallSupport(function() {
-    var args, f;
-    f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    if (_.isFunction(f)) {
-      if (args.length) {
-        return partiallyApplied(f, args);
-      } else {
-        return f;
-      }
-    } else if (isFieldKey(f)) {
-      return toFieldExtractor(f, args);
-    } else {
-      return _.always(f);
-    }
+      return result;
+    })()).unsubscribe;
   });
+  return resultStream;
+};
 
-  makeFunction = function(f, args) {
-    return makeFunction_.apply(null, [f].concat(slice.call(args)));
-  };
+var containsDuplicateDeps = function (observables) {
+  var state = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 
-  convertArgsToFunction = function(obs, f, args, method) {
-    var sampled;
-    if (f instanceof Property) {
-      sampled = f.sampledBy(obs, function(p, s) {
-        return [p, s];
-      });
-      return method.call(sampled, function(arg) {
-        var p, s;
-        p = arg[0], s = arg[1];
-        return p;
-      }).map(function(arg) {
-        var p, s;
-        p = arg[0], s = arg[1];
-        return s;
-      });
+  var checkObservable = function (obs) {
+    if (_.contains(state, obs)) {
+      return true;
     } else {
-      f = makeFunction(f, args);
-      return method.call(obs, f);
-    }
-  };
-
-  toCombinator = function(f) {
-    var key;
-    if (_.isFunction(f)) {
-      return f;
-    } else if (isFieldKey(f)) {
-      key = toFieldKey(f);
-      return function(left, right) {
-        return left[key](right);
-      };
-    } else {
-      throw new Exception("not a function or a field key: " + f);
-    }
-  };
-
-  toFieldKey = function(f) {
-    return f.slice(1);
-  };
-
-  Some = (function() {
-    function Some(value1) {
-      this.value = value1;
-    }
-
-    Some.prototype.getOrElse = function() {
-      return this.value;
-    };
-
-    Some.prototype.get = function() {
-      return this.value;
-    };
-
-    Some.prototype.filter = function(f) {
-      if (f(this.value)) {
-        return new Some(this.value);
+      var deps = obs.internalDeps();
+      if (deps.length) {
+        state.push(obs);
+        return _.any(deps, checkObservable);
       } else {
-        return None;
+        state.push(obs);
+        return false;
       }
-    };
+    }
+  };
 
-    Some.prototype.map = function(f) {
-      return new Some(f(this.value));
-    };
+  return _.any(observables, checkObservable);
+};
 
-    Some.prototype.forEach = function(f) {
-      return f(this.value);
-    };
+var constantToFunction = function (f) {
+  if (_.isFunction(f)) {
+    return f;
+  } else {
+    return _.always(f);
+  }
+};
 
-    Some.prototype.isDefined = true;
+Bacon.groupSimultaneous = function () {
+  for (var _len5 = arguments.length, streams = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    streams[_key5] = arguments[_key5];
+  }
 
-    Some.prototype.toArray = function() {
-      return [this.value];
-    };
-
-    Some.prototype.inspect = function() {
-      return "Some(" + this.value + ")";
-    };
-
-    Some.prototype.toString = function() {
-      return this.inspect();
-    };
-
-    return Some;
-
+  if (streams.length === 1 && isArray(streams[0])) {
+    streams = streams[0];
+  }
+  var sources = (function () {
+    var result = [];
+    for (var i = 0, s; i < streams.length; i++) {
+      s = streams[i];
+      result.push(new BufferingSource(s));
+    }
+    return result;
   })();
-
-  None = {
-    getOrElse: function(value) {
-      return value;
-    },
-    filter: function() {
-      return None;
-    },
-    map: function() {
-      return None;
-    },
-    forEach: function() {},
-    isDefined: false,
-    toArray: function() {
-      return [];
-    },
-    inspect: function() {
-      return "None";
-    },
-    toString: function() {
-      return this.inspect();
-    }
-  };
-
-  toOption = function(v) {
-    if (v instanceof Some || v === None) {
-      return v;
-    } else {
-      return new Some(v);
-    }
-  };
-
-  Bacon.noMore = ["<no-more>"];
-
-  Bacon.more = ["<more>"];
-
-  eventIdCounter = 0;
-
-  Event = (function() {
-    function Event() {
-      this.id = ++eventIdCounter;
+  return withDesc(new Bacon.Desc(Bacon, "groupSimultaneous", streams), Bacon.when(sources, function () {
+    for (var _len6 = arguments.length, xs = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+      xs[_key6] = arguments[_key6];
     }
 
-    Event.prototype.isEvent = function() {
-      return true;
-    };
+    return xs;
+  }));
+};
 
-    Event.prototype.isEnd = function() {
-      return false;
-    };
+function PropertyDispatcher(property, subscribe, handleEvent) {
+  Dispatcher.call(this, subscribe, handleEvent);
+  this.property = property;
+  this.subscribe = _.bind(this.subscribe, this);
+  this.current = None;
+  this.currentValueRootId = undefined;
+  this.propertyEnded = false;
+}
 
-    Event.prototype.isInitial = function() {
-      return false;
-    };
-
-    Event.prototype.isNext = function() {
-      return false;
-    };
-
-    Event.prototype.isError = function() {
-      return false;
-    };
-
-    Event.prototype.hasValue = function() {
-      return false;
-    };
-
-    Event.prototype.filter = function() {
-      return true;
-    };
-
-    Event.prototype.inspect = function() {
-      return this.toString();
-    };
-
-    Event.prototype.log = function() {
-      return this.toString();
-    };
-
-    return Event;
-
-  })();
-
-  Next = (function(superClass) {
-    extend(Next, superClass);
-
-    function Next(valueF, eager) {
-      Next.__super__.constructor.call(this);
-      if (!eager && _.isFunction(valueF) || valueF instanceof Next) {
-        this.valueF = valueF;
-        this.valueInternal = void 0;
-      } else {
-        this.valueF = void 0;
-        this.valueInternal = valueF;
-      }
+inherit(PropertyDispatcher, Dispatcher);
+extend(PropertyDispatcher.prototype, {
+  push: function (event) {
+    if (event.isEnd()) {
+      this.propertyEnded = true;
     }
-
-    Next.prototype.isNext = function() {
-      return true;
-    };
-
-    Next.prototype.hasValue = function() {
-      return true;
-    };
-
-    Next.prototype.value = function() {
-      if (this.valueF instanceof Next) {
-        this.valueInternal = this.valueF.value();
-        this.valueF = void 0;
-      } else if (this.valueF) {
-        this.valueInternal = this.valueF();
-        this.valueF = void 0;
-      }
-      return this.valueInternal;
-    };
-
-    Next.prototype.fmap = function(f) {
-      var event, value;
-      if (this.valueInternal) {
-        value = this.valueInternal;
-        return this.apply(function() {
-          return f(value);
-        });
-      } else {
-        event = this;
-        return this.apply(function() {
-          return f(event.value());
-        });
-      }
-    };
-
-    Next.prototype.apply = function(value) {
-      return new Next(value);
-    };
-
-    Next.prototype.filter = function(f) {
-      return f(this.value());
-    };
-
-    Next.prototype.toString = function() {
-      return _.toString(this.value());
-    };
-
-    Next.prototype.log = function() {
-      return this.value();
-    };
-
-    return Next;
-
-  })(Event);
-
-  Initial = (function(superClass) {
-    extend(Initial, superClass);
-
-    function Initial() {
-      return Initial.__super__.constructor.apply(this, arguments);
+    if (event.hasValue()) {
+      this.current = new Some(event);
+      this.currentValueRootId = UpdateBarrier.currentEventId();
     }
-
-    Initial.prototype.isInitial = function() {
-      return true;
-    };
-
-    Initial.prototype.isNext = function() {
-      return false;
-    };
-
-    Initial.prototype.apply = function(value) {
-      return new Initial(value);
-    };
-
-    Initial.prototype.toNext = function() {
-      return new Next(this);
-    };
-
-    return Initial;
-
-  })(Next);
-
-  End = (function(superClass) {
-    extend(End, superClass);
-
-    function End() {
-      return End.__super__.constructor.apply(this, arguments);
-    }
-
-    End.prototype.isEnd = function() {
-      return true;
-    };
-
-    End.prototype.fmap = function() {
-      return this;
-    };
-
-    End.prototype.apply = function() {
-      return this;
-    };
-
-    End.prototype.toString = function() {
-      return "<end>";
-    };
-
-    return End;
-
-  })(Event);
-
-  Error = (function(superClass) {
-    extend(Error, superClass);
-
-    function Error(error1) {
-      this.error = error1;
-    }
-
-    Error.prototype.isError = function() {
-      return true;
-    };
-
-    Error.prototype.fmap = function() {
-      return this;
-    };
-
-    Error.prototype.apply = function() {
-      return this;
-    };
-
-    Error.prototype.toString = function() {
-      return "<error> " + _.toString(this.error);
-    };
-
-    return Error;
-
-  })(Event);
-
-  Bacon.Event = Event;
-
-  Bacon.Initial = Initial;
-
-  Bacon.Next = Next;
-
-  Bacon.End = End;
-
-  Bacon.Error = Error;
-
-  initialEvent = function(value) {
-    return new Initial(value, true);
-  };
-
-  nextEvent = function(value) {
-    return new Next(value, true);
-  };
-
-  endEvent = function() {
-    return new End();
-  };
-
-  toEvent = function(x) {
-    if (x instanceof Event) {
-      return x;
-    } else {
-      return nextEvent(x);
-    }
-  };
-
-  idCounter = 0;
-
-  registerObs = function() {};
-
-  Observable = (function() {
-    function Observable(desc1) {
-      this.desc = desc1;
-      this.id = ++idCounter;
-      this.initialDesc = this.desc;
-    }
-
-    Observable.prototype.subscribe = function(sink) {
-      return UpdateBarrier.wrappedSubscribe(this, sink);
-    };
-
-    Observable.prototype.subscribeInternal = function(sink) {
-      return this.dispatcher.subscribe(sink);
-    };
-
-    Observable.prototype.onValue = function() {
-      var f;
-      f = makeFunctionArgs(arguments);
-      return this.subscribe(function(event) {
-        if (event.hasValue()) {
-          return f(event.value());
-        }
-      });
-    };
-
-    Observable.prototype.onValues = function(f) {
-      return this.onValue(function(args) {
-        return f.apply(null, args);
-      });
-    };
-
-    Observable.prototype.onError = function() {
-      var f;
-      f = makeFunctionArgs(arguments);
-      return this.subscribe(function(event) {
-        if (event.isError()) {
-          return f(event.error);
-        }
-      });
-    };
-
-    Observable.prototype.onEnd = function() {
-      var f;
-      f = makeFunctionArgs(arguments);
-      return this.subscribe(function(event) {
-        if (event.isEnd()) {
-          return f();
-        }
-      });
-    };
-
-    Observable.prototype.name = function(name) {
-      this._name = name;
-      return this;
-    };
-
-    Observable.prototype.withDescription = function() {
-      this.desc = describe.apply(null, arguments);
-      return this;
-    };
-
-    Observable.prototype.toString = function() {
-      if (this._name) {
-        return this._name;
-      } else {
-        return this.desc.toString();
-      }
-    };
-
-    Observable.prototype.internalDeps = function() {
-      return this.initialDesc.deps();
-    };
-
-    return Observable;
-
-  })();
-
-  Observable.prototype.assign = Observable.prototype.onValue;
-
-  Observable.prototype.forEach = Observable.prototype.onValue;
-
-  Observable.prototype.inspect = Observable.prototype.toString;
-
-  Bacon.Observable = Observable;
-
-  CompositeUnsubscribe = (function() {
-    function CompositeUnsubscribe(ss) {
-      var j, len1, s;
-      if (ss == null) {
-        ss = [];
-      }
-      this.unsubscribe = bind(this.unsubscribe, this);
-      this.unsubscribed = false;
-      this.subscriptions = [];
-      this.starting = [];
-      for (j = 0, len1 = ss.length; j < len1; j++) {
-        s = ss[j];
-        this.add(s);
-      }
-    }
-
-    CompositeUnsubscribe.prototype.add = function(subscription) {
-      var ended, unsub, unsubMe;
-      if (this.unsubscribed) {
-        return;
-      }
-      ended = false;
-      unsub = nop;
-      this.starting.push(subscription);
-      unsubMe = (function(_this) {
-        return function() {
-          if (_this.unsubscribed) {
-            return;
-          }
-          ended = true;
-          _this.remove(unsub);
-          return _.remove(subscription, _this.starting);
-        };
-      })(this);
-      unsub = subscription(this.unsubscribe, unsubMe);
-      if (!(this.unsubscribed || ended)) {
-        this.subscriptions.push(unsub);
-      } else {
-        unsub();
-      }
-      _.remove(subscription, this.starting);
-      return unsub;
-    };
-
-    CompositeUnsubscribe.prototype.remove = function(unsub) {
-      if (this.unsubscribed) {
-        return;
-      }
-      if ((_.remove(unsub, this.subscriptions)) !== void 0) {
-        return unsub();
-      }
-    };
-
-    CompositeUnsubscribe.prototype.unsubscribe = function() {
-      var j, len1, ref, s;
-      if (this.unsubscribed) {
-        return;
-      }
-      this.unsubscribed = true;
-      ref = this.subscriptions;
-      for (j = 0, len1 = ref.length; j < len1; j++) {
-        s = ref[j];
-        s();
-      }
-      this.subscriptions = [];
-      return this.starting = [];
-    };
-
-    CompositeUnsubscribe.prototype.count = function() {
-      if (this.unsubscribed) {
-        return 0;
-      }
-      return this.subscriptions.length + this.starting.length;
-    };
-
-    CompositeUnsubscribe.prototype.empty = function() {
-      return this.count() === 0;
-    };
-
-    return CompositeUnsubscribe;
-
-  })();
-
-  Bacon.CompositeUnsubscribe = CompositeUnsubscribe;
-
-  Dispatcher = (function() {
-    Dispatcher.prototype.pushing = false;
-
-    Dispatcher.prototype.ended = false;
-
-    Dispatcher.prototype.prevError = void 0;
-
-    Dispatcher.prototype.unsubSrc = void 0;
-
-    function Dispatcher(_subscribe, _handleEvent) {
-      this._subscribe = _subscribe;
-      this._handleEvent = _handleEvent;
-      this.subscribe = bind(this.subscribe, this);
-      this.handleEvent = bind(this.handleEvent, this);
-      this.subscriptions = [];
-      this.queue = [];
-    }
-
-    Dispatcher.prototype.hasSubscribers = function() {
-      return this.subscriptions.length > 0;
-    };
-
-    Dispatcher.prototype.removeSub = function(subscription) {
-      return this.subscriptions = _.without(subscription, this.subscriptions);
-    };
-
-    Dispatcher.prototype.push = function(event) {
-      if (event.isEnd()) {
-        this.ended = true;
-      }
-      return UpdateBarrier.inTransaction(event, this, this.pushIt, [event]);
-    };
-
-    Dispatcher.prototype.pushToSubscriptions = function(event) {
-      var e, j, len1, reply, sub, tmp;
-      try {
-        tmp = this.subscriptions;
-        for (j = 0, len1 = tmp.length; j < len1; j++) {
-          sub = tmp[j];
-          reply = sub.sink(event);
-          if (reply === Bacon.noMore || event.isEnd()) {
-            this.removeSub(sub);
-          }
-        }
-        return true;
-      } catch (_error) {
-        e = _error;
-        this.pushing = false;
-        this.queue = [];
-        throw e;
-      }
-    };
-
-    Dispatcher.prototype.pushIt = function(event) {
-      if (!this.pushing) {
-        if (event === this.prevError) {
-          return;
-        }
-        if (event.isError()) {
-          this.prevError = event;
-        }
-        this.pushing = true;
-        this.pushToSubscriptions(event);
-        this.pushing = false;
-        while (this.queue.length) {
-          event = this.queue.shift();
-          this.push(event);
-        }
-        if (this.hasSubscribers()) {
-          return Bacon.more;
-        } else {
-          this.unsubscribeFromSource();
-          return Bacon.noMore;
-        }
-      } else {
-        this.queue.push(event);
-        return Bacon.more;
-      }
-    };
-
-    Dispatcher.prototype.handleEvent = function(event) {
-      if (this._handleEvent) {
-        return this._handleEvent(event);
-      } else {
-        return this.push(event);
-      }
-    };
-
-    Dispatcher.prototype.unsubscribeFromSource = function() {
-      if (this.unsubSrc) {
-        this.unsubSrc();
-      }
-      return this.unsubSrc = void 0;
-    };
-
-    Dispatcher.prototype.subscribe = function(sink) {
-      var subscription;
-      if (this.ended) {
-        sink(endEvent());
-        return nop;
-      } else {
-        assertFunction(sink);
-        subscription = {
-          sink: sink
-        };
-        this.subscriptions.push(subscription);
-        if (this.subscriptions.length === 1) {
-          this.unsubSrc = this._subscribe(this.handleEvent);
-          assertFunction(this.unsubSrc);
-        }
-        return (function(_this) {
-          return function() {
-            _this.removeSub(subscription);
-            if (!_this.hasSubscribers()) {
-              return _this.unsubscribeFromSource();
-            }
-          };
-        })(this);
-      }
-    };
-
-    return Dispatcher;
-
-  })();
-
-  Bacon.Dispatcher = Dispatcher;
-
-  EventStream = (function(superClass) {
-    extend(EventStream, superClass);
-
-    function EventStream(desc, subscribe, handler) {
-      if (_.isFunction(desc)) {
-        handler = subscribe;
-        subscribe = desc;
-        desc = Desc.empty;
-      }
-      EventStream.__super__.constructor.call(this, desc);
-      assertFunction(subscribe);
-      this.dispatcher = new Dispatcher(subscribe, handler);
-      registerObs(this);
-    }
-
-    EventStream.prototype.toProperty = function(initValue_) {
-      var disp, initValue;
-      initValue = arguments.length === 0 ? None : toOption(function() {
-        return initValue_;
-      });
-      disp = this.dispatcher;
-      return new Property(new Bacon.Desc(this, "toProperty", [initValue_]), function(sink) {
-        var initSent, reply, sendInit, unsub;
-        initSent = false;
-        unsub = nop;
-        reply = Bacon.more;
-        sendInit = function() {
-          if (!initSent) {
-            return initValue.forEach(function(value) {
-              initSent = true;
-              reply = sink(new Initial(value));
-              if (reply === Bacon.noMore) {
-                unsub();
-                return unsub = nop;
-              }
-            });
-          }
-        };
-        unsub = disp.subscribe(function(event) {
-          if (event.hasValue()) {
-            if (initSent && event.isInitial()) {
-              return Bacon.more;
-            } else {
-              if (!event.isInitial()) {
-                sendInit();
-              }
-              initSent = true;
-              initValue = new Some(event);
-              return sink(event);
-            }
-          } else {
-            if (event.isEnd()) {
-              reply = sendInit();
-            }
-            if (reply !== Bacon.noMore) {
-              return sink(event);
-            }
-          }
-        });
-        sendInit();
-        return unsub;
-      });
-    };
-
-    EventStream.prototype.toEventStream = function() {
-      return this;
-    };
-
-    EventStream.prototype.withHandler = function(handler) {
-      return new EventStream(new Bacon.Desc(this, "withHandler", [handler]), this.dispatcher.subscribe, handler);
-    };
-
-    return EventStream;
-
-  })(Observable);
-
-  Bacon.EventStream = EventStream;
-
-  Bacon.never = function() {
-    return new EventStream(describe(Bacon, "never"), function(sink) {
+    return Dispatcher.prototype.push.call(this, event);
+  },
+
+  maybeSubSource: function (sink, reply) {
+    if (reply === Bacon.noMore) {
+      return nop;
+    } else if (this.propertyEnded) {
       sink(endEvent());
       return nop;
-    });
-  };
-
-  Bacon.when = function() {
-    var f, i, index, ix, j, k, len, len1, len2, needsBarrier, pat, patSources, pats, patterns, ref, resultStream, s, sources, triggerFound, usage;
-    if (arguments.length === 0) {
-      return Bacon.never();
-    }
-    len = arguments.length;
-    usage = "when: expecting arguments in the form (Observable+,function)+";
-    assert(usage, len % 2 === 0);
-    sources = [];
-    pats = [];
-    i = 0;
-    patterns = [];
-    while (i < len) {
-      patterns[i] = arguments[i];
-      patterns[i + 1] = arguments[i + 1];
-      patSources = _.toArray(arguments[i]);
-      f = constantToFunction(arguments[i + 1]);
-      pat = {
-        f: f,
-        ixs: []
-      };
-      triggerFound = false;
-      for (j = 0, len1 = patSources.length; j < len1; j++) {
-        s = patSources[j];
-        index = _.indexOf(sources, s);
-        if (!triggerFound) {
-          triggerFound = Source.isTrigger(s);
-        }
-        if (index < 0) {
-          sources.push(s);
-          index = sources.length - 1;
-        }
-        ref = pat.ixs;
-        for (k = 0, len2 = ref.length; k < len2; k++) {
-          ix = ref[k];
-          if (ix.index === index) {
-            ix.count++;
-          }
-        }
-        pat.ixs.push({
-          index: index,
-          count: 1
-        });
-      }
-      assert("At least one EventStream required", triggerFound || (!patSources.length));
-      if (patSources.length > 0) {
-        pats.push(pat);
-      }
-      i = i + 2;
-    }
-    if (!sources.length) {
-      return Bacon.never();
-    }
-    sources = _.map(Source.fromObservable, sources);
-    needsBarrier = (_.any(sources, function(s) {
-      return s.flatten;
-    })) && (containsDuplicateDeps(_.map((function(s) {
-      return s.obs;
-    }), sources)));
-    return resultStream = new EventStream(new Bacon.Desc(Bacon, "when", patterns), function(sink) {
-      var cannotMatch, cannotSync, ends, match, nonFlattened, part, triggers;
-      triggers = [];
-      ends = false;
-      match = function(p) {
-        var l, len3, ref1;
-        ref1 = p.ixs;
-        for (l = 0, len3 = ref1.length; l < len3; l++) {
-          i = ref1[l];
-          if (!sources[i.index].hasAtLeast(i.count)) {
-            return false;
-          }
-        }
-        return true;
-      };
-      cannotSync = function(source) {
-        return !source.sync || source.ended;
-      };
-      cannotMatch = function(p) {
-        var l, len3, ref1;
-        ref1 = p.ixs;
-        for (l = 0, len3 = ref1.length; l < len3; l++) {
-          i = ref1[l];
-          if (!sources[i.index].mayHave(i.count)) {
-            return true;
-          }
-        }
-      };
-      nonFlattened = function(trigger) {
-        return !trigger.source.flatten;
-      };
-      part = function(source) {
-        return function(unsubAll) {
-          var flush, flushLater, flushWhileTriggers;
-          flushLater = function() {
-            return UpdateBarrier.whenDoneWith(resultStream, flush);
-          };
-          flushWhileTriggers = function() {
-            var events, l, len3, p, reply, trigger;
-            if (triggers.length > 0) {
-              reply = Bacon.more;
-              trigger = triggers.pop();
-              for (l = 0, len3 = pats.length; l < len3; l++) {
-                p = pats[l];
-                if (match(p)) {
-                  events = (function() {
-                    var len4, m, ref1, results;
-                    ref1 = p.ixs;
-                    results = [];
-                    for (m = 0, len4 = ref1.length; m < len4; m++) {
-                      i = ref1[m];
-                      results.push(sources[i.index].consume());
-                    }
-                    return results;
-                  })();
-                  reply = sink(trigger.e.apply(function() {
-                    var event, values;
-                    values = (function() {
-                      var len4, m, results;
-                      results = [];
-                      for (m = 0, len4 = events.length; m < len4; m++) {
-                        event = events[m];
-                        results.push(event.value());
-                      }
-                      return results;
-                    })();
-                    return p.f.apply(p, values);
-                  }));
-                  if (triggers.length) {
-                    triggers = _.filter(nonFlattened, triggers);
-                  }
-                  if (reply === Bacon.noMore) {
-                    return reply;
-                  } else {
-                    return flushWhileTriggers();
-                  }
-                }
-              }
-            } else {
-              return Bacon.more;
-            }
-          };
-          flush = function() {
-            var reply;
-            reply = flushWhileTriggers();
-            if (ends) {
-              ends = false;
-              if (_.all(sources, cannotSync) || _.all(pats, cannotMatch)) {
-                reply = Bacon.noMore;
-                sink(endEvent());
-              }
-            }
-            if (reply === Bacon.noMore) {
-              unsubAll();
-            }
-            return reply;
-          };
-          return source.subscribe(function(e) {
-            var reply;
-            if (e.isEnd()) {
-              ends = true;
-              source.markEnded();
-              flushLater();
-            } else if (e.isError()) {
-              reply = sink(e);
-            } else {
-              source.push(e);
-              if (source.sync) {
-                triggers.push({
-                  source: source,
-                  e: e
-                });
-                if (needsBarrier || UpdateBarrier.hasWaiters()) {
-                  flushLater();
-                } else {
-                  flush();
-                }
-              }
-            }
-            if (reply === Bacon.noMore) {
-              unsubAll();
-            }
-            return reply || Bacon.more;
-          });
-        };
-      };
-      return new Bacon.CompositeUnsubscribe((function() {
-        var l, len3, results;
-        results = [];
-        for (l = 0, len3 = sources.length; l < len3; l++) {
-          s = sources[l];
-          results.push(part(s));
-        }
-        return results;
-      })()).unsubscribe;
-    });
-  };
-
-  containsDuplicateDeps = function(observables, state) {
-    var checkObservable;
-    if (state == null) {
-      state = [];
-    }
-    checkObservable = function(obs) {
-      var deps;
-      if (_.contains(state, obs)) {
-        return true;
-      } else {
-        deps = obs.internalDeps();
-        if (deps.length) {
-          state.push(obs);
-          return _.any(deps, checkObservable);
-        } else {
-          state.push(obs);
-          return false;
-        }
-      }
-    };
-    return _.any(observables, checkObservable);
-  };
-
-  constantToFunction = function(f) {
-    if (_.isFunction(f)) {
-      return f;
     } else {
-      return _.always(f);
+      return Dispatcher.prototype.subscribe.call(this, sink);
     }
-  };
+  },
 
-  Bacon.groupSimultaneous = function() {
-    var s, sources, streams;
-    streams = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    if (streams.length === 1 && isArray(streams[0])) {
-      streams = streams[0];
-    }
-    sources = (function() {
-      var j, len1, results;
-      results = [];
-      for (j = 0, len1 = streams.length; j < len1; j++) {
-        s = streams[j];
-        results.push(new BufferingSource(s));
-      }
-      return results;
-    })();
-    return withDesc(new Bacon.Desc(Bacon, "groupSimultaneous", streams), Bacon.when(sources, (function() {
-      var xs;
-      xs = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      return xs;
-    })));
-  };
+  subscribe: function (sink) {
+    var _this3 = this;
 
-  PropertyDispatcher = (function(superClass) {
-    extend(PropertyDispatcher, superClass);
+    var initSent = false;
 
-    function PropertyDispatcher(property1, subscribe, handleEvent) {
-      this.property = property1;
-      this.subscribe = bind(this.subscribe, this);
-      PropertyDispatcher.__super__.constructor.call(this, subscribe, handleEvent);
-      this.current = None;
-      this.currentValueRootId = void 0;
-      this.propertyEnded = false;
-    }
+    var reply = Bacon.more;
 
-    PropertyDispatcher.prototype.push = function(event) {
-      if (event.isEnd()) {
-        this.propertyEnded = true;
-      }
-      if (event.hasValue()) {
-        this.current = new Some(event);
-        this.currentValueRootId = UpdateBarrier.currentEventId();
-      }
-      return PropertyDispatcher.__super__.push.call(this, event);
-    };
+    if (this.current.isDefined && (this.hasSubscribers() || this.propertyEnded)) {
+      var dispatchingId = UpdateBarrier.currentEventId();
+      var valId = this.currentValueRootId;
+      if (!this.propertyEnded && valId && dispatchingId && dispatchingId !== valId) {
+        UpdateBarrier.whenDoneWith(this.property, function () {
+          if (_this3.currentValueRootId === valId) {
+            return sink(initialEvent(_this3.current.get().value()));
+          }
+        });
 
-    PropertyDispatcher.prototype.maybeSubSource = function(sink, reply) {
-      if (reply === Bacon.noMore) {
-        return nop;
-      } else if (this.propertyEnded) {
-        sink(endEvent());
-        return nop;
+        return this.maybeSubSource(sink, reply);
       } else {
-        return Dispatcher.prototype.subscribe.call(this, sink);
-      }
-    };
-
-    PropertyDispatcher.prototype.subscribe = function(sink) {
-      var dispatchingId, initSent, reply, valId;
-      initSent = false;
-      reply = Bacon.more;
-      if (this.current.isDefined && (this.hasSubscribers() || this.propertyEnded)) {
-        dispatchingId = UpdateBarrier.currentEventId();
-        valId = this.currentValueRootId;
-        if (!this.propertyEnded && valId && dispatchingId && dispatchingId !== valId) {
-          UpdateBarrier.whenDoneWith(this.property, (function(_this) {
-            return function() {
-              if (_this.currentValueRootId === valId) {
-                return sink(initialEvent(_this.current.get().value()));
-              }
-            };
-          })(this));
-          return this.maybeSubSource(sink, reply);
-        } else {
-          UpdateBarrier.inTransaction(void 0, this, (function() {
-            return reply = sink(initialEvent(this.current.get().value()));
-          }), []);
-          return this.maybeSubSource(sink, reply);
-        }
-      } else {
+        UpdateBarrier.inTransaction(undefined, this, function () {
+          reply = sink(initialEvent(this.current.get().value()));
+          return reply;
+        }, []);
         return this.maybeSubSource(sink, reply);
       }
-    };
-
-    return PropertyDispatcher;
-
-  })(Dispatcher);
-
-  Property = (function(superClass) {
-    extend(Property, superClass);
-
-    function Property(desc, subscribe, handler) {
-      Property.__super__.constructor.call(this, desc);
-      assertFunction(subscribe);
-      this.dispatcher = new PropertyDispatcher(this, subscribe, handler);
-      registerObs(this);
-    }
-
-    Property.prototype.changes = function() {
-      return new EventStream(new Bacon.Desc(this, "changes", []), (function(_this) {
-        return function(sink) {
-          return _this.dispatcher.subscribe(function(event) {
-            if (!event.isInitial()) {
-              return sink(event);
-            }
-          });
-        };
-      })(this));
-    };
-
-    Property.prototype.withHandler = function(handler) {
-      return new Property(new Bacon.Desc(this, "withHandler", [handler]), this.dispatcher.subscribe, handler);
-    };
-
-    Property.prototype.toProperty = function() {
-      assertNoArguments(arguments);
-      return this;
-    };
-
-    Property.prototype.toEventStream = function() {
-      return new EventStream(new Bacon.Desc(this, "toEventStream", []), (function(_this) {
-        return function(sink) {
-          return _this.dispatcher.subscribe(function(event) {
-            if (event.isInitial()) {
-              event = event.toNext();
-            }
-            return sink(event);
-          });
-        };
-      })(this));
-    };
-
-    return Property;
-
-  })(Observable);
-
-  Bacon.Property = Property;
-
-  Bacon.constant = function(value) {
-    return new Property(new Bacon.Desc(Bacon, "constant", [value]), function(sink) {
-      sink(initialEvent(value));
-      sink(endEvent());
-      return nop;
-    });
-  };
-
-  Bacon.fromBinder = function(binder, eventTransformer) {
-    if (eventTransformer == null) {
-      eventTransformer = _.id;
-    }
-    return new EventStream(new Bacon.Desc(Bacon, "fromBinder", [binder, eventTransformer]), function(sink) {
-      var shouldUnbind, unbind, unbinder, unbound;
-      unbound = false;
-      shouldUnbind = false;
-      unbind = function() {
-        if (!unbound) {
-          if (typeof unbinder !== "undefined" && unbinder !== null) {
-            unbinder();
-            return unbound = true;
-          } else {
-            return shouldUnbind = true;
-          }
-        }
-      };
-      unbinder = binder(function() {
-        var args, event, j, len1, reply, value;
-        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        value = eventTransformer.apply(this, args);
-        if (!(isArray(value) && _.last(value) instanceof Event)) {
-          value = [value];
-        }
-        reply = Bacon.more;
-        for (j = 0, len1 = value.length; j < len1; j++) {
-          event = value[j];
-          reply = sink(event = toEvent(event));
-          if (reply === Bacon.noMore || event.isEnd()) {
-            unbind();
-            return reply;
-          }
-        }
-        return reply;
-      });
-      if (shouldUnbind) {
-        unbind();
-      }
-      return unbind;
-    });
-  };
-
-  eventMethods = [["addEventListener", "removeEventListener"], ["addListener", "removeListener"], ["on", "off"], ["bind", "unbind"]];
-
-  findHandlerMethods = function(target) {
-    var j, len1, methodPair, pair;
-    for (j = 0, len1 = eventMethods.length; j < len1; j++) {
-      pair = eventMethods[j];
-      methodPair = [target[pair[0]], target[pair[1]]];
-      if (methodPair[0] && methodPair[1]) {
-        return methodPair;
-      }
-    }
-    throw new Error("No suitable event methods in " + target);
-  };
-
-  Bacon.fromEventTarget = function(target, eventName, eventTransformer) {
-    var ref, sub, unsub;
-    ref = findHandlerMethods(target), sub = ref[0], unsub = ref[1];
-    return withDesc(new Bacon.Desc(Bacon, "fromEvent", [target, eventName]), Bacon.fromBinder(function(handler) {
-      sub.call(target, eventName, handler);
-      return function() {
-        return unsub.call(target, eventName, handler);
-      };
-    }, eventTransformer));
-  };
-
-  Bacon.fromEvent = Bacon.fromEventTarget;
-
-  Bacon.Observable.prototype.map = function() {
-    var args, p;
-    p = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    return convertArgsToFunction(this, p, args, function(f) {
-      return withDesc(new Bacon.Desc(this, "map", [f]), this.withHandler(function(event) {
-        return this.push(event.fmap(f));
-      }));
-    });
-  };
-
-  Bacon.combineAsArray = function() {
-    var index, j, len1, s, sources, stream, streams;
-    streams = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    if (streams.length === 1 && isArray(streams[0])) {
-      streams = streams[0];
-    }
-    for (index = j = 0, len1 = streams.length; j < len1; index = ++j) {
-      stream = streams[index];
-      if (!(isObservable(stream))) {
-        streams[index] = Bacon.constant(stream);
-      }
-    }
-    if (streams.length) {
-      sources = (function() {
-        var k, len2, results;
-        results = [];
-        for (k = 0, len2 = streams.length; k < len2; k++) {
-          s = streams[k];
-          results.push(new Source(s, true));
-        }
-        return results;
-      })();
-      return withDesc(new Bacon.Desc(Bacon, "combineAsArray", streams), Bacon.when(sources, (function() {
-        var xs;
-        xs = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        return xs;
-      })).toProperty());
     } else {
-      return Bacon.constant([]);
+      return this.maybeSubSource(sink, reply);
     }
-  };
+  }
+});
 
-  Bacon.onValues = function() {
-    var f, j, streams;
-    streams = 2 <= arguments.length ? slice.call(arguments, 0, j = arguments.length - 1) : (j = 0, []), f = arguments[j++];
-    return Bacon.combineAsArray(streams).onValues(f);
-  };
+function Property(desc, subscribe, handler) {
+  Observable.call(this, desc);
+  assertFunction(subscribe);
+  this.dispatcher = new PropertyDispatcher(this, subscribe, handler);
+  registerObs(this);
+}
 
-  Bacon.combineWith = function() {
-    var f, streams;
-    f = arguments[0], streams = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    return withDesc(new Bacon.Desc(Bacon, "combineWith", [f].concat(slice.call(streams))), Bacon.combineAsArray(streams).map(function(values) {
-      return f.apply(null, values);
-    }));
-  };
+inherit(Property, Observable);
+extend(Property.prototype, {
+  _isProperty: true,
 
-  Bacon.combineTemplate = function(template) {
-    var applyStreamValue, combinator, compile, compileTemplate, constantValue, current, funcs, mkContext, setValue, streams;
-    funcs = [];
-    streams = [];
-    current = function(ctxStack) {
-      return ctxStack[ctxStack.length - 1];
-    };
-    setValue = function(ctxStack, key, value) {
-      return current(ctxStack)[key] = value;
-    };
-    applyStreamValue = function(key, index) {
-      return function(ctxStack, values) {
-        return setValue(ctxStack, key, values[index]);
-      };
-    };
-    constantValue = function(key, value) {
-      return function(ctxStack) {
-        return setValue(ctxStack, key, value);
-      };
-    };
-    mkContext = function(template) {
-      if (isArray(template)) {
-        return [];
-      } else {
-        return {};
+  changes: function () {
+    var _this4 = this;
+
+    return new EventStream(new Bacon.Desc(this, "changes", []), function (sink) {
+      return _this4.dispatcher.subscribe(function (event) {
+        if (!event.isInitial()) {
+          return sink(event);
+        }
+      });
+    });
+  },
+
+  withHandler: function (handler) {
+    return new Property(new Bacon.Desc(this, "withHandler", [handler]), this.dispatcher.subscribe, handler);
+  },
+
+  toProperty: function () {
+    assertNoArguments(arguments);
+    return this;
+  },
+
+  toEventStream: function () {
+    var _this5 = this;
+
+    return new EventStream(new Bacon.Desc(this, "toEventStream", []), function (sink) {
+      return _this5.dispatcher.subscribe(function (event) {
+        if (event.isInitial()) {
+          event = event.toNext();
+        }
+        return sink(event);
+      });
+    });
+  }
+});
+
+Bacon.Property = Property;
+
+Bacon.constant = function (value) {
+  return new Property(new Bacon.Desc(Bacon, "constant", [value]), function (sink) {
+    sink(initialEvent(value));
+    sink(endEvent());
+    return nop;
+  });
+};
+
+Bacon.fromBinder = function (binder) {
+  var eventTransformer = arguments.length <= 1 || arguments[1] === undefined ? _.id : arguments[1];
+
+  var desc = new Bacon.Desc(Bacon, "fromBinder", [binder, eventTransformer]);
+  return new EventStream(desc, function (sink) {
+    var unbound = false;
+    var shouldUnbind = false;
+    var unbind = function () {
+      if (!unbound) {
+        if (typeof unbinder !== "undefined" && unbinder !== null) {
+          unbinder();
+          return unbound = true;
+        } else {
+          return shouldUnbind = true;
+        }
       }
     };
-    compile = function(key, value) {
-      var popContext, pushContext;
-      if (isObservable(value)) {
-        streams.push(value);
-        return funcs.push(applyStreamValue(key, streams.length - 1));
-      } else if (value === Object(value) && typeof value !== "function" && !(value instanceof RegExp) && !(value instanceof Date)) {
-        pushContext = function(key) {
-          return function(ctxStack) {
-            var newContext;
-            newContext = mkContext(value);
-            setValue(ctxStack, key, newContext);
-            return ctxStack.push(newContext);
-          };
-        };
-        popContext = function(ctxStack) {
-          return ctxStack.pop();
-        };
-        funcs.push(pushContext(key));
-        compileTemplate(value);
-        return funcs.push(popContext);
-      } else {
-        return funcs.push(constantValue(key, value));
+    var unbinder = binder(function () {
+      var ref;
+
+      for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+        args[_key7] = arguments[_key7];
       }
-    };
-    compileTemplate = function(template) {
-      return _.each(template, compile);
-    };
-    compileTemplate(template);
-    combinator = function(values) {
-      var ctxStack, f, j, len1, rootContext;
-      rootContext = mkContext(template);
-      ctxStack = [rootContext];
-      for (j = 0, len1 = funcs.length; j < len1; j++) {
-        f = funcs[j];
-        f(ctxStack, values);
+
+      var value = eventTransformer.apply(this, args);
+      if (!(isArray(value) && ((ref = _.last(value)) != null ? ref._isEvent : undefined))) {
+        value = [value];
       }
-      return rootContext;
-    };
-    return withDesc(new Bacon.Desc(Bacon, "combineTemplate", [template]), Bacon.combineAsArray(streams).map(combinator));
-  };
-
-  Bacon.Observable.prototype.combine = function(other, f) {
-    var combinator;
-    combinator = toCombinator(f);
-    return withDesc(new Bacon.Desc(this, "combine", [other, f]), Bacon.combineAsArray(this, other).map(function(values) {
-      return combinator(values[0], values[1]);
-    }));
-  };
-
-  Bacon.Observable.prototype.decode = function(cases) {
-    return withDesc(new Bacon.Desc(this, "decode", [cases]), this.combine(Bacon.combineTemplate(cases), function(key, values) {
-      return values[key];
-    }));
-  };
-
-  Bacon.Observable.prototype.withStateMachine = function(initState, f) {
-    var state;
-    state = initState;
-    return withDesc(new Bacon.Desc(this, "withStateMachine", [initState, f]), this.withHandler(function(event) {
-      var fromF, j, len1, newState, output, outputs, reply;
-      fromF = f(state, event);
-      newState = fromF[0], outputs = fromF[1];
-      state = newState;
-      reply = Bacon.more;
-      for (j = 0, len1 = outputs.length; j < len1; j++) {
-        output = outputs[j];
-        reply = this.push(output);
-        if (reply === Bacon.noMore) {
+      var reply = Bacon.more;
+      for (var i = 0, event; i < value.length; i++) {
+        event = value[i];
+        reply = sink(event = toEvent(event));
+        if (reply === Bacon.noMore || event.isEnd()) {
+          unbind();
           return reply;
         }
       }
       return reply;
-    }));
-  };
-
-  Bacon.Observable.prototype.skipDuplicates = function(isEqual) {
-    if (isEqual == null) {
-      isEqual = function(a, b) {
-        return a === b;
-      };
+    });
+    if (shouldUnbind) {
+      unbind();
     }
-    return withDesc(new Bacon.Desc(this, "skipDuplicates", []), this.withStateMachine(None, function(prev, event) {
-      if (!event.hasValue()) {
-        return [prev, [event]];
-      } else if (event.isInitial() || prev === None || !isEqual(prev.get(), event.value())) {
-        return [new Some(event.value()), [event]];
+    return unbind;
+  });
+};
+
+Bacon.Observable.prototype.map = function (p) {
+  for (var _len8 = arguments.length, args = Array(_len8 > 1 ? _len8 - 1 : 0), _key8 = 1; _key8 < _len8; _key8++) {
+    args[_key8 - 1] = arguments[_key8];
+  }
+
+  return convertArgsToFunction(this, p, args, function (f) {
+    return withDesc(new Bacon.Desc(this, "map", [f]), this.withHandler(function (event) {
+      return this.push(event.fmap(f));
+    }));
+  });
+};
+
+var argumentsToObservables = function (args) {
+  if (isArray(args[0])) {
+    return args[0];
+  } else {
+    return Array.prototype.slice.call(args);
+  }
+};
+
+var argumentsToObservablesAndFunction = function (args) {
+  if (_.isFunction(args[0])) {
+    return [argumentsToObservables(Array.prototype.slice.call(args, 1)), args[0]];
+  } else {
+    return [argumentsToObservables(Array.prototype.slice.call(args, 0, args.length - 1)), _.last(args)];
+  }
+};
+
+Bacon.combineAsArray = function () {
+  var streams = argumentsToObservables(arguments);
+  if (streams.length) {
+    var sources = [];
+    for (var i = 0; i < streams.length; i++) {
+      var stream = isObservable(streams[i]) ? streams[i] : Bacon.constant(streams[i]);
+      sources.push(new Source(stream, true));
+    }
+    return withDesc(new Bacon.Desc(Bacon, "combineAsArray", streams), Bacon.when(sources, function () {
+      for (var _len9 = arguments.length, xs = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+        xs[_key9] = arguments[_key9];
+      }
+
+      return xs;
+    }).toProperty());
+  } else {
+    return Bacon.constant([]);
+  }
+};
+
+Bacon.onValues = function () {
+  return Bacon.combineAsArray(Array.prototype.slice.call(arguments, 0, arguments.length - 1)).onValues(arguments[arguments.length - 1]);
+};
+
+Bacon.combineWith = function () {
+  var _argumentsToObservablesAndFunction = argumentsToObservablesAndFunction(arguments);
+
+  var streams = _argumentsToObservablesAndFunction[0];
+  var f = _argumentsToObservablesAndFunction[1];
+
+  var desc = new Bacon.Desc(Bacon, "combineWith", [f].concat(streams));
+  return withDesc(desc, Bacon.combineAsArray(streams).map(function (values) {
+    return f.apply(undefined, values);
+  }));
+};
+
+Bacon.Observable.prototype.combine = function (other, f) {
+  var combinator = toCombinator(f);
+  var desc = new Bacon.Desc(this, "combine", [other, f]);
+  return withDesc(desc, Bacon.combineAsArray(this, other).map(function (values) {
+    return combinator(values[0], values[1]);
+  }));
+};
+
+Bacon.Observable.prototype.withStateMachine = function (initState, f) {
+  var state = initState;
+  var desc = new Bacon.Desc(this, "withStateMachine", [initState, f]);
+  return withDesc(desc, this.withHandler(function (event) {
+    var fromF = f(state, event);
+    var newState = fromF[0];
+    var outputs = fromF[1];
+
+    state = newState;
+    var reply = Bacon.more;
+    for (var i = 0, output; i < outputs.length; i++) {
+      output = outputs[i];
+      reply = this.push(output);
+      if (reply === Bacon.noMore) {
+        return reply;
+      }
+    }
+    return reply;
+  }));
+};
+
+var equals = function (a, b) {
+  return a === b;
+};
+
+var isNone = function (object) {
+  return typeof object !== "undefined" && object !== null ? object._isNone : false;
+};
+
+Bacon.Observable.prototype.skipDuplicates = function () {
+  var isEqual = arguments.length <= 0 || arguments[0] === undefined ? equals : arguments[0];
+
+  var desc = new Bacon.Desc(this, "skipDuplicates", []);
+  return withDesc(desc, this.withStateMachine(None, function (prev, event) {
+    if (!event.hasValue()) {
+      return [prev, [event]];
+    } else if (event.isInitial() || isNone(prev) || !isEqual(prev.get(), event.value())) {
+      return [new Some(event.value()), [event]];
+    } else {
+      return [prev, []];
+    }
+  }));
+};
+
+Bacon.Observable.prototype.awaiting = function (other) {
+  var desc = new Bacon.Desc(this, "awaiting", [other]);
+  return withDesc(desc, Bacon.groupSimultaneous(this, other).map(function (values) {
+    return values[1].length === 0;
+  }).toProperty(false).skipDuplicates());
+};
+
+Bacon.Observable.prototype.not = function () {
+  return withDesc(new Bacon.Desc(this, "not", []), this.map(function (x) {
+    return !x;
+  }));
+};
+
+Bacon.Property.prototype.and = function (other) {
+  return withDesc(new Bacon.Desc(this, "and", [other]), this.combine(other, function (x, y) {
+    return x && y;
+  }));
+};
+
+Bacon.Property.prototype.or = function (other) {
+  return withDesc(new Bacon.Desc(this, "or", [other]), this.combine(other, function (x, y) {
+    return x || y;
+  }));
+};
+
+Bacon.scheduler = {
+  setTimeout: function (f, d) {
+    return setTimeout(f, d);
+  },
+  setInterval: function (f, i) {
+    return setInterval(f, i);
+  },
+  clearInterval: function (id) {
+    return clearInterval(id);
+  },
+  clearTimeout: function (id) {
+    return clearTimeout(id);
+  },
+  now: function () {
+    return new Date().getTime();
+  }
+};
+
+Bacon.EventStream.prototype.bufferWithTime = function (delay) {
+  return withDesc(new Bacon.Desc(this, "bufferWithTime", [delay]), this.bufferWithTimeOrCount(delay, Number.MAX_VALUE));
+};
+
+Bacon.EventStream.prototype.bufferWithCount = function (count) {
+  return withDesc(new Bacon.Desc(this, "bufferWithCount", [count]), this.bufferWithTimeOrCount(undefined, count));
+};
+
+Bacon.EventStream.prototype.bufferWithTimeOrCount = function (delay, count) {
+  var flushOrSchedule = function (buffer) {
+    if (buffer.values.length === count) {
+      return buffer.flush();
+    } else if (delay !== undefined) {
+      return buffer.schedule();
+    }
+  };
+  var desc = new Bacon.Desc(this, "bufferWithTimeOrCount", [delay, count]);
+  return withDesc(desc, this.buffer(delay, flushOrSchedule, flushOrSchedule));
+};
+
+Bacon.EventStream.prototype.buffer = function (delay) {
+  var onInput = arguments.length <= 1 || arguments[1] === undefined ? nop : arguments[1];
+  var onFlush = arguments.length <= 2 || arguments[2] === undefined ? nop : arguments[2];
+
+  var buffer = {
+    scheduled: null,
+    end: undefined,
+    values: [],
+    flush: function () {
+      if (this.scheduled) {
+        Bacon.scheduler.clearTimeout(this.scheduled);
+        this.scheduled = null;
+      }
+      if (this.values.length > 0) {
+        var valuesToPush = this.values;
+        this.values = [];
+        var reply = this.push(nextEvent(valuesToPush));
+        if (this.end != null) {
+          return this.push(this.end);
+        } else if (reply !== Bacon.noMore) {
+          return onFlush(this);
+        }
       } else {
-        return [prev, []];
-      }
-    }));
-  };
-
-  Bacon.Observable.prototype.awaiting = function(other) {
-    return withDesc(new Bacon.Desc(this, "awaiting", [other]), Bacon.groupSimultaneous(this, other).map(function(arg) {
-      var myValues, otherValues;
-      myValues = arg[0], otherValues = arg[1];
-      return otherValues.length === 0;
-    }).toProperty(false).skipDuplicates());
-  };
-
-  Bacon.Observable.prototype.not = function() {
-    return withDesc(new Bacon.Desc(this, "not", []), this.map(function(x) {
-      return !x;
-    }));
-  };
-
-  Bacon.Property.prototype.and = function(other) {
-    return withDesc(new Bacon.Desc(this, "and", [other]), this.combine(other, function(x, y) {
-      return x && y;
-    }));
-  };
-
-  Bacon.Property.prototype.or = function(other) {
-    return withDesc(new Bacon.Desc(this, "or", [other]), this.combine(other, function(x, y) {
-      return x || y;
-    }));
-  };
-
-  Bacon.scheduler = {
-    setTimeout: function(f, d) {
-      return setTimeout(f, d);
-    },
-    setInterval: function(f, i) {
-      return setInterval(f, i);
-    },
-    clearInterval: function(id) {
-      return clearInterval(id);
-    },
-    clearTimeout: function(id) {
-      return clearTimeout(id);
-    },
-    now: function() {
-      return new Date().getTime();
-    }
-  };
-
-  Bacon.EventStream.prototype.bufferWithTime = function(delay) {
-    return withDesc(new Bacon.Desc(this, "bufferWithTime", [delay]), this.bufferWithTimeOrCount(delay, Number.MAX_VALUE));
-  };
-
-  Bacon.EventStream.prototype.bufferWithCount = function(count) {
-    return withDesc(new Bacon.Desc(this, "bufferWithCount", [count]), this.bufferWithTimeOrCount(void 0, count));
-  };
-
-  Bacon.EventStream.prototype.bufferWithTimeOrCount = function(delay, count) {
-    var flushOrSchedule;
-    flushOrSchedule = function(buffer) {
-      if (buffer.values.length === count) {
-        return buffer.flush();
-      } else if (delay !== void 0) {
-        return buffer.schedule();
-      }
-    };
-    return withDesc(new Bacon.Desc(this, "bufferWithTimeOrCount", [delay, count]), this.buffer(delay, flushOrSchedule, flushOrSchedule));
-  };
-
-  Bacon.EventStream.prototype.buffer = function(delay, onInput, onFlush) {
-    var buffer, delayMs, reply;
-    if (onInput == null) {
-      onInput = nop;
-    }
-    if (onFlush == null) {
-      onFlush = nop;
-    }
-    buffer = {
-      scheduled: null,
-      end: void 0,
-      values: [],
-      flush: function() {
-        var reply;
-        if (this.scheduled) {
-          Bacon.scheduler.clearTimeout(this.scheduled);
-          this.scheduled = null;
-        }
-        if (this.values.length > 0) {
-          reply = this.push(nextEvent(this.values));
-          this.values = [];
-          if (this.end != null) {
-            return this.push(this.end);
-          } else if (reply !== Bacon.noMore) {
-            return onFlush(this);
-          }
-        } else {
-          if (this.end != null) {
-            return this.push(this.end);
-          }
-        }
-      },
-      schedule: function() {
-        if (!this.scheduled) {
-          return this.scheduled = delay((function(_this) {
-            return function() {
-              return _this.flush();
-            };
-          })(this));
+        if (this.end != null) {
+          return this.push(this.end);
         }
       }
-    };
-    reply = Bacon.more;
-    if (!_.isFunction(delay)) {
-      delayMs = delay;
-      delay = function(f) {
-        return Bacon.scheduler.setTimeout(f, delayMs);
-      };
-    }
-    return withDesc(new Bacon.Desc(this, "buffer", []), this.withHandler(function(event) {
-      buffer.push = (function(_this) {
-        return function(event) {
-          return _this.push(event);
-        };
-      })(this);
-      if (event.isError()) {
-        reply = this.push(event);
-      } else if (event.isEnd()) {
-        buffer.end = event;
-        if (!buffer.scheduled) {
-          buffer.flush();
-        }
-      } else {
-        buffer.values.push(event.value());
-        onInput(buffer);
-      }
-      return reply;
-    }));
-  };
+    },
+    schedule: function () {
+      var _this6 = this;
 
-  Bacon.Observable.prototype.filter = function() {
-    var args, f;
-    f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    assertObservableIsProperty(f);
-    return convertArgsToFunction(this, f, args, function(f) {
-      return withDesc(new Bacon.Desc(this, "filter", [f]), this.withHandler(function(event) {
-        if (event.filter(f)) {
-          return this.push(event);
-        } else {
-          return Bacon.more;
-        }
-      }));
-    });
-  };
-
-  Bacon.once = function(value) {
-    return new EventStream(new Desc(Bacon, "once", [value]), function(sink) {
-      sink(toEvent(value));
-      sink(endEvent());
-      return nop;
-    });
-  };
-
-  Bacon.EventStream.prototype.concat = function(right) {
-    var left;
-    left = this;
-    return new EventStream(new Bacon.Desc(left, "concat", [right]), function(sink) {
-      var unsubLeft, unsubRight;
-      unsubRight = nop;
-      unsubLeft = left.dispatcher.subscribe(function(e) {
-        if (e.isEnd()) {
-          return unsubRight = right.dispatcher.subscribe(sink);
-        } else {
-          return sink(e);
-        }
-      });
-      return function() {
-        unsubLeft();
-        return unsubRight();
-      };
-    });
-  };
-
-  Bacon.Observable.prototype.flatMap = function() {
-    return flatMap_(this, makeSpawner(arguments));
-  };
-
-  Bacon.Observable.prototype.flatMapFirst = function() {
-    return flatMap_(this, makeSpawner(arguments), true);
-  };
-
-  flatMap_ = function(root, f, firstOnly, limit) {
-    var childDeps, result, rootDep;
-    rootDep = [root];
-    childDeps = [];
-    result = new EventStream(new Bacon.Desc(root, "flatMap" + (firstOnly ? "First" : ""), [f]), function(sink) {
-      var checkEnd, checkQueue, composite, queue, spawn;
-      composite = new CompositeUnsubscribe();
-      queue = [];
-      spawn = function(event) {
-        var child;
-        child = makeObservable(f(event.value()));
-        childDeps.push(child);
-        return composite.add(function(unsubAll, unsubMe) {
-          return child.dispatcher.subscribe(function(event) {
-            var reply;
-            if (event.isEnd()) {
-              _.remove(child, childDeps);
-              checkQueue();
-              checkEnd(unsubMe);
-              return Bacon.noMore;
-            } else {
-              if (event instanceof Initial) {
-                event = event.toNext();
-              }
-              reply = sink(event);
-              if (reply === Bacon.noMore) {
-                unsubAll();
-              }
-              return reply;
-            }
-          });
+      if (!this.scheduled) {
+        return this.scheduled = delay(function () {
+          return _this6.flush();
         });
-      };
-      checkQueue = function() {
-        var event;
-        event = queue.shift();
-        if (event) {
-          return spawn(event);
-        }
-      };
-      checkEnd = function(unsub) {
-        unsub();
-        if (composite.empty()) {
-          return sink(endEvent());
-        }
-      };
-      composite.add(function(__, unsubRoot) {
-        return root.dispatcher.subscribe(function(event) {
+      }
+    }
+  };
+  var reply = Bacon.more;
+  if (!_.isFunction(delay)) {
+    var delayMs = delay;
+    delay = function (f) {
+      return Bacon.scheduler.setTimeout(f, delayMs);
+    };
+  }
+  return withDesc(new Bacon.Desc(this, "buffer", []), this.withHandler(function (event) {
+    var _this7 = this;
+
+    buffer.push = function (event) {
+      return _this7.push(event);
+    };
+    if (event.isError()) {
+      reply = this.push(event);
+    } else if (event.isEnd()) {
+      buffer.end = event;
+      if (!buffer.scheduled) {
+        buffer.flush();
+      }
+    } else {
+      buffer.values.push(event.value());
+
+      onInput(buffer);
+    }
+    return reply;
+  }));
+};
+
+Bacon.Observable.prototype.filter = function (f) {
+  assertObservableIsProperty(f);
+
+  for (var _len10 = arguments.length, args = Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
+    args[_key10 - 1] = arguments[_key10];
+  }
+
+  return convertArgsToFunction(this, f, args, function (f) {
+    return withDesc(new Bacon.Desc(this, "filter", [f]), this.withHandler(function (event) {
+      if (event.filter(f)) {
+        return this.push(event);
+      } else {
+        return Bacon.more;
+      }
+    }));
+  });
+};
+
+Bacon.once = function (value) {
+  return new EventStream(new Desc(Bacon, "once", [value]), function (sink) {
+    sink(toEvent(value));
+    sink(endEvent());
+    return nop;
+  });
+};
+
+Bacon.EventStream.prototype.concat = function (right) {
+  var left = this;
+  return new EventStream(new Bacon.Desc(left, "concat", [right]), function (sink) {
+    var unsubRight = nop;
+    var unsubLeft = left.dispatcher.subscribe(function (e) {
+      if (e.isEnd()) {
+        unsubRight = right.dispatcher.subscribe(sink);
+        return unsubRight;
+      } else {
+        return sink(e);
+      }
+    });
+    return function () {
+      return unsubLeft(), unsubRight();
+    };
+  });
+};
+
+Bacon.Observable.prototype.flatMap = function () {
+  return flatMap_(this, makeSpawner(arguments));
+};
+
+Bacon.Observable.prototype.flatMapFirst = function () {
+  return flatMap_(this, makeSpawner(arguments), true);
+};
+
+var makeSpawner = function (args) {
+  if (args.length === 1 && isObservable(args[0])) {
+    return _.always(args[0]);
+  } else {
+    return makeFunctionArgs(args);
+  }
+};
+
+var makeObservable = function (x) {
+  if (isObservable(x)) {
+    return x;
+  } else {
+    return Bacon.once(x);
+  }
+};
+
+var flatMap_ = function (root, f, firstOnly, limit) {
+  var rootDep = [root];
+  var childDeps = [];
+  var desc = new Bacon.Desc(root, "flatMap" + (firstOnly ? "First" : ""), [f]);
+  var result = new EventStream(desc, function (sink) {
+    var composite = new CompositeUnsubscribe();
+    var queue = [];
+    var spawn = function (event) {
+      var child = makeObservable(f(event.value()));
+      childDeps.push(child);
+      return composite.add(function (unsubAll, unsubMe) {
+        return child.dispatcher.subscribe(function (event) {
           if (event.isEnd()) {
-            return checkEnd(unsubRoot);
-          } else if (event.isError()) {
-            return sink(event);
-          } else if (firstOnly && composite.count() > 1) {
-            return Bacon.more;
+            _.remove(child, childDeps);
+            checkQueue();
+            checkEnd(unsubMe);
+            return Bacon.noMore;
           } else {
-            if (composite.unsubscribed) {
-              return Bacon.noMore;
+            if (typeof event !== "undefined" && event !== null ? event._isInitial : undefined) {
+              event = event.toNext();
             }
-            if (limit && composite.count() > limit) {
-              return queue.push(event);
-            } else {
-              return spawn(event);
+            var reply = sink(event);
+            if (reply === Bacon.noMore) {
+              unsubAll();
             }
+            return reply;
           }
         });
       });
-      return composite.unsubscribe;
-    });
-    result.internalDeps = function() {
-      if (childDeps.length) {
-        return rootDep.concat(childDeps);
-      } else {
-        return rootDep;
+    };
+    var checkQueue = function () {
+      var event = queue.shift();
+      if (event) {
+        return spawn(event);
       }
     };
-    return result;
-  };
-
-  makeSpawner = function(args) {
-    if (args.length === 1 && isObservable(args[0])) {
-      return _.always(args[0]);
+    var checkEnd = function (unsub) {
+      unsub();
+      if (composite.empty()) {
+        return sink(endEvent());
+      }
+    };
+    composite.add(function (__, unsubRoot) {
+      return root.dispatcher.subscribe(function (event) {
+        if (event.isEnd()) {
+          return checkEnd(unsubRoot);
+        } else if (event.isError()) {
+          return sink(event);
+        } else if (firstOnly && composite.count() > 1) {
+          return Bacon.more;
+        } else {
+          if (composite.unsubscribed) {
+            return Bacon.noMore;
+          }
+          if (limit && composite.count() > limit) {
+            return queue.push(event);
+          } else {
+            return spawn(event);
+          }
+        }
+      });
+    });
+    return composite.unsubscribe;
+  });
+  result.internalDeps = function () {
+    if (childDeps.length) {
+      return rootDep.concat(childDeps);
     } else {
-      return makeFunctionArgs(args);
+      return rootDep;
     }
   };
+  return result;
+};
 
-  makeObservable = function(x) {
-    if (isObservable(x)) {
-      return x;
+Bacon.Observable.prototype.flatMapWithConcurrencyLimit = function (limit) {
+  for (var _len11 = arguments.length, args = Array(_len11 > 1 ? _len11 - 1 : 0), _key11 = 1; _key11 < _len11; _key11++) {
+    args[_key11 - 1] = arguments[_key11];
+  }
+
+  var desc = new Bacon.Desc(this, "flatMapWithConcurrencyLimit", [limit].concat(args));
+  return withDesc(desc, flatMap_(this, makeSpawner(args), false, limit));
+};
+
+Bacon.Observable.prototype.flatMapConcat = function () {
+  var desc = new Bacon.Desc(this, "flatMapConcat", Array.prototype.slice.call(arguments, 0));
+  return withDesc(desc, this.flatMapWithConcurrencyLimit.apply(this, [1].concat(_slice.call(arguments))));
+};
+
+Bacon.later = function (delay, value) {
+  return withDesc(new Bacon.Desc(Bacon, "later", [delay, value]), Bacon.fromBinder(function (sink) {
+    var sender = function () {
+      return sink([value, endEvent()]);
+    };
+    var id = Bacon.scheduler.setTimeout(sender, delay);
+    return function () {
+      return Bacon.scheduler.clearTimeout(id);
+    };
+  }));
+};
+
+Bacon.Observable.prototype.bufferingThrottle = function (minimumInterval) {
+  var desc = new Bacon.Desc(this, "bufferingThrottle", [minimumInterval]);
+  return withDesc(desc, this.flatMapConcat(function (x) {
+    return Bacon.once(x).concat(Bacon.later(minimumInterval).filter(false));
+  }));
+};
+
+Bacon.Property.prototype.bufferingThrottle = function () {
+  return Bacon.Observable.prototype.bufferingThrottle.apply(this, arguments).toProperty();
+};
+
+function Bus() {
+  if (!(this instanceof Bus)) {
+    return new Bus();
+  }
+
+  this.unsubAll = _.bind(this.unsubAll, this);
+  this.subscribeAll = _.bind(this.subscribeAll, this);
+  this.guardedSink = _.bind(this.guardedSink, this);
+
+  this.sink = undefined;
+  this.subscriptions = [];
+  this.ended = false;
+  EventStream.call(this, new Bacon.Desc(Bacon, "Bus", []), this.subscribeAll);
+}
+
+inherit(Bus, EventStream);
+extend(Bus.prototype, {
+  unsubAll: function () {
+    var iterable = this.subscriptions;
+    for (var i = 0, sub; i < iterable.length; i++) {
+      sub = iterable[i];
+      if (typeof sub.unsub === "function") {
+        sub.unsub();
+      }
+    }
+  },
+
+  subscribeAll: function (newSink) {
+    if (this.ended) {
+      newSink(endEvent());
     } else {
-      return Bacon.once(x);
+      this.sink = newSink;
+      var iterable = cloneArray(this.subscriptions);
+      for (var i = 0, subscription; i < iterable.length; i++) {
+        subscription = iterable[i];
+        this.subscribeInput(subscription);
+      }
     }
-  };
+    return this.unsubAll;
+  },
 
-  Bacon.Observable.prototype.flatMapWithConcurrencyLimit = function() {
-    var args, limit;
-    limit = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    return withDesc(new Bacon.Desc(this, "flatMapWithConcurrencyLimit", [limit].concat(slice.call(args))), flatMap_(this, makeSpawner(args), false, limit));
-  };
+  guardedSink: function (input) {
+    var _this8 = this;
 
-  Bacon.Observable.prototype.flatMapConcat = function() {
-    return withDesc(new Bacon.Desc(this, "flatMapConcat", Array.prototype.slice.call(arguments, 0)), this.flatMapWithConcurrencyLimit.apply(this, [1].concat(slice.call(arguments))));
-  };
+    return function (event) {
+      if (event.isEnd()) {
+        _this8.unsubscribeInput(input);
+        return Bacon.noMore;
+      } else {
+        return _this8.sink(event);
+      }
+    };
+  },
 
-  Bacon.later = function(delay, value) {
-    return withDesc(new Bacon.Desc(Bacon, "later", [delay, value]), Bacon.fromBinder(function(sink) {
-      var id, sender;
-      sender = function() {
-        return sink([value, endEvent()]);
-      };
-      id = Bacon.scheduler.setTimeout(sender, delay);
-      return function() {
-        return Bacon.scheduler.clearTimeout(id);
-      };
-    }));
-  };
+  subscribeInput: function (subscription) {
+    subscription.unsub = subscription.input.dispatcher.subscribe(this.guardedSink(subscription.input));
+    return subscription.unsub;
+  },
 
-  Bacon.Observable.prototype.bufferingThrottle = function(minimumInterval) {
-    return withDesc(new Bacon.Desc(this, "bufferingThrottle", [minimumInterval]), this.flatMapConcat(function(x) {
-      return Bacon.once(x).concat(Bacon.later(minimumInterval).filter(false));
-    }));
-  };
-
-  Bacon.Property.prototype.bufferingThrottle = function() {
-    return Bacon.Observable.prototype.bufferingThrottle.apply(this, arguments).toProperty();
-  };
-
-  Bus = (function(superClass) {
-    extend(Bus, superClass);
-
-    function Bus() {
-      this.guardedSink = bind(this.guardedSink, this);
-      this.subscribeAll = bind(this.subscribeAll, this);
-      this.unsubAll = bind(this.unsubAll, this);
-      this.sink = void 0;
-      this.subscriptions = [];
-      this.ended = false;
-      Bus.__super__.constructor.call(this, new Bacon.Desc(Bacon, "Bus", []), this.subscribeAll);
-    }
-
-    Bus.prototype.unsubAll = function() {
-      var j, len1, ref, sub;
-      ref = this.subscriptions;
-      for (j = 0, len1 = ref.length; j < len1; j++) {
-        sub = ref[j];
+  unsubscribeInput: function (input) {
+    var iterable = this.subscriptions;
+    for (var i = 0, sub; i < iterable.length; i++) {
+      sub = iterable[i];
+      if (sub.input === input) {
         if (typeof sub.unsub === "function") {
           sub.unsub();
         }
-      }
-      return void 0;
-    };
-
-    Bus.prototype.subscribeAll = function(newSink) {
-      var j, len1, ref, subscription;
-      if (this.ended) {
-        newSink(endEvent());
-      } else {
-        this.sink = newSink;
-        ref = cloneArray(this.subscriptions);
-        for (j = 0, len1 = ref.length; j < len1; j++) {
-          subscription = ref[j];
-          this.subscribeInput(subscription);
-        }
-      }
-      return this.unsubAll;
-    };
-
-    Bus.prototype.guardedSink = function(input) {
-      return (function(_this) {
-        return function(event) {
-          if (event.isEnd()) {
-            _this.unsubscribeInput(input);
-            return Bacon.noMore;
-          } else {
-            return _this.sink(event);
-          }
-        };
-      })(this);
-    };
-
-    Bus.prototype.subscribeInput = function(subscription) {
-      return subscription.unsub = subscription.input.dispatcher.subscribe(this.guardedSink(subscription.input));
-    };
-
-    Bus.prototype.unsubscribeInput = function(input) {
-      var i, j, len1, ref, sub;
-      ref = this.subscriptions;
-      for (i = j = 0, len1 = ref.length; j < len1; i = ++j) {
-        sub = ref[i];
-        if (sub.input === input) {
-          if (typeof sub.unsub === "function") {
-            sub.unsub();
-          }
-          this.subscriptions.splice(i, 1);
-          return;
-        }
-      }
-    };
-
-    Bus.prototype.plug = function(input) {
-      var sub;
-      assertObservable(input);
-      if (this.ended) {
+        this.subscriptions.splice(i, 1);
         return;
       }
-      sub = {
-        input: input
-      };
-      this.subscriptions.push(sub);
-      if ((this.sink != null)) {
-        this.subscribeInput(sub);
-      }
-      return (function(_this) {
-        return function() {
-          return _this.unsubscribeInput(input);
-        };
-      })(this);
+    }
+  },
+
+  plug: function (input) {
+    var _this9 = this;
+
+    assertObservable(input);
+    if (this.ended) {
+      return;
+    }
+    var sub = { input: input };
+    this.subscriptions.push(sub);
+    if (typeof this.sink !== "undefined") {
+      this.subscribeInput(sub);
+    }
+    return function () {
+      return _this9.unsubscribeInput(input);
     };
+  },
 
-    Bus.prototype.end = function() {
-      this.ended = true;
-      this.unsubAll();
-      return typeof this.sink === "function" ? this.sink(endEvent()) : void 0;
-    };
+  end: function () {
+    this.ended = true;
+    this.unsubAll();
+    if (typeof this.sink === "function") {
+      return this.sink(endEvent());
+    }
+  },
 
-    Bus.prototype.push = function(value) {
-      if (!this.ended) {
-        return typeof this.sink === "function" ? this.sink(nextEvent(value)) : void 0;
-      }
-    };
+  push: function (value) {
+    if (!this.ended && typeof this.sink === "function") {
+      return this.sink(nextEvent(value));
+    }
+  },
 
-    Bus.prototype.error = function(error) {
-      return typeof this.sink === "function" ? this.sink(new Error(error)) : void 0;
-    };
+  error: function (error) {
+    if (typeof this.sink === "function") {
+      return this.sink(new Error(error));
+    }
+  }
+});
 
-    return Bus;
+Bacon.Bus = Bus;
 
-  })(EventStream);
+var liftCallback = function (desc, wrapped) {
+  return withMethodCallSupport(function (f) {
+    var stream = partiallyApplied(wrapped, [function (values, callback) {
+      return f.apply(undefined, values.concat([callback]));
+    }]);
 
-  Bacon.Bus = Bus;
+    for (var _len12 = arguments.length, args = Array(_len12 > 1 ? _len12 - 1 : 0), _key12 = 1; _key12 < _len12; _key12++) {
+      args[_key12 - 1] = arguments[_key12];
+    }
 
-  liftCallback = function(desc, wrapped) {
-    return withMethodCallSupport(function() {
-      var args, f, stream;
-      f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-      stream = partiallyApplied(wrapped, [
-        function(values, callback) {
-          return f.apply(null, slice.call(values).concat([callback]));
-        }
-      ]);
-      return withDesc(new Bacon.Desc(Bacon, desc, [f].concat(slice.call(args))), Bacon.combineAsArray(args).flatMap(stream));
-    });
-  };
-
-  Bacon.fromCallback = liftCallback("fromCallback", function() {
-    var args, f;
-    f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    return Bacon.fromBinder(function(handler) {
-      makeFunction(f, args)(handler);
-      return nop;
-    }, (function(value) {
-      return [value, endEvent()];
-    }));
+    return withDesc(new Bacon.Desc(Bacon, desc, [f].concat(args)), Bacon.combineAsArray(args).flatMap(stream));
   });
+};
 
-  Bacon.fromNodeCallback = liftCallback("fromNodeCallback", function() {
-    var args, f;
-    f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    return Bacon.fromBinder(function(handler) {
-      makeFunction(f, args)(handler);
-      return nop;
-    }, function(error, value) {
-      if (error) {
-        return [new Error(error), endEvent()];
-      }
-      return [value, endEvent()];
-    });
-  });
-
-  addPropertyInitValueToStream = function(property, stream) {
-    var justInitValue;
-    justInitValue = new EventStream(describe(property, "justInitValue"), function(sink) {
-      var unsub, value;
-      value = void 0;
-      unsub = property.dispatcher.subscribe(function(event) {
-        if (!event.isEnd()) {
-          value = event;
-        }
-        return Bacon.noMore;
-      });
-      UpdateBarrier.whenDoneWith(justInitValue, function() {
-        if (value != null) {
-          sink(value);
-        }
-        return sink(endEvent());
-      });
-      return unsub;
-    });
-    return justInitValue.concat(stream).toProperty();
-  };
-
-  Bacon.Observable.prototype.mapEnd = function() {
-    var f;
-    f = makeFunctionArgs(arguments);
-    return withDesc(new Bacon.Desc(this, "mapEnd", [f]), this.withHandler(function(event) {
-      if (event.isEnd()) {
-        this.push(nextEvent(f(event)));
-        this.push(endEvent());
-        return Bacon.noMore;
-      } else {
-        return this.push(event);
-      }
-    }));
-  };
-
-  Bacon.Observable.prototype.skipErrors = function() {
-    return withDesc(new Bacon.Desc(this, "skipErrors", []), this.withHandler(function(event) {
-      if (event.isError()) {
-        return Bacon.more;
-      } else {
-        return this.push(event);
-      }
-    }));
-  };
-
-  Bacon.EventStream.prototype.takeUntil = function(stopper) {
-    var endMarker;
-    endMarker = {};
-    return withDesc(new Bacon.Desc(this, "takeUntil", [stopper]), Bacon.groupSimultaneous(this.mapEnd(endMarker), stopper.skipErrors()).withHandler(function(event) {
-      var data, j, len1, ref, reply, value;
-      if (!event.hasValue()) {
-        return this.push(event);
-      } else {
-        ref = event.value(), data = ref[0], stopper = ref[1];
-        if (stopper.length) {
-          return this.push(endEvent());
-        } else {
-          reply = Bacon.more;
-          for (j = 0, len1 = data.length; j < len1; j++) {
-            value = data[j];
-            if (value === endMarker) {
-              reply = this.push(endEvent());
-            } else {
-              reply = this.push(nextEvent(value));
-            }
-          }
-          return reply;
-        }
-      }
-    }));
-  };
-
-  Bacon.Property.prototype.takeUntil = function(stopper) {
-    var changes;
-    changes = this.changes().takeUntil(stopper);
-    return withDesc(new Bacon.Desc(this, "takeUntil", [stopper]), addPropertyInitValueToStream(this, changes));
-  };
-
-  Bacon.Observable.prototype.flatMapLatest = function() {
-    var f, stream;
-    f = makeSpawner(arguments);
-    stream = this.toEventStream();
-    return withDesc(new Bacon.Desc(this, "flatMapLatest", [f]), stream.flatMap(function(value) {
-      return makeObservable(f(value)).takeUntil(stream);
-    }));
-  };
-
-  Bacon.Property.prototype.delayChanges = function(desc, f) {
-    return withDesc(desc, addPropertyInitValueToStream(this, f(this.changes())));
-  };
-
-  Bacon.EventStream.prototype.delay = function(delay) {
-    return withDesc(new Bacon.Desc(this, "delay", [delay]), this.flatMap(function(value) {
-      return Bacon.later(delay, value);
-    }));
-  };
-
-  Bacon.Property.prototype.delay = function(delay) {
-    return this.delayChanges(new Bacon.Desc(this, "delay", [delay]), function(changes) {
-      return changes.delay(delay);
-    });
-  };
-
-  Bacon.EventStream.prototype.debounce = function(delay) {
-    return withDesc(new Bacon.Desc(this, "debounce", [delay]), this.flatMapLatest(function(value) {
-      return Bacon.later(delay, value);
-    }));
-  };
-
-  Bacon.Property.prototype.debounce = function(delay) {
-    return this.delayChanges(new Bacon.Desc(this, "debounce", [delay]), function(changes) {
-      return changes.debounce(delay);
-    });
-  };
-
-  Bacon.EventStream.prototype.debounceImmediate = function(delay) {
-    return withDesc(new Bacon.Desc(this, "debounceImmediate", [delay]), this.flatMapFirst(function(value) {
-      return Bacon.once(value).concat(Bacon.later(delay).filter(false));
-    }));
-  };
-
-  Bacon.Observable.prototype.scan = function(seed, f) {
-    var acc, resultProperty, subscribe;
-    f = toCombinator(f);
-    acc = toOption(seed);
-    subscribe = (function(_this) {
-      return function(sink) {
-        var initSent, reply, sendInit, unsub;
-        initSent = false;
-        unsub = nop;
-        reply = Bacon.more;
-        sendInit = function() {
-          if (!initSent) {
-            return acc.forEach(function(value) {
-              initSent = true;
-              reply = sink(new Initial(function() {
-                return value;
-              }));
-              if (reply === Bacon.noMore) {
-                unsub();
-                return unsub = nop;
-              }
-            });
-          }
-        };
-        unsub = _this.dispatcher.subscribe(function(event) {
-          var next, prev;
-          if (event.hasValue()) {
-            if (initSent && event.isInitial()) {
-              return Bacon.more;
-            } else {
-              if (!event.isInitial()) {
-                sendInit();
-              }
-              initSent = true;
-              prev = acc.getOrElse(void 0);
-              next = f(prev, event.value());
-              acc = new Some(next);
-              return sink(event.apply(function() {
-                return next;
-              }));
-            }
-          } else {
-            if (event.isEnd()) {
-              reply = sendInit();
-            }
-            if (reply !== Bacon.noMore) {
-              return sink(event);
-            }
-          }
-        });
-        UpdateBarrier.whenDoneWith(resultProperty, sendInit);
-        return unsub;
-      };
-    })(this);
-    return resultProperty = new Property(new Bacon.Desc(this, "scan", [seed, f]), subscribe);
-  };
-
-  Bacon.Observable.prototype.diff = function(start, f) {
-    f = toCombinator(f);
-    return withDesc(new Bacon.Desc(this, "diff", [start, f]), this.scan([start], function(prevTuple, next) {
-      return [next, f(prevTuple[0], next)];
-    }).filter(function(tuple) {
-      return tuple.length === 2;
-    }).map(function(tuple) {
-      return tuple[1];
-    }));
-  };
-
-  Bacon.Observable.prototype.doAction = function() {
-    var f;
-    f = makeFunctionArgs(arguments);
-    return withDesc(new Bacon.Desc(this, "doAction", [f]), this.withHandler(function(event) {
-      if (event.hasValue()) {
-        f(event.value());
-      }
-      return this.push(event);
-    }));
-  };
-
-  Bacon.Observable.prototype.doError = function() {
-    var f;
-    f = makeFunctionArgs(arguments);
-    return withDesc(new Bacon.Desc(this, "doError", [f]), this.withHandler(function(event) {
-      if (event.isError()) {
-        f(event.error);
-      }
-      return this.push(event);
-    }));
-  };
-
-  Bacon.Observable.prototype.doLog = function() {
-    var args;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    return withDesc(new Bacon.Desc(this, "doLog", args), this.withHandler(function(event) {
-      if (typeof console !== "undefined" && console !== null) {
-        if (typeof console.log === "function") {
-          console.log.apply(console, slice.call(args).concat([event.log()]));
-        }
-      }
-      return this.push(event);
-    }));
-  };
-
-  Bacon.Observable.prototype.endOnError = function() {
-    var args, f;
-    f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    if (f == null) {
-      f = true;
-    }
-    return convertArgsToFunction(this, f, args, function(f) {
-      return withDesc(new Bacon.Desc(this, "endOnError", []), this.withHandler(function(event) {
-        if (event.isError() && f(event.error)) {
-          this.push(event);
-          return this.push(endEvent());
-        } else {
-          return this.push(event);
-        }
-      }));
-    });
-  };
-
-  Observable.prototype.errors = function() {
-    return withDesc(new Bacon.Desc(this, "errors", []), this.filter(function() {
-      return false;
-    }));
-  };
-
-  valueAndEnd = (function(value) {
-    return [value, endEvent()];
-  });
-
-  Bacon.fromPromise = function(promise, abort, eventTransformer) {
-    if (eventTransformer == null) {
-      eventTransformer = valueAndEnd;
-    }
-    return withDesc(new Bacon.Desc(Bacon, "fromPromise", [promise]), Bacon.fromBinder(function(handler) {
-      var ref;
-      if ((ref = promise.then(handler, function(e) {
-        return handler(new Error(e));
-      })) != null) {
-        if (typeof ref.done === "function") {
-          ref.done();
-        }
-      }
-      return function() {
-        if (abort) {
-          return typeof promise.abort === "function" ? promise.abort() : void 0;
-        }
-      };
-    }, eventTransformer));
-  };
-
-  Bacon.Observable.prototype.mapError = function() {
-    var f;
-    f = makeFunctionArgs(arguments);
-    return withDesc(new Bacon.Desc(this, "mapError", [f]), this.withHandler(function(event) {
-      if (event.isError()) {
-        return this.push(nextEvent(f(event.error)));
-      } else {
-        return this.push(event);
-      }
-    }));
-  };
-
-  Bacon.Observable.prototype.flatMapError = function(fn) {
-    return withDesc(new Bacon.Desc(this, "flatMapError", [fn]), this.mapError(function(err) {
-      return new Error(err);
-    }).flatMap(function(x) {
-      if (x instanceof Error) {
-        return fn(x.error);
-      } else {
-        return Bacon.once(x);
-      }
-    }));
-  };
-
-  Bacon.EventStream.prototype.sampledBy = function(sampler, combinator) {
-    return withDesc(new Bacon.Desc(this, "sampledBy", [sampler, combinator]), this.toProperty().sampledBy(sampler, combinator));
-  };
-
-  Bacon.Property.prototype.sampledBy = function(sampler, combinator) {
-    var lazy, result, samplerSource, stream, thisSource;
-    if (combinator != null) {
-      combinator = toCombinator(combinator);
-    } else {
-      lazy = true;
-      combinator = function(f) {
-        return f.value();
-      };
-    }
-    thisSource = new Source(this, false, lazy);
-    samplerSource = new Source(sampler, true, lazy);
-    stream = Bacon.when([thisSource, samplerSource], combinator);
-    result = sampler instanceof Property ? stream.toProperty() : stream;
-    return withDesc(new Bacon.Desc(this, "sampledBy", [sampler, combinator]), result);
-  };
-
-  Bacon.Property.prototype.sample = function(interval) {
-    return withDesc(new Bacon.Desc(this, "sample", [interval]), this.sampledBy(Bacon.interval(interval, {})));
-  };
-
-  Bacon.Observable.prototype.map = function() {
-    var args, p;
-    p = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    if (p instanceof Property) {
-      return p.sampledBy(this, former);
-    } else {
-      return convertArgsToFunction(this, p, args, function(f) {
-        return withDesc(new Bacon.Desc(this, "map", [f]), this.withHandler(function(event) {
-          return this.push(event.fmap(f));
-        }));
-      });
-    }
-  };
-
-  Bacon.Observable.prototype.fold = function(seed, f) {
-    return withDesc(new Bacon.Desc(this, "fold", [seed, f]), this.scan(seed, f).sampledBy(this.filter(false).mapEnd().toProperty()));
-  };
-
-  Observable.prototype.reduce = Observable.prototype.fold;
-
-  Bacon.fromPoll = function(delay, poll) {
-    return withDesc(new Bacon.Desc(Bacon, "fromPoll", [delay, poll]), Bacon.fromBinder((function(handler) {
-      var id;
-      id = Bacon.scheduler.setInterval(handler, delay);
-      return function() {
-        return Bacon.scheduler.clearInterval(id);
-      };
-    }), poll));
-  };
-
-  Bacon.fromArray = function(values) {
-    var i;
-    assertArray(values);
-    if (!values.length) {
-      return withDesc(new Bacon.Desc(Bacon, "fromArray", values), Bacon.never());
-    } else {
-      i = 0;
-      return new EventStream(new Bacon.Desc(Bacon, "fromArray", [values]), function(sink) {
-        var push, pushNeeded, pushing, reply, unsubd;
-        unsubd = false;
-        reply = Bacon.more;
-        pushing = false;
-        pushNeeded = false;
-        push = function() {
-          var value;
-          pushNeeded = true;
-          if (pushing) {
-            return;
-          }
-          pushing = true;
-          while (pushNeeded) {
-            pushNeeded = false;
-            if ((reply !== Bacon.noMore) && !unsubd) {
-              value = values[i++];
-              reply = sink(toEvent(value));
-              if (reply !== Bacon.noMore) {
-                if (i === values.length) {
-                  sink(endEvent());
-                } else {
-                  UpdateBarrier.afterTransaction(push);
-                }
-              }
-            }
-          }
-          return pushing = false;
-        };
-        push();
-        return function() {
-          return unsubd = true;
-        };
-      });
-    }
-  };
-
-  Bacon.EventStream.prototype.holdWhen = function(valve) {
-    var bufferedValues, composite, onHold, src, subscribed;
-    composite = new CompositeUnsubscribe();
-    onHold = false;
-    bufferedValues = [];
-    subscribed = false;
-    src = this;
-    return new EventStream(new Bacon.Desc(this, "holdWhen", [valve]), function(sink) {
-      var endIfBothEnded;
-      endIfBothEnded = function(unsub) {
-        if (typeof unsub === "function") {
-          unsub();
-        }
-        if (composite.empty() && subscribed) {
-          return sink(endEvent());
-        }
-      };
-      composite.add(function(unsubAll, unsubMe) {
-        return valve.subscribeInternal(function(event) {
-          var j, len1, results, toSend, value;
-          if (event.hasValue()) {
-            onHold = event.value();
-            if (!onHold) {
-              toSend = bufferedValues;
-              bufferedValues = [];
-              results = [];
-              for (j = 0, len1 = toSend.length; j < len1; j++) {
-                value = toSend[j];
-                results.push(sink(nextEvent(value)));
-              }
-              return results;
-            }
-          } else if (event.isEnd()) {
-            return endIfBothEnded(unsubMe);
-          } else {
-            return sink(event);
-          }
-        });
-      });
-      composite.add(function(unsubAll, unsubMe) {
-        return src.subscribeInternal(function(event) {
-          if (onHold && event.hasValue()) {
-            return bufferedValues.push(event.value());
-          } else if (event.isEnd() && bufferedValues.length) {
-            return endIfBothEnded(unsubMe);
-          } else {
-            return sink(event);
-          }
-        });
-      });
-      subscribed = true;
-      endIfBothEnded();
-      return composite.unsubscribe;
-    });
-  };
-
-  Bacon.interval = function(delay, value) {
-    if (value == null) {
-      value = {};
-    }
-    return withDesc(new Bacon.Desc(Bacon, "interval", [delay, value]), Bacon.fromPoll(delay, function() {
-      return nextEvent(value);
-    }));
-  };
-
-  Bacon.$ = {};
-
-  Bacon.$.asEventStream = function(eventName, selector, eventTransformer) {
-    var ref;
-    if (_.isFunction(selector)) {
-      ref = [selector, void 0], eventTransformer = ref[0], selector = ref[1];
-    }
-    return withDesc(new Bacon.Desc(this.selector || this, "asEventStream", [eventName]), Bacon.fromBinder((function(_this) {
-      return function(handler) {
-        _this.on(eventName, selector, handler);
-        return function() {
-          return _this.off(eventName, selector, handler);
-        };
-      };
-    })(this), eventTransformer));
-  };
-
-  if ((ref = typeof jQuery !== "undefined" && jQuery !== null ? jQuery : typeof Zepto !== "undefined" && Zepto !== null ? Zepto : void 0) != null) {
-    ref.fn.asEventStream = Bacon.$.asEventStream;
+Bacon.fromCallback = liftCallback("fromCallback", function (f) {
+  for (var _len13 = arguments.length, args = Array(_len13 > 1 ? _len13 - 1 : 0), _key13 = 1; _key13 < _len13; _key13++) {
+    args[_key13 - 1] = arguments[_key13];
   }
 
-  Bacon.Observable.prototype.log = function() {
-    var args;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    this.subscribe(function(event) {
-      return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log.apply(console, slice.call(args).concat([event.log()])) : void 0 : void 0;
-    });
-    return this;
-  };
+  return Bacon.fromBinder(function (handler) {
+    makeFunction(f, args)(handler);
+    return nop;
+  }, function (value) {
+    return [value, endEvent()];
+  });
+});
 
-  Bacon.EventStream.prototype.merge = function(right) {
-    var left;
-    assertEventStream(right);
-    left = this;
-    return withDesc(new Bacon.Desc(left, "merge", [right]), Bacon.mergeAll(this, right));
-  };
+Bacon.fromNodeCallback = liftCallback("fromNodeCallback", function (f) {
+  for (var _len14 = arguments.length, args = Array(_len14 > 1 ? _len14 - 1 : 0), _key14 = 1; _key14 < _len14; _key14++) {
+    args[_key14 - 1] = arguments[_key14];
+  }
 
-  Bacon.mergeAll = function() {
-    var streams;
-    streams = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    if (isArray(streams[0])) {
-      streams = streams[0];
+  return Bacon.fromBinder(function (handler) {
+    makeFunction(f, args)(handler);
+    return nop;
+  }, function (error, value) {
+    if (error) {
+      return [new Error(error), endEvent()];
     }
-    if (streams.length) {
-      return new EventStream(new Bacon.Desc(Bacon, "mergeAll", streams), function(sink) {
-        var ends, sinks, smartSink;
-        ends = 0;
-        smartSink = function(obs) {
-          return function(unsubBoth) {
-            return obs.dispatcher.subscribe(function(event) {
-              var reply;
-              if (event.isEnd()) {
-                ends++;
-                if (ends === streams.length) {
-                  return sink(endEvent());
-                } else {
-                  return Bacon.more;
-                }
-              } else {
-                reply = sink(event);
-                if (reply === Bacon.noMore) {
-                  unsubBoth();
-                }
-                return reply;
-              }
-            });
-          };
-        };
-        sinks = _.map(smartSink, streams);
-        return new Bacon.CompositeUnsubscribe(sinks).unsubscribe;
-      });
+    return [value, endEvent()];
+  });
+});
+
+Bacon.combineTemplate = function (template) {
+  function current(ctxStack) {
+    return ctxStack[ctxStack.length - 1];
+  }
+  function setValue(ctxStack, key, value) {
+    current(ctxStack)[key] = value;
+    return value;
+  }
+  function applyStreamValue(key, index) {
+    return function (ctxStack, values) {
+      return setValue(ctxStack, key, values[index]);
+    };
+  }
+  function constantValue(key, value) {
+    return function (ctxStack) {
+      return setValue(ctxStack, key, value);
+    };
+  }
+
+  function mkContext(template) {
+    return isArray(template) ? [] : {};
+  }
+
+  function pushContext(key, value) {
+    return function (ctxStack) {
+      var newContext = mkContext(value);
+      setValue(ctxStack, key, newContext);
+      return ctxStack.push(newContext);
+    };
+  }
+
+  function compile(key, value) {
+    if (isObservable(value)) {
+      streams.push(value);
+      return funcs.push(applyStreamValue(key, streams.length - 1));
+    } else if (value && (value.constructor == Object || value.constructor == Array)) {
+      var popContext = function (ctxStack) {
+        return ctxStack.pop();
+      };
+      funcs.push(pushContext(key, value));
+      compileTemplate(value);
+      return funcs.push(popContext);
     } else {
-      return Bacon.never();
+      return funcs.push(constantValue(key, value));
     }
-  };
+  }
 
-  Bacon.repeatedly = function(delay, values) {
-    var index;
-    index = 0;
-    return withDesc(new Bacon.Desc(Bacon, "repeatedly", [delay, values]), Bacon.fromPoll(delay, function() {
-      return values[index++ % values.length];
-    }));
-  };
+  function combinator(values) {
+    var rootContext = mkContext(template);
+    var ctxStack = [rootContext];
+    for (var i = 0, f; i < funcs.length; i++) {
+      f = funcs[i];
+      f(ctxStack, values);
+    }
+    return rootContext;
+  }
 
-  Bacon.repeat = function(generator) {
-    var index;
-    index = 0;
-    return Bacon.fromBinder(function(sink) {
-      var flag, handleEvent, reply, subscribeNext, unsub;
-      flag = false;
-      reply = Bacon.more;
-      unsub = function() {};
-      handleEvent = function(event) {
-        if (event.isEnd()) {
-          if (!flag) {
-            return flag = true;
-          } else {
-            return subscribeNext();
-          }
-        } else {
-          return reply = sink(event);
-        }
-      };
-      subscribeNext = function() {
-        var next;
-        flag = true;
-        while (flag && reply !== Bacon.noMore) {
-          next = generator(index++);
-          flag = false;
-          if (next) {
-            unsub = next.subscribeInternal(handleEvent);
-          } else {
-            sink(endEvent());
-          }
-        }
-        return flag = true;
-      };
-      subscribeNext();
-      return function() {
-        return unsub();
-      };
+  function compileTemplate(template) {
+    return _.each(template, compile);
+  }
+
+  var funcs = [];
+  var streams = [];
+
+  compileTemplate(template);
+
+  return withDesc(new Bacon.Desc(Bacon, "combineTemplate", [template]), Bacon.combineAsArray(streams).map(combinator));
+};
+
+var addPropertyInitValueToStream = function (property, stream) {
+  var justInitValue = new EventStream(describe(property, "justInitValue"), function (sink) {
+    var value = undefined;
+    var unsub = property.dispatcher.subscribe(function (event) {
+      if (!event.isEnd()) {
+        value = event;
+      }
+      return Bacon.noMore;
     });
-  };
+    UpdateBarrier.whenDoneWith(justInitValue, function () {
+      if (typeof value !== "undefined" && value !== null) {
+        sink(value);
+      }
+      return sink(endEvent());
+    });
+    return unsub;
+  });
+  return justInitValue.concat(stream).toProperty();
+};
 
-  Bacon.retry = function(options) {
-    var delay, error, finished, isRetryable, maxRetries, retries, source;
-    if (!_.isFunction(options.source)) {
-      throw new Exception("'source' option has to be a function");
+Bacon.Observable.prototype.mapEnd = function () {
+  var f = makeFunctionArgs(arguments);
+  return withDesc(new Bacon.Desc(this, "mapEnd", [f]), this.withHandler(function (event) {
+    if (event.isEnd()) {
+      this.push(nextEvent(f(event)));
+      this.push(endEvent());
+      return Bacon.noMore;
+    } else {
+      return this.push(event);
     }
-    source = options.source;
-    retries = options.retries || 0;
-    maxRetries = options.maxRetries || retries;
-    delay = options.delay || function() {
-      return 0;
-    };
-    isRetryable = options.isRetryable || function() {
-      return true;
-    };
-    finished = false;
-    error = null;
-    return withDesc(new Bacon.Desc(Bacon, "retry", [options]), Bacon.repeat(function() {
-      var context, pause, valueStream;
-      if (finished) {
-        return null;
-      } else {
-        valueStream = function() {
-          return source().endOnError().withHandler(function(event) {
-            if (event.isError()) {
-              error = event;
-              if (isRetryable(error.error) && retries > 0) {
+  }));
+};
 
-              } else {
-                finished = true;
-                return this.push(event);
-              }
-            } else {
-              if (event.hasValue()) {
-                error = null;
-                finished = true;
-              }
-              return this.push(event);
-            }
-          });
-        };
-        if (error) {
-          context = {
-            error: error.error,
-            retriesDone: maxRetries - retries
-          };
-          pause = Bacon.later(delay(context)).filter(false);
-          retries = retries - 1;
-          return pause.concat(Bacon.once().flatMap(valueStream));
-        } else {
-          return valueStream();
-        }
-      }
-    }));
-  };
-
-  Bacon.sequentially = function(delay, values) {
-    var index;
-    index = 0;
-    return withDesc(new Bacon.Desc(Bacon, "sequentially", [delay, values]), Bacon.fromPoll(delay, function() {
-      var value;
-      value = values[index++];
-      if (index < values.length) {
-        return value;
-      } else if (index === values.length) {
-        return [value, endEvent()];
-      } else {
-        return endEvent();
-      }
-    }));
-  };
-
-  Bacon.Observable.prototype.skip = function(count) {
-    return withDesc(new Bacon.Desc(this, "skip", [count]), this.withHandler(function(event) {
-      if (!event.hasValue()) {
-        return this.push(event);
-      } else if (count > 0) {
-        count--;
-        return Bacon.more;
-      } else {
-        return this.push(event);
-      }
-    }));
-  };
-
-  Bacon.Observable.prototype.take = function(count) {
-    if (count <= 0) {
-      return Bacon.never();
+Bacon.Observable.prototype.skipErrors = function () {
+  return withDesc(new Bacon.Desc(this, "skipErrors", []), this.withHandler(function (event) {
+    if (event.isError()) {
+      return Bacon.more;
+    } else {
+      return this.push(event);
     }
-    return withDesc(new Bacon.Desc(this, "take", [count]), this.withHandler(function(event) {
-      if (!event.hasValue()) {
-        return this.push(event);
+  }));
+};
+
+Bacon.EventStream.prototype.takeUntil = function (stopper) {
+  var endMarker = {};
+  return withDesc(new Bacon.Desc(this, "takeUntil", [stopper]), Bacon.groupSimultaneous(this.mapEnd(endMarker), stopper.skipErrors()).withHandler(function (event) {
+    if (!event.hasValue()) {
+      return this.push(event);
+    } else {
+      var _event$value = event.value();
+
+      var data = _event$value[0];
+      var stopper = _event$value[1];
+
+      if (stopper.length) {
+        return this.push(endEvent());
       } else {
-        count--;
-        if (count > 0) {
-          return this.push(event);
-        } else {
-          if (count === 0) {
-            this.push(event);
+        var reply = Bacon.more;
+        for (var i = 0, value; i < data.length; i++) {
+          value = data[i];
+          if (value === endMarker) {
+            reply = this.push(endEvent());
+          } else {
+            reply = this.push(nextEvent(value));
           }
-          this.push(endEvent());
-          return Bacon.noMore;
         }
+        return reply;
       }
-    }));
-  };
+    }
+  }));
+};
 
-  Bacon.EventStream.prototype.skipUntil = function(starter) {
-    var started;
-    started = starter.take(1).map(true).toProperty(false);
-    return withDesc(new Bacon.Desc(this, "skipUntil", [starter]), this.filter(started));
-  };
+Bacon.Property.prototype.takeUntil = function (stopper) {
+  var changes = this.changes().takeUntil(stopper);
+  return withDesc(new Bacon.Desc(this, "takeUntil", [stopper]), addPropertyInitValueToStream(this, changes));
+};
 
-  Bacon.EventStream.prototype.skipWhile = function() {
-    var args, f, ok;
-    f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    assertObservableIsProperty(f);
-    ok = false;
-    return convertArgsToFunction(this, f, args, function(f) {
-      return withDesc(new Bacon.Desc(this, "skipWhile", [f]), this.withHandler(function(event) {
-        if (ok || !event.hasValue() || !f(event.value())) {
-          if (event.hasValue()) {
-            ok = true;
+Bacon.Observable.prototype.flatMapLatest = function () {
+  var f = makeSpawner(arguments);
+  var stream = this.toEventStream();
+  return withDesc(new Bacon.Desc(this, "flatMapLatest", [f]), stream.flatMap(function (value) {
+    return makeObservable(f(value)).takeUntil(stream);
+  }));
+};
+
+Bacon.Property.prototype.delayChanges = function (desc, f) {
+  return withDesc(desc, addPropertyInitValueToStream(this, f(this.changes())));
+};
+
+Bacon.EventStream.prototype.delay = function (delay) {
+  return withDesc(new Bacon.Desc(this, "delay", [delay]), this.flatMap(function (value) {
+    return Bacon.later(delay, value);
+  }));
+};
+
+Bacon.Property.prototype.delay = function (delay) {
+  return this.delayChanges(new Bacon.Desc(this, "delay", [delay]), function (changes) {
+    return changes.delay(delay);
+  });
+};
+
+Bacon.EventStream.prototype.debounce = function (delay) {
+  return withDesc(new Bacon.Desc(this, "debounce", [delay]), this.flatMapLatest(function (value) {
+    return Bacon.later(delay, value);
+  }));
+};
+
+Bacon.Property.prototype.debounce = function (delay) {
+  return this.delayChanges(new Bacon.Desc(this, "debounce", [delay]), function (changes) {
+    return changes.debounce(delay);
+  });
+};
+
+Bacon.EventStream.prototype.debounceImmediate = function (delay) {
+  return withDesc(new Bacon.Desc(this, "debounceImmediate", [delay]), this.flatMapFirst(function (value) {
+    return Bacon.once(value).concat(Bacon.later(delay).filter(false));
+  }));
+};
+
+Bacon.Property.prototype.debounceImmediate = function (delay) {
+  return this.delayChanges(new Bacon.Desc(this, "debounceImmediate", [delay]), function (changes) {
+    return changes.debounceImmediate(delay);
+  });
+};
+
+Bacon.Observable.prototype.decode = function (cases) {
+  return withDesc(new Bacon.Desc(this, "decode", [cases]), this.combine(Bacon.combineTemplate(cases), function (key, values) {
+    return values[key];
+  }));
+};
+
+Bacon.Observable.prototype.scan = function (seed, f) {
+  var _this10 = this;
+
+  var resultProperty;
+  f = toCombinator(f);
+  var acc = toOption(seed);
+  var initHandled = false;
+  var subscribe = function (sink) {
+    var initSent = false;
+    var unsub = nop;
+    var reply = Bacon.more;
+    var sendInit = function () {
+      if (!initSent) {
+        return acc.forEach(function (value) {
+          initSent = initHandled = true;
+          reply = sink(new Initial(function () {
+            return value;
+          }));
+          if (reply === Bacon.noMore) {
+            unsub();
+            unsub = nop;
+            return unsub;
           }
-          return this.push(event);
-        } else {
+        });
+      }
+    };
+    unsub = _this10.dispatcher.subscribe(function (event) {
+      if (event.hasValue()) {
+        if (initHandled && event.isInitial()) {
           return Bacon.more;
-        }
-      }));
-    });
-  };
-
-  Bacon.Observable.prototype.slidingWindow = function(n, minValues) {
-    if (minValues == null) {
-      minValues = 0;
-    }
-    return withDesc(new Bacon.Desc(this, "slidingWindow", [n, minValues]), this.scan([], (function(window, value) {
-      return window.concat([value]).slice(-n);
-    })).filter((function(values) {
-      return values.length >= minValues;
-    })));
-  };
-
-  Bacon.spy = function(spy) {
-    return spys.push(spy);
-  };
-
-  spys = [];
-
-  registerObs = function(obs) {
-    var j, len1, spy;
-    if (spys.length) {
-      if (!registerObs.running) {
-        try {
-          registerObs.running = true;
-          for (j = 0, len1 = spys.length; j < len1; j++) {
-            spy = spys[j];
-            spy(obs);
-          }
-        } finally {
-          delete registerObs.running;
-        }
-      }
-    }
-    return void 0;
-  };
-
-  Bacon.Property.prototype.startWith = function(seed) {
-    return withDesc(new Bacon.Desc(this, "startWith", [seed]), this.scan(seed, function(prev, next) {
-      return next;
-    }));
-  };
-
-  Bacon.EventStream.prototype.startWith = function(seed) {
-    return withDesc(new Bacon.Desc(this, "startWith", [seed]), Bacon.once(seed).concat(this));
-  };
-
-  Bacon.Observable.prototype.takeWhile = function() {
-    var args, f;
-    f = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    assertObservableIsProperty(f);
-    return convertArgsToFunction(this, f, args, function(f) {
-      return withDesc(new Bacon.Desc(this, "takeWhile", [f]), this.withHandler(function(event) {
-        if (event.filter(f)) {
-          return this.push(event);
         } else {
-          this.push(endEvent());
-          return Bacon.noMore;
+            if (!event.isInitial()) {
+              sendInit();
+            }
+            initSent = initHandled = true;
+            var prev = acc.getOrElse(undefined);
+            var next = f(prev, event.value());
+
+            acc = new Some(next);
+            return sink(event.apply(function () {
+              return next;
+            }));
+          }
+      } else {
+        if (event.isEnd()) {
+          reply = sendInit();
         }
-      }));
-    });
-  };
-
-  Bacon.update = function() {
-    var i, initial, lateBindFirst, patterns;
-    initial = arguments[0], patterns = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    lateBindFirst = function(f) {
-      return function() {
-        var args;
-        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        return function(i) {
-          return f.apply(null, [i].concat(args));
-        };
-      };
-    };
-    i = patterns.length - 1;
-    while (i > 0) {
-      if (!(patterns[i] instanceof Function)) {
-        patterns[i] = (function(x) {
-          return function() {
-            return x;
-          };
-        })(patterns[i]);
+        if (reply !== Bacon.noMore) {
+          return sink(event);
+        }
       }
-      patterns[i] = lateBindFirst(patterns[i]);
-      i = i - 2;
-    }
-    return withDesc(new Bacon.Desc(Bacon, "update", [initial].concat(slice.call(patterns))), Bacon.when.apply(Bacon, patterns).scan(initial, (function(x, f) {
-      return f(x);
-    })));
+    });
+    UpdateBarrier.whenDoneWith(resultProperty, sendInit);
+    return unsub;
   };
+  resultProperty = new Property(new Bacon.Desc(this, "scan", [seed, f]), subscribe);
+  return resultProperty;
+};
 
-  Bacon.zipAsArray = function() {
-    var streams;
-    streams = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    if (isArray(streams[0])) {
-      streams = streams[0];
+Bacon.Observable.prototype.diff = function (start, f) {
+  f = toCombinator(f);
+  return withDesc(new Bacon.Desc(this, "diff", [start, f]), this.scan([start], function (prevTuple, next) {
+    return [next, f(prevTuple[0], next)];
+  }).filter(function (tuple) {
+    return tuple.length === 2;
+  }).map(function (tuple) {
+    return tuple[1];
+  }));
+};
+
+Bacon.Observable.prototype.doAction = function () {
+  var f = makeFunctionArgs(arguments);
+  return withDesc(new Bacon.Desc(this, "doAction", [f]), this.withHandler(function (event) {
+    if (event.hasValue()) {
+      f(event.value());
     }
-    return withDesc(new Bacon.Desc(Bacon, "zipAsArray", streams), Bacon.zipWith(streams, function() {
-      var xs;
-      xs = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      return xs;
+    return this.push(event);
+  }));
+};
+
+Bacon.Observable.prototype.doEnd = function () {
+  var f = makeFunctionArgs(arguments);
+  return withDesc(new Bacon.Desc(this, "doEnd", [f]), this.withHandler(function (event) {
+    if (event.isEnd()) {
+      f();
+    }
+    return this.push(event);
+  }));
+};
+
+Bacon.Observable.prototype.doError = function () {
+  var f = makeFunctionArgs(arguments);
+  return withDesc(new Bacon.Desc(this, "doError", [f]), this.withHandler(function (event) {
+    if (event.isError()) {
+      f(event.error);
+    }
+    return this.push(event);
+  }));
+};
+
+Bacon.Observable.prototype.doLog = function () {
+  for (var _len15 = arguments.length, args = Array(_len15), _key15 = 0; _key15 < _len15; _key15++) {
+    args[_key15] = arguments[_key15];
+  }
+
+  return withDesc(new Bacon.Desc(this, "doLog", args), this.withHandler(function (event) {
+    if (typeof console !== "undefined" && console !== null && typeof console.log === "function") {
+      console.log.apply(console, args.concat([event.log()]));
+    }
+    return this.push(event);
+  }));
+};
+
+Bacon.Observable.prototype.endOnError = function (f) {
+  if (!(typeof f !== "undefined" && f !== null)) {
+    f = true;
+  }
+
+  for (var _len16 = arguments.length, args = Array(_len16 > 1 ? _len16 - 1 : 0), _key16 = 1; _key16 < _len16; _key16++) {
+    args[_key16 - 1] = arguments[_key16];
+  }
+
+  return convertArgsToFunction(this, f, args, function (f) {
+    return withDesc(new Bacon.Desc(this, "endOnError", []), this.withHandler(function (event) {
+      if (event.isError() && f(event.error)) {
+        this.push(event);
+        return this.push(endEvent());
+      } else {
+        return this.push(event);
+      }
     }));
-  };
+  });
+};
 
-  Bacon.zipWith = function() {
-    var f, ref1, streams;
-    f = arguments[0], streams = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-    if (!_.isFunction(f)) {
-      ref1 = [f, streams[0]], streams = ref1[0], f = ref1[1];
+Observable.prototype.errors = function () {
+  return withDesc(new Bacon.Desc(this, "errors", []), this.filter(function () {
+    return false;
+  }));
+};
+
+Bacon.Observable.prototype.take = function (count) {
+  if (count <= 0) {
+    return Bacon.never();
+  }
+  return withDesc(new Bacon.Desc(this, "take", [count]), this.withHandler(function (event) {
+    if (!event.hasValue()) {
+      return this.push(event);
+    } else {
+      count--;
+      if (count > 0) {
+        return this.push(event);
+      } else {
+        if (count === 0) {
+          this.push(event);
+        }
+        this.push(endEvent());
+        return Bacon.noMore;
+      }
     }
-    streams = _.map((function(s) {
-      return s.toEventStream();
-    }), streams);
-    return withDesc(new Bacon.Desc(Bacon, "zipWith", [f].concat(slice.call(streams))), Bacon.when(streams, f));
-  };
-
-  Bacon.Observable.prototype.zip = function(other, f) {
-    if (f == null) {
-      f = Array;
-    }
-    return withDesc(new Bacon.Desc(this, "zip", [other]), Bacon.zipWith([this, other], f));
-  };
-
-  
+  }));
+};
 
 Bacon.Observable.prototype.first = function () {
   return withDesc(new Bacon.Desc(this, "first", []), this.take(1));
 };
+
+Bacon.Observable.prototype.mapError = function () {
+  var f = makeFunctionArgs(arguments);
+  return withDesc(new Bacon.Desc(this, "mapError", [f]), this.withHandler(function (event) {
+    if (event.isError()) {
+      return this.push(nextEvent(f(event.error)));
+    } else {
+      return this.push(event);
+    }
+  }));
+};
+
+Bacon.Observable.prototype.flatMapError = function (fn) {
+  var desc = new Bacon.Desc(this, "flatMapError", [fn]);
+  return withDesc(desc, this.mapError(function (err) {
+    return new Error(err);
+  }).flatMap(function (x) {
+    if (x instanceof Error) {
+      return fn(x.error);
+    } else {
+      return Bacon.once(x);
+    }
+  }));
+};
+
+Bacon.EventStream.prototype.sampledBy = function (sampler, combinator) {
+  return withDesc(new Bacon.Desc(this, "sampledBy", [sampler, combinator]), this.toProperty().sampledBy(sampler, combinator));
+};
+
+Bacon.Property.prototype.sampledBy = function (sampler, combinator) {
+  var lazy = false;
+  if (typeof combinator !== "undefined" && combinator !== null) {
+    combinator = toCombinator(combinator);
+  } else {
+    lazy = true;
+    combinator = function (f) {
+      return f.value();
+    };
+  }
+  var thisSource = new Source(this, false, lazy);
+  var samplerSource = new Source(sampler, true, lazy);
+  var stream = Bacon.when([thisSource, samplerSource], combinator);
+  var result = sampler._isProperty ? stream.toProperty() : stream;
+  return withDesc(new Bacon.Desc(this, "sampledBy", [sampler, combinator]), result);
+};
+
+Bacon.Property.prototype.sample = function (interval) {
+  return withDesc(new Bacon.Desc(this, "sample", [interval]), this.sampledBy(Bacon.interval(interval, {})));
+};
+
+Bacon.Observable.prototype.map = function (p) {
+  if (p && p._isProperty) {
+    return p.sampledBy(this, former);
+  } else {
+    for (var _len17 = arguments.length, args = Array(_len17 > 1 ? _len17 - 1 : 0), _key17 = 1; _key17 < _len17; _key17++) {
+      args[_key17 - 1] = arguments[_key17];
+    }
+
+    return convertArgsToFunction(this, p, args, function (f) {
+      return withDesc(new Bacon.Desc(this, "map", [f]), this.withHandler(function (event) {
+        return this.push(event.fmap(f));
+      }));
+    });
+  }
+};
+
+Bacon.Observable.prototype.fold = function (seed, f) {
+  return withDesc(new Bacon.Desc(this, "fold", [seed, f]), this.scan(seed, f).sampledBy(this.filter(false).mapEnd().toProperty()));
+};
+
+Observable.prototype.reduce = Observable.prototype.fold;
+
+var eventMethods = [["addEventListener", "removeEventListener"], ["addListener", "removeListener"], ["on", "off"], ["bind", "unbind"]];
+
+var findHandlerMethods = function (target) {
+  var pair;
+  for (var i = 0; i < eventMethods.length; i++) {
+    pair = eventMethods[i];
+    var methodPair = [target[pair[0]], target[pair[1]]];
+    if (methodPair[0] && methodPair[1]) {
+      return methodPair;
+    }
+  }
+  for (var j = 0; j < eventMethods.length; j++) {
+    pair = eventMethods[j];
+    var addListener = target[pair[0]];
+    if (addListener) {
+      return [addListener, function () {}];
+    }
+  }
+  throw new Error("No suitable event methods in " + target);
+};
+
+Bacon.fromEventTarget = function (target, eventName, eventTransformer) {
+  var _findHandlerMethods = findHandlerMethods(target);
+
+  var sub = _findHandlerMethods[0];
+  var unsub = _findHandlerMethods[1];
+
+  var desc = new Bacon.Desc(Bacon, "fromEvent", [target, eventName]);
+  return withDesc(desc, Bacon.fromBinder(function (handler) {
+    sub.call(target, eventName, handler);
+    return function () {
+      return unsub.call(target, eventName, handler);
+    };
+  }, eventTransformer));
+};
+
+Bacon.fromEvent = Bacon.fromEventTarget;
+
+Bacon.fromPoll = function (delay, poll) {
+  var desc = new Bacon.Desc(Bacon, "fromPoll", [delay, poll]);
+  return withDesc(desc, Bacon.fromBinder(function (handler) {
+    var id = Bacon.scheduler.setInterval(handler, delay);
+    return function () {
+      return Bacon.scheduler.clearInterval(id);
+    };
+  }, poll));
+};
+
+function valueAndEnd(value) {
+  return [value, endEvent()];
+}
+
+Bacon.fromPromise = function (promise, abort) {
+  var eventTransformer = arguments.length <= 2 || arguments[2] === undefined ? valueAndEnd : arguments[2];
+
+  return withDesc(new Bacon.Desc(Bacon, "fromPromise", [promise]), Bacon.fromBinder(function (handler) {
+    var bound = promise.then(handler, function (e) {
+      return handler(new Error(e));
+    });
+    if (bound && typeof bound.done === "function") {
+      bound.done();
+    }
+
+    if (abort) {
+      return function () {
+        if (typeof promise.abort === "function") {
+          return promise.abort();
+        }
+      };
+    } else {
+      return function () {};
+    }
+  }, eventTransformer));
+};
+
+Bacon.Observable.prototype.groupBy = function (keyF) {
+  var limitF = arguments.length <= 1 || arguments[1] === undefined ? Bacon._.id : arguments[1];
+
+  var streams = {};
+  var src = this;
+  return src.filter(function (x) {
+    return !streams[keyF(x)];
+  }).map(function (x) {
+    var key = keyF(x);
+    var similar = src.filter(function (x) {
+      return keyF(x) === key;
+    });
+    var data = Bacon.once(x).concat(similar);
+    var limited = limitF(data, x).withHandler(function (event) {
+      this.push(event);
+      if (event.isEnd()) {
+        return delete streams[key];
+      }
+    });
+    streams[key] = limited;
+    return limited;
+  });
+};
+
+Bacon.fromArray = function (values) {
+  assertArray(values);
+  if (!values.length) {
+    return withDesc(new Bacon.Desc(Bacon, "fromArray", values), Bacon.never());
+  } else {
+    var i = 0;
+    return new EventStream(new Bacon.Desc(Bacon, "fromArray", [values]), function (sink) {
+      var unsubd = false;
+      var reply = Bacon.more;
+      var pushing = false;
+      var pushNeeded = false;
+      var push = function () {
+        pushNeeded = true;
+        if (pushing) {
+          return;
+        }
+        pushing = true;
+        while (pushNeeded) {
+          pushNeeded = false;
+          if (reply !== Bacon.noMore && !unsubd) {
+            var value = values[i++];
+            reply = sink(toEvent(value));
+            if (reply !== Bacon.noMore) {
+              if (i === values.length) {
+                sink(endEvent());
+              } else {
+                UpdateBarrier.afterTransaction(push);
+              }
+            }
+          }
+        }
+        pushing = false;
+        return pushing;
+      };
+
+      push();
+      return function () {
+        unsubd = true;
+        return unsubd;
+      };
+    });
+  }
+};
+
+Bacon.EventStream.prototype.holdWhen = function (valve) {
+  var onHold = false;
+  var bufferedValues = [];
+  var src = this;
+  var srcIsEnded = false;
+  return new EventStream(new Bacon.Desc(this, "holdWhen", [valve]), function (sink) {
+    var composite = new CompositeUnsubscribe();
+    var subscribed = false;
+    var endIfBothEnded = function (unsub) {
+      if (typeof unsub === "function") {
+        unsub();
+      }
+      if (composite.empty() && subscribed) {
+        return sink(endEvent());
+      }
+    };
+    composite.add(function (unsubAll, unsubMe) {
+      return valve.subscribeInternal(function (event) {
+        if (event.hasValue()) {
+          onHold = event.value();
+          if (!onHold) {
+            var toSend = bufferedValues;
+            bufferedValues = [];
+            return (function () {
+              var result = [];
+              for (var i = 0, value; i < toSend.length; i++) {
+                value = toSend[i];
+                result.push(sink(nextEvent(value)));
+              }
+              if (srcIsEnded) {
+                result.push(sink(endEvent()));
+                unsubMe();
+              }
+              return result;
+            })();
+          }
+        } else if (event.isEnd()) {
+          return endIfBothEnded(unsubMe);
+        } else {
+          return sink(event);
+        }
+      });
+    });
+    composite.add(function (unsubAll, unsubMe) {
+      return src.subscribeInternal(function (event) {
+        if (onHold && event.hasValue()) {
+          return bufferedValues.push(event.value());
+        } else if (event.isEnd() && bufferedValues.length) {
+          srcIsEnded = true;
+          return endIfBothEnded(unsubMe);
+        } else {
+          return sink(event);
+        }
+      });
+    });
+    subscribed = true;
+    endIfBothEnded();
+    return composite.unsubscribe;
+  });
+};
+
+Bacon.interval = function (delay) {
+  var value = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  return withDesc(new Bacon.Desc(Bacon, "interval", [delay, value]), Bacon.fromPoll(delay, function () {
+    return nextEvent(value);
+  }));
+};
+
+Bacon.$ = {};
+Bacon.$.asEventStream = function (eventName, selector, eventTransformer) {
+  var _this11 = this;
+
+  if (_.isFunction(selector)) {
+    eventTransformer = selector;
+    selector = undefined;
+  }
+
+  return withDesc(new Bacon.Desc(this.selector || this, "asEventStream", [eventName]), Bacon.fromBinder(function (handler) {
+    _this11.on(eventName, selector, handler);
+    return function () {
+      return _this11.off(eventName, selector, handler);
+    };
+  }, eventTransformer));
+};
+
+if (typeof jQuery !== "undefined" && jQuery) {
+  jQuery.fn.asEventStream = Bacon.$.asEventStream;
+}
+
+if (typeof Zepto !== "undefined" && Zepto) {
+  Zepto.fn.asEventStream = Bacon.$.asEventStream;
+}
 
 Bacon.Observable.prototype.last = function () {
   var lastEvent;
@@ -5220,6 +4874,267 @@ Bacon.Observable.prototype.last = function () {
   }));
 };
 
+Bacon.Observable.prototype.log = function () {
+  for (var _len18 = arguments.length, args = Array(_len18), _key18 = 0; _key18 < _len18; _key18++) {
+    args[_key18] = arguments[_key18];
+  }
+
+  this.subscribe(function (event) {
+    if (typeof console !== "undefined" && typeof console.log === "function") {
+      console.log.apply(console, args.concat([event.log()]));
+    }
+  });
+  return this;
+};
+
+Bacon.EventStream.prototype.merge = function (right) {
+  assertEventStream(right);
+  var left = this;
+  return withDesc(new Bacon.Desc(left, "merge", [right]), Bacon.mergeAll(this, right));
+};
+
+Bacon.mergeAll = function () {
+  var streams = argumentsToObservables(arguments);
+  if (streams.length) {
+    return new EventStream(new Bacon.Desc(Bacon, "mergeAll", streams), function (sink) {
+      var ends = 0;
+      var smartSink = function (obs) {
+        return function (unsubBoth) {
+          return obs.dispatcher.subscribe(function (event) {
+            if (event.isEnd()) {
+              ends++;
+              if (ends === streams.length) {
+                return sink(endEvent());
+              } else {
+                return Bacon.more;
+              }
+            } else {
+              var reply = sink(event);
+              if (reply === Bacon.noMore) {
+                unsubBoth();
+              }
+              return reply;
+            }
+          });
+        };
+      };
+      var sinks = _.map(smartSink, streams);
+      return new Bacon.CompositeUnsubscribe(sinks).unsubscribe;
+    });
+  } else {
+    return Bacon.never();
+  }
+};
+
+Bacon.repeatedly = function (delay, values) {
+  var index = 0;
+  return withDesc(new Bacon.Desc(Bacon, "repeatedly", [delay, values]), Bacon.fromPoll(delay, function () {
+    return values[index++ % values.length];
+  }));
+};
+
+Bacon.repeat = function (generator) {
+  var index = 0;
+  return Bacon.fromBinder(function (sink) {
+    var flag = false;
+    var reply = Bacon.more;
+    var unsub = function () {};
+    function handleEvent(event) {
+      if (event.isEnd()) {
+        if (!flag) {
+          return flag = true;
+        } else {
+          return subscribeNext();
+        }
+      } else {
+        return reply = sink(event);
+      }
+    };
+    function subscribeNext() {
+      var next;
+      flag = true;
+      while (flag && reply !== Bacon.noMore) {
+        next = generator(index++);
+        flag = false;
+        if (next) {
+          unsub = next.subscribeInternal(handleEvent);
+        } else {
+          sink(endEvent());
+        }
+      }
+      return flag = true;
+    };
+    subscribeNext();
+    return function () {
+      return unsub();
+    };
+  });
+};
+
+Bacon.retry = function (options) {
+  if (!_.isFunction(options.source)) {
+    throw new Exception("'source' option has to be a function");
+  }
+  var source = options.source;
+  var retries = options.retries || 0;
+  var retriesDone = 0;
+  var delay = options.delay || function () {
+    return 0;
+  };
+  var isRetryable = options.isRetryable || function () {
+    return true;
+  };
+  var finished = false;
+  var error = null;
+
+  return withDesc(new Bacon.Desc(Bacon, "retry", [options]), Bacon.repeat(function () {
+    function valueStream() {
+      return source().endOnError().withHandler(function (event) {
+        if (event.isError()) {
+          error = event;
+          if (!(isRetryable(error.error) && (retries === 0 || retriesDone < retries))) {
+            finished = true;
+            return this.push(event);
+          }
+        } else {
+          if (event.hasValue()) {
+            error = null;
+            finished = true;
+          }
+          return this.push(event);
+        }
+      });
+    }
+
+    if (finished) {
+      return null;
+    } else if (error) {
+      var context = {
+        error: error.error,
+        retriesDone: retriesDone
+      };
+      var pause = Bacon.later(delay(context)).filter(false);
+      retriesDone++;
+      return pause.concat(Bacon.once().flatMap(valueStream));
+    } else {
+      return valueStream();
+    }
+  }));
+};
+
+Bacon.sequentially = function (delay, values) {
+  var index = 0;
+  return withDesc(new Bacon.Desc(Bacon, "sequentially", [delay, values]), Bacon.fromPoll(delay, function () {
+    var value = values[index++];
+    if (index < values.length) {
+      return value;
+    } else if (index === values.length) {
+      return [value, endEvent()];
+    } else {
+      return endEvent();
+    }
+  }));
+};
+
+Bacon.Observable.prototype.skip = function (count) {
+  return withDesc(new Bacon.Desc(this, "skip", [count]), this.withHandler(function (event) {
+    if (!event.hasValue()) {
+      return this.push(event);
+    } else if (count > 0) {
+      count--;
+      return Bacon.more;
+    } else {
+      return this.push(event);
+    }
+  }));
+};
+
+Bacon.EventStream.prototype.skipUntil = function (starter) {
+  var started = starter.take(1).map(true).toProperty(false);
+  return withDesc(new Bacon.Desc(this, "skipUntil", [starter]), this.filter(started));
+};
+
+Bacon.EventStream.prototype.skipWhile = function (f) {
+  assertObservableIsProperty(f);
+  var ok = false;
+
+  for (var _len19 = arguments.length, args = Array(_len19 > 1 ? _len19 - 1 : 0), _key19 = 1; _key19 < _len19; _key19++) {
+    args[_key19 - 1] = arguments[_key19];
+  }
+
+  return convertArgsToFunction(this, f, args, function (f) {
+    return withDesc(new Bacon.Desc(this, "skipWhile", [f]), this.withHandler(function (event) {
+      if (ok || !event.hasValue() || !f(event.value())) {
+        if (event.hasValue()) {
+          ok = true;
+        }
+        return this.push(event);
+      } else {
+        return Bacon.more;
+      }
+    }));
+  });
+};
+
+Bacon.Observable.prototype.slidingWindow = function (n) {
+  var minValues = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
+  return withDesc(new Bacon.Desc(this, "slidingWindow", [n, minValues]), this.scan([], function (window, value) {
+    return window.concat([value]).slice(-n);
+  }).filter(function (values) {
+    return values.length >= minValues;
+  }));
+};
+
+var spies = [];
+var registerObs = function (obs) {
+  if (spies.length) {
+    if (!registerObs.running) {
+      try {
+        registerObs.running = true;
+        spies.forEach(function (spy) {
+          spy(obs);
+        });
+      } finally {
+        delete registerObs.running;
+      }
+    }
+  }
+};
+
+Bacon.spy = function (spy) {
+  return spies.push(spy);
+};
+
+Bacon.Property.prototype.startWith = function (seed) {
+  return withDesc(new Bacon.Desc(this, "startWith", [seed]), this.scan(seed, function (prev, next) {
+    return next;
+  }));
+};
+
+Bacon.EventStream.prototype.startWith = function (seed) {
+  return withDesc(new Bacon.Desc(this, "startWith", [seed]), Bacon.once(seed).concat(this));
+};
+
+Bacon.Observable.prototype.takeWhile = function (f) {
+  assertObservableIsProperty(f);
+
+  for (var _len20 = arguments.length, args = Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
+    args[_key20 - 1] = arguments[_key20];
+  }
+
+  return convertArgsToFunction(this, f, args, function (f) {
+    return withDesc(new Bacon.Desc(this, "takeWhile", [f]), this.withHandler(function (event) {
+      if (event.filter(f)) {
+        return this.push(event);
+      } else {
+        this.push(endEvent());
+        return Bacon.noMore;
+      }
+    }));
+  });
+};
+
 Bacon.EventStream.prototype.throttle = function (delay) {
   return withDesc(new Bacon.Desc(this, "throttle", [delay]), this.bufferWithTime(delay).map(function (values) {
     return values[values.length - 1];
@@ -5233,7 +5148,7 @@ Bacon.Property.prototype.throttle = function (delay) {
 };
 
 Observable.prototype.firstToPromise = function (PromiseCtr) {
-  var _this = this;
+  var _this12 = this;
 
   if (typeof PromiseCtr !== "function") {
     if (typeof Promise === "function") {
@@ -5244,7 +5159,7 @@ Observable.prototype.firstToPromise = function (PromiseCtr) {
   }
 
   return new PromiseCtr(function (resolve, reject) {
-    return _this.subscribe(function (event) {
+    return _this12.subscribe(function (event) {
       if (event.hasValue()) {
         resolve(event.value());
       }
@@ -5261,18 +5176,93 @@ Observable.prototype.toPromise = function (PromiseCtr) {
   return this.last().firstToPromise(PromiseCtr);
 };
 
-if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) {
-    define([], function() {
-      return Bacon;
-    });
-    this.Bacon = Bacon;
-  } else if ((typeof module !== "undefined" && module !== null) && (module.exports != null)) {
-    module.exports = Bacon;
-    Bacon.Bacon = Bacon;
-  } else {
-    this.Bacon = Bacon;
+Bacon["try"] = function (f) {
+  return function (value) {
+    try {
+      return Bacon.once(f(value));
+    } catch (e) {
+      return new Bacon.Error(e);
+    }
+  };
+};
+
+Bacon.update = function (initial) {
+  function lateBindFirst(f) {
+    return function () {
+      for (var _len22 = arguments.length, args = Array(_len22), _key22 = 0; _key22 < _len22; _key22++) {
+        args[_key22] = arguments[_key22];
+      }
+
+      return function (i) {
+        return f.apply(undefined, [i].concat(args));
+      };
+    };
   }
 
+  for (var _len21 = arguments.length, patterns = Array(_len21 > 1 ? _len21 - 1 : 0), _key21 = 1; _key21 < _len21; _key21++) {
+    patterns[_key21 - 1] = arguments[_key21];
+  }
+
+  var i = patterns.length - 1;
+  while (i > 0) {
+    if (!(patterns[i] instanceof Function)) {
+      patterns[i] = _.always(patterns[i]);
+    }
+    patterns[i] = lateBindFirst(patterns[i]);
+    i = i - 2;
+  }
+  return withDesc(new Bacon.Desc(Bacon, "update", [initial].concat(patterns)), Bacon.when.apply(Bacon, patterns).scan(initial, function (x, f) {
+    return f(x);
+  }));
+};
+
+Bacon.zipAsArray = function () {
+  for (var _len23 = arguments.length, args = Array(_len23), _key23 = 0; _key23 < _len23; _key23++) {
+    args[_key23] = arguments[_key23];
+  }
+
+  var streams = argumentsToObservables(args);
+  return withDesc(new Bacon.Desc(Bacon, "zipAsArray", streams), Bacon.zipWith(streams, function () {
+    for (var _len24 = arguments.length, xs = Array(_len24), _key24 = 0; _key24 < _len24; _key24++) {
+      xs[_key24] = arguments[_key24];
+    }
+
+    return xs;
+  }));
+};
+
+Bacon.zipWith = function () {
+  for (var _len25 = arguments.length, args = Array(_len25), _key25 = 0; _key25 < _len25; _key25++) {
+    args[_key25] = arguments[_key25];
+  }
+
+  var observablesAndFunction = argumentsToObservablesAndFunction(args);
+  var streams = observablesAndFunction[0];
+  var f = observablesAndFunction[1];
+
+  streams = _.map(function (s) {
+    return s.toEventStream();
+  }, streams);
+  return withDesc(new Bacon.Desc(Bacon, "zipWith", [f].concat(streams)), Bacon.when(streams, f));
+};
+
+Bacon.Observable.prototype.zip = function (other, f) {
+  return withDesc(new Bacon.Desc(this, "zip", [other]), Bacon.zipWith([this, other], f || Array));
+};
+
+if (typeof define !== "undefined" && define !== null && define.amd != null) {
+  define([], function () {
+    return Bacon;
+  });
+  if (typeof this !== "undefined" && this !== null) {
+    this.Bacon = Bacon;
+  }
+} else if (typeof module !== "undefined" && module !== null && module.exports != null) {
+  module.exports = Bacon;
+  Bacon.Bacon = Bacon;
+} else {
+    this.Bacon = Bacon;
+  }
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -5293,10 +5283,10 @@ require('../../js/tab.js')
 require('../../js/affix.js')
 },{"../../js/affix.js":10,"../../js/alert.js":11,"../../js/button.js":12,"../../js/carousel.js":13,"../../js/collapse.js":14,"../../js/dropdown.js":15,"../../js/modal.js":16,"../../js/popover.js":17,"../../js/scrollspy.js":18,"../../js/tab.js":19,"../../js/tooltip.js":20,"../../js/transition.js":21}],10:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: affix.js v3.3.5
+ * Bootstrap: affix.js v3.3.7
  * http://getbootstrap.com/javascript/#affix
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -5322,7 +5312,7 @@ require('../../js/affix.js')
     this.checkPosition()
   }
 
-  Affix.VERSION  = '3.3.5'
+  Affix.VERSION  = '3.3.7'
 
   Affix.RESET    = 'affix affix-top affix-bottom'
 
@@ -5457,10 +5447,10 @@ require('../../js/affix.js')
 
 },{}],11:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: alert.js v3.3.5
+ * Bootstrap: alert.js v3.3.7
  * http://getbootstrap.com/javascript/#alerts
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -5476,7 +5466,7 @@ require('../../js/affix.js')
     $(el).on('click', dismiss, this.close)
   }
 
-  Alert.VERSION = '3.3.5'
+  Alert.VERSION = '3.3.7'
 
   Alert.TRANSITION_DURATION = 150
 
@@ -5489,7 +5479,7 @@ require('../../js/affix.js')
       selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
     }
 
-    var $parent = $(selector)
+    var $parent = $(selector === '#' ? [] : selector)
 
     if (e) e.preventDefault()
 
@@ -5553,10 +5543,10 @@ require('../../js/affix.js')
 
 },{}],12:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: button.js v3.3.5
+ * Bootstrap: button.js v3.3.7
  * http://getbootstrap.com/javascript/#buttons
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -5573,7 +5563,7 @@ require('../../js/affix.js')
     this.isLoading = false
   }
 
-  Button.VERSION  = '3.3.5'
+  Button.VERSION  = '3.3.7'
 
   Button.DEFAULTS = {
     loadingText: 'loading...'
@@ -5595,10 +5585,10 @@ require('../../js/affix.js')
 
       if (state == 'loadingText') {
         this.isLoading = true
-        $el.addClass(d).attr(d, d)
+        $el.addClass(d).attr(d, d).prop(d, true)
       } else if (this.isLoading) {
         this.isLoading = false
-        $el.removeClass(d).removeAttr(d)
+        $el.removeClass(d).removeAttr(d).prop(d, false)
       }
     }, this), 0)
   }
@@ -5662,10 +5652,15 @@ require('../../js/affix.js')
 
   $(document)
     .on('click.bs.button.data-api', '[data-toggle^="button"]', function (e) {
-      var $btn = $(e.target)
-      if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
+      var $btn = $(e.target).closest('.btn')
       Plugin.call($btn, 'toggle')
-      if (!($(e.target).is('input[type="radio"]') || $(e.target).is('input[type="checkbox"]'))) e.preventDefault()
+      if (!($(e.target).is('input[type="radio"], input[type="checkbox"]'))) {
+        // Prevent double click on radios, and the double selections (so cancellation) on checkboxes
+        e.preventDefault()
+        // The target component still receive the focus
+        if ($btn.is('input,button')) $btn.trigger('focus')
+        else $btn.find('input:visible,button:visible').first().trigger('focus')
+      }
     })
     .on('focus.bs.button.data-api blur.bs.button.data-api', '[data-toggle^="button"]', function (e) {
       $(e.target).closest('.btn').toggleClass('focus', /^focus(in)?$/.test(e.type))
@@ -5675,10 +5670,10 @@ require('../../js/affix.js')
 
 },{}],13:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: carousel.js v3.3.5
+ * Bootstrap: carousel.js v3.3.7
  * http://getbootstrap.com/javascript/#carousel
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -5706,7 +5701,7 @@ require('../../js/affix.js')
       .on('mouseleave.bs.carousel', $.proxy(this.cycle, this))
   }
 
-  Carousel.VERSION  = '3.3.5'
+  Carousel.VERSION  = '3.3.7'
 
   Carousel.TRANSITION_DURATION = 600
 
@@ -5914,13 +5909,14 @@ require('../../js/affix.js')
 
 },{}],14:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: collapse.js v3.3.5
+ * Bootstrap: collapse.js v3.3.7
  * http://getbootstrap.com/javascript/#collapse
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
+/* jshint latedef: false */
 
 +function ($) {
   'use strict';
@@ -5944,7 +5940,7 @@ require('../../js/affix.js')
     if (this.options.toggle) this.toggle()
   }
 
-  Collapse.VERSION  = '3.3.5'
+  Collapse.VERSION  = '3.3.7'
 
   Collapse.TRANSITION_DURATION = 350
 
@@ -6127,10 +6123,10 @@ require('../../js/affix.js')
 
 },{}],15:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: dropdown.js v3.3.5
+ * Bootstrap: dropdown.js v3.3.7
  * http://getbootstrap.com/javascript/#dropdowns
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -6147,7 +6143,7 @@ require('../../js/affix.js')
     $(element).on('click.bs.dropdown', this.toggle)
   }
 
-  Dropdown.VERSION = '3.3.5'
+  Dropdown.VERSION = '3.3.7'
 
   function getParent($this) {
     var selector = $this.attr('data-target')
@@ -6179,7 +6175,7 @@ require('../../js/affix.js')
       if (e.isDefaultPrevented()) return
 
       $this.attr('aria-expanded', 'false')
-      $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget)
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
     })
   }
 
@@ -6213,7 +6209,7 @@ require('../../js/affix.js')
 
       $parent
         .toggleClass('open')
-        .trigger('shown.bs.dropdown', relatedTarget)
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
     }
 
     return false
@@ -6294,10 +6290,10 @@ require('../../js/affix.js')
 
 },{}],16:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: modal.js v3.3.5
+ * Bootstrap: modal.js v3.3.7
  * http://getbootstrap.com/javascript/#modals
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -6328,7 +6324,7 @@ require('../../js/affix.js')
     }
   }
 
-  Modal.VERSION  = '3.3.5'
+  Modal.VERSION  = '3.3.7'
 
   Modal.TRANSITION_DURATION = 300
   Modal.BACKDROP_TRANSITION_DURATION = 150
@@ -6435,7 +6431,9 @@ require('../../js/affix.js')
     $(document)
       .off('focusin.bs.modal') // guard against infinite focus loop
       .on('focusin.bs.modal', $.proxy(function (e) {
-        if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
+        if (document !== e.target &&
+            this.$element[0] !== e.target &&
+            !this.$element.has(e.target).length) {
           this.$element.trigger('focus')
         }
       }, this))
@@ -6633,10 +6631,10 @@ require('../../js/affix.js')
 
 },{}],17:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: popover.js v3.3.5
+ * Bootstrap: popover.js v3.3.7
  * http://getbootstrap.com/javascript/#popovers
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -6653,7 +6651,7 @@ require('../../js/affix.js')
 
   if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
 
-  Popover.VERSION  = '3.3.5'
+  Popover.VERSION  = '3.3.7'
 
   Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
     placement: 'right',
@@ -6743,10 +6741,10 @@ require('../../js/affix.js')
 
 },{}],18:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: scrollspy.js v3.3.5
+ * Bootstrap: scrollspy.js v3.3.7
  * http://getbootstrap.com/javascript/#scrollspy
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -6772,7 +6770,7 @@ require('../../js/affix.js')
     this.process()
   }
 
-  ScrollSpy.VERSION  = '3.3.5'
+  ScrollSpy.VERSION  = '3.3.7'
 
   ScrollSpy.DEFAULTS = {
     offset: 10
@@ -6917,10 +6915,10 @@ require('../../js/affix.js')
 
 },{}],19:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: tab.js v3.3.5
+ * Bootstrap: tab.js v3.3.7
  * http://getbootstrap.com/javascript/#tabs
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -6937,7 +6935,7 @@ require('../../js/affix.js')
     // jscs:enable requireDollarBeforejQueryAssignment
   }
 
-  Tab.VERSION = '3.3.5'
+  Tab.VERSION = '3.3.7'
 
   Tab.TRANSITION_DURATION = 150
 
@@ -7074,11 +7072,11 @@ require('../../js/affix.js')
 
 },{}],20:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: tooltip.js v3.3.5
+ * Bootstrap: tooltip.js v3.3.7
  * http://getbootstrap.com/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -7101,7 +7099,7 @@ require('../../js/affix.js')
     this.init('tooltip', element, options)
   }
 
-  Tooltip.VERSION  = '3.3.5'
+  Tooltip.VERSION  = '3.3.7'
 
   Tooltip.TRANSITION_DURATION = 150
 
@@ -7392,9 +7390,11 @@ require('../../js/affix.js')
 
     function complete() {
       if (that.hoverState != 'in') $tip.detach()
-      that.$element
-        .removeAttr('aria-describedby')
-        .trigger('hidden.bs.' + that.type)
+      if (that.$element) { // TODO: Check whether guarding this code with this `if` is really necessary.
+        that.$element
+          .removeAttr('aria-describedby')
+          .trigger('hidden.bs.' + that.type)
+      }
       callback && callback()
     }
 
@@ -7437,7 +7437,10 @@ require('../../js/affix.js')
       // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
       elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
     }
-    var elOffset  = isBody ? { top: 0, left: 0 } : $element.offset()
+    var isSvg = window.SVGElement && el instanceof window.SVGElement
+    // Avoid using $.offset() on SVGs since it gives incorrect results in jQuery 3.
+    // See https://github.com/twbs/bootstrap/issues/20280
+    var elOffset  = isBody ? { top: 0, left: 0 } : (isSvg ? null : $element.offset())
     var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() }
     var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null
 
@@ -7553,6 +7556,7 @@ require('../../js/affix.js')
       that.$tip = null
       that.$arrow = null
       that.$viewport = null
+      that.$element = null
     })
   }
 
@@ -7590,10 +7594,10 @@ require('../../js/affix.js')
 
 },{}],21:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: transition.js v3.3.5
+ * Bootstrap: transition.js v3.3.7
  * http://getbootstrap.com/javascript/#transitions
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -7654,12 +7658,12 @@ require('../../js/affix.js')
  * Encoding.js
  *
  * @description    Converts character encoding.
- * @fileOverview   Encoding library
+ * @fileoverview   Encoding library
  * @author         polygon planet
- * @version        1.0.23
- * @date           2015-04-06
+ * @version        1.0.25
+ * @date           2016-11-03
  * @link           https://github.com/polygonplanet/encoding.js
- * @copyright      Copyright (c) 2013-2015 polygon planet <polygon.planet.aqua@gmail.com>
+ * @copyright      Copyright (c) 2013-2016 polygon planet <polygon.planet.aqua@gmail.com>
  * @license        licensed under the MIT license.
  *
  * Based:
@@ -7851,7 +7855,7 @@ var Encoding = {
       return false;
     }
 
-    if (isObject(encodings)) {
+    if (isObject(encodings) && !isArray(encodings)) {
       encodings = encodings.encoding;
     }
 
@@ -8038,6 +8042,33 @@ var Encoding = {
     }
 
     return results;
+  },
+  /**
+   * Encode a character code array to Base64 encoded string.
+   *
+   * @param {Array.<number>|TypedArray} data The data being encoded.
+   * @return {string} The Base64 encoded string.
+   *
+   * @public
+   * @function
+   */
+  base64Encode: function(data) {
+    if (isString(data)) {
+      data = stringToBuffer(data);
+    }
+    return base64encode(data);
+  },
+  /**
+   * Decode a Base64 encoded string to character code array.
+   *
+   * @param {string} string The data being decoded.
+   * @return {Array.<number>} The decoded array.
+   *
+   * @public
+   * @function
+   */
+  base64Decode: function(string) {
+    return base64decode(string);
   },
   /**
    * Joins a character code array to string.
@@ -10955,6 +10986,138 @@ function bufferToCode(buffer) {
   return slice.call(buffer);
 }
 
+// Base64
+/* Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
+ * Version: 1.0
+ * LastModified: Dec 25 1999
+ * This library is free.  You can redistribute it and/or modify it.
+ */
+// -- Masanao Izumo Copyright 1999 "free"
+// Modified to add support for Binary Array for Encoding.js
+
+var base64EncodeChars = [
+  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,
+  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
+  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
+ 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  43,  47
+];
+
+var base64DecodeChars = [
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
+  52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
+  -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+  15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+  -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+  41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
+];
+
+var base64EncodePadding = '='.charCodeAt(0);
+
+
+function base64encode(data) {
+  var out, i, len;
+  var c1, c2, c3;
+
+  len = data && data.length;
+  i = 0;
+  out = [];
+
+  while (i < len) {
+    c1 = data[i++];
+    if (i == len) {
+      out[out.length] = base64EncodeChars[c1 >> 2];
+      out[out.length] = base64EncodeChars[(c1 & 0x3) << 4];
+      out[out.length] = base64EncodePadding;
+      out[out.length] = base64EncodePadding;
+      break;
+    }
+
+    c2 = data[i++];
+    if (i == len) {
+      out[out.length] = base64EncodeChars[c1 >> 2];
+      out[out.length] = base64EncodeChars[((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4)];
+      out[out.length] = base64EncodeChars[(c2 & 0xF) << 2];
+      out[out.length] = base64EncodePadding;
+      break;
+    }
+
+    c3 = data[i++];
+    out[out.length] = base64EncodeChars[c1 >> 2];
+    out[out.length] = base64EncodeChars[((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4)];
+    out[out.length] = base64EncodeChars[((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6)];
+    out[out.length] = base64EncodeChars[c3 & 0x3F];
+  }
+
+  return codeToString_fast(out);
+}
+
+
+function base64decode(str) {
+  var c1, c2, c3, c4;
+  var i, len, out;
+
+  len = str && str.length;
+  i = 0;
+  out = [];
+
+  while (i < len) {
+    /* c1 */
+    do {
+      c1 = base64DecodeChars[str.charCodeAt(i++) & 0xFF];
+    } while (i < len && c1 == -1);
+
+    if (c1 == -1) {
+      break;
+    }
+
+    /* c2 */
+    do {
+      c2 = base64DecodeChars[str.charCodeAt(i++) & 0xFF];
+    } while (i < len && c2 == -1);
+
+    if (c2 == -1) {
+      break;
+    }
+
+    out[out.length] = (c1 << 2) | ((c2 & 0x30) >> 4);
+
+    /* c3 */
+    do {
+      c3 = str.charCodeAt(i++) & 0xFF;
+      if (c3 == 61) {
+        return out;
+      }
+      c3 = base64DecodeChars[c3];
+    } while (i < len && c3 == -1);
+
+    if (c3 == -1) {
+      break;
+    }
+
+    out[out.length] = ((c2 & 0xF) << 4) | ((c3 & 0x3C) >> 2);
+
+    /* c4 */
+    do {
+      c4 = str.charCodeAt(i++) & 0xFF;
+      if (c4 == 61) {
+        return out;
+      }
+      c4 = base64DecodeChars[c4];
+    } while (i < len && c4 == -1);
+
+    if (c4 == -1) {
+      break;
+    }
+
+    out[out.length] = ((c3 & 0x03) << 6) | c4;
+  }
+
+  return out;
+}
+
 
 /**
  * Encoding conversion table for UTF-8 to JIS.
@@ -13779,17 +13942,17 @@ return Encoding;
 
 },{}],23:[function(require,module,exports){
 /*!
- * jQuery JavaScript Library v2.1.4
+ * jQuery JavaScript Library v2.2.4
  * http://jquery.com/
  *
  * Includes Sizzle.js
  * http://sizzlejs.com/
  *
- * Copyright 2005, 2014 jQuery Foundation, Inc. and other contributors
+ * Copyright jQuery Foundation and other contributors
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2015-04-28T16:01Z
+ * Date: 2016-05-20T17:23Z
  */
 
 (function( global, factory ) {
@@ -13821,9 +13984,10 @@ return Encoding;
 // Can't be in strict mode, several libs including ASP.NET trace
 // the stack via arguments.caller.callee and Firefox dies if
 // you try to trace through "use strict" call chains. (#13335)
-//
-
+//"use strict";
 var arr = [];
+
+var document = window.document;
 
 var slice = arr.slice;
 
@@ -13844,13 +14008,11 @@ var support = {};
 
 
 var
-	// Use the correct document accordingly with window argument (sandbox)
-	document = window.document,
-
-	version = "2.1.4",
+	version = "2.2.4",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
+
 		// The jQuery object is actually just the init constructor 'enhanced'
 		// Need init if jQuery is called (just allow error to be thrown if not included)
 		return new jQuery.fn.init( selector, context );
@@ -13870,6 +14032,7 @@ var
 	};
 
 jQuery.fn = jQuery.prototype = {
+
 	// The current version of jQuery being used
 	jquery: version,
 
@@ -13913,16 +14076,14 @@ jQuery.fn = jQuery.prototype = {
 	},
 
 	// Execute a callback for every element in the matched set.
-	// (You can seed the arguments with an array of args, but this is
-	// only used internally.)
-	each: function( callback, args ) {
-		return jQuery.each( this, callback, args );
+	each: function( callback ) {
+		return jQuery.each( this, callback );
 	},
 
 	map: function( callback ) {
-		return this.pushStack( jQuery.map(this, function( elem, i ) {
+		return this.pushStack( jQuery.map( this, function( elem, i ) {
 			return callback.call( elem, i, elem );
-		}));
+		} ) );
 	},
 
 	slice: function() {
@@ -13940,11 +14101,11 @@ jQuery.fn = jQuery.prototype = {
 	eq: function( i ) {
 		var len = this.length,
 			j = +i + ( i < 0 ? len : 0 );
-		return this.pushStack( j >= 0 && j < len ? [ this[j] ] : [] );
+		return this.pushStack( j >= 0 && j < len ? [ this[ j ] ] : [] );
 	},
 
 	end: function() {
-		return this.prevObject || this.constructor(null);
+		return this.prevObject || this.constructor();
 	},
 
 	// For internal use only.
@@ -13956,7 +14117,7 @@ jQuery.fn = jQuery.prototype = {
 
 jQuery.extend = jQuery.fn.extend = function() {
 	var options, name, src, copy, copyIsArray, clone,
-		target = arguments[0] || {},
+		target = arguments[ 0 ] || {},
 		i = 1,
 		length = arguments.length,
 		deep = false;
@@ -13971,7 +14132,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 	}
 
 	// Handle case when target is a string or something (possible in deep copy)
-	if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
+	if ( typeof target !== "object" && !jQuery.isFunction( target ) ) {
 		target = {};
 	}
 
@@ -13982,8 +14143,10 @@ jQuery.extend = jQuery.fn.extend = function() {
 	}
 
 	for ( ; i < length; i++ ) {
+
 		// Only deal with non-null/undefined values
-		if ( (options = arguments[ i ]) != null ) {
+		if ( ( options = arguments[ i ] ) != null ) {
+
 			// Extend the base object
 			for ( name in options ) {
 				src = target[ name ];
@@ -13995,13 +14158,15 @@ jQuery.extend = jQuery.fn.extend = function() {
 				}
 
 				// Recurse if we're merging plain objects or arrays
-				if ( deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+				if ( deep && copy && ( jQuery.isPlainObject( copy ) ||
+					( copyIsArray = jQuery.isArray( copy ) ) ) ) {
+
 					if ( copyIsArray ) {
 						copyIsArray = false;
-						clone = src && jQuery.isArray(src) ? src : [];
+						clone = src && jQuery.isArray( src ) ? src : [];
 
 					} else {
-						clone = src && jQuery.isPlainObject(src) ? src : {};
+						clone = src && jQuery.isPlainObject( src ) ? src : {};
 					}
 
 					// Never move original objects, clone them
@@ -14019,7 +14184,8 @@ jQuery.extend = jQuery.fn.extend = function() {
 	return target;
 };
 
-jQuery.extend({
+jQuery.extend( {
+
 	// Unique for each copy of jQuery on the page
 	expando: "jQuery" + ( version + Math.random() ).replace( /\D/g, "" ),
 
@@ -14033,7 +14199,7 @@ jQuery.extend({
 	noop: function() {},
 
 	isFunction: function( obj ) {
-		return jQuery.type(obj) === "function";
+		return jQuery.type( obj ) === "function";
 	},
 
 	isArray: Array.isArray,
@@ -14043,14 +14209,18 @@ jQuery.extend({
 	},
 
 	isNumeric: function( obj ) {
+
 		// parseFloat NaNs numeric-cast false positives (null|true|false|"")
 		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
 		// subtraction forces infinities to NaN
 		// adding 1 corrects loss of precision from parseFloat (#15100)
-		return !jQuery.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
+		var realStringObj = obj && obj.toString();
+		return !jQuery.isArray( obj ) && ( realStringObj - parseFloat( realStringObj ) + 1 ) >= 0;
 	},
 
 	isPlainObject: function( obj ) {
+		var key;
+
 		// Not plain objects:
 		// - Any object or value whose internal [[Class]] property is not "[object Object]"
 		// - DOM nodes
@@ -14059,14 +14229,18 @@ jQuery.extend({
 			return false;
 		}
 
+		// Not own constructor property must be Object
 		if ( obj.constructor &&
-				!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+				!hasOwn.call( obj, "constructor" ) &&
+				!hasOwn.call( obj.constructor.prototype || {}, "isPrototypeOf" ) ) {
 			return false;
 		}
 
-		// If the function hasn't returned already, we're confident that
-		// |obj| is a plain object, created by {} or constructed with new Object
-		return true;
+		// Own properties are enumerated firstly, so to speed up,
+		// if last one is own, then all properties are own
+		for ( key in obj ) {}
+
+		return key === undefined || hasOwn.call( obj, key );
 	},
 
 	isEmptyObject: function( obj ) {
@@ -14081,9 +14255,10 @@ jQuery.extend({
 		if ( obj == null ) {
 			return obj + "";
 		}
+
 		// Support: Android<4.0, iOS<6 (functionish RegExp)
 		return typeof obj === "object" || typeof obj === "function" ?
-			class2type[ toString.call(obj) ] || "object" :
+			class2type[ toString.call( obj ) ] || "object" :
 			typeof obj;
 	},
 
@@ -14095,16 +14270,19 @@ jQuery.extend({
 		code = jQuery.trim( code );
 
 		if ( code ) {
+
 			// If the code includes a valid, prologue position
 			// strict mode pragma, execute code by injecting a
 			// script tag into the document.
-			if ( code.indexOf("use strict") === 1 ) {
-				script = document.createElement("script");
+			if ( code.indexOf( "use strict" ) === 1 ) {
+				script = document.createElement( "script" );
 				script.text = code;
 				document.head.appendChild( script ).parentNode.removeChild( script );
 			} else {
-			// Otherwise, avoid the DOM node creation, insertion
-			// and removal by using an indirect global eval
+
+				// Otherwise, avoid the DOM node creation, insertion
+				// and removal by using an indirect global eval
+
 				indirect( code );
 			}
 		}
@@ -14121,49 +14299,20 @@ jQuery.extend({
 		return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 	},
 
-	// args is for internal usage only
-	each: function( obj, callback, args ) {
-		var value,
-			i = 0,
-			length = obj.length,
-			isArray = isArraylike( obj );
+	each: function( obj, callback ) {
+		var length, i = 0;
 
-		if ( args ) {
-			if ( isArray ) {
-				for ( ; i < length; i++ ) {
-					value = callback.apply( obj[ i ], args );
-
-					if ( value === false ) {
-						break;
-					}
-				}
-			} else {
-				for ( i in obj ) {
-					value = callback.apply( obj[ i ], args );
-
-					if ( value === false ) {
-						break;
-					}
+		if ( isArrayLike( obj ) ) {
+			length = obj.length;
+			for ( ; i < length; i++ ) {
+				if ( callback.call( obj[ i ], i, obj[ i ] ) === false ) {
+					break;
 				}
 			}
-
-		// A special, fast, case for the most common use of each
 		} else {
-			if ( isArray ) {
-				for ( ; i < length; i++ ) {
-					value = callback.call( obj[ i ], i, obj[ i ] );
-
-					if ( value === false ) {
-						break;
-					}
-				}
-			} else {
-				for ( i in obj ) {
-					value = callback.call( obj[ i ], i, obj[ i ] );
-
-					if ( value === false ) {
-						break;
-					}
+			for ( i in obj ) {
+				if ( callback.call( obj[ i ], i, obj[ i ] ) === false ) {
+					break;
 				}
 			}
 		}
@@ -14183,7 +14332,7 @@ jQuery.extend({
 		var ret = results || [];
 
 		if ( arr != null ) {
-			if ( isArraylike( Object(arr) ) ) {
+			if ( isArrayLike( Object( arr ) ) ) {
 				jQuery.merge( ret,
 					typeof arr === "string" ?
 					[ arr ] : arr
@@ -14235,14 +14384,13 @@ jQuery.extend({
 
 	// arg is for internal usage only
 	map: function( elems, callback, arg ) {
-		var value,
+		var length, value,
 			i = 0,
-			length = elems.length,
-			isArray = isArraylike( elems ),
 			ret = [];
 
 		// Go through the array, translating each of the items to their new values
-		if ( isArray ) {
+		if ( isArrayLike( elems ) ) {
+			length = elems.length;
 			for ( ; i < length; i++ ) {
 				value = callback( elems[ i ], i, arg );
 
@@ -14303,28 +14451,35 @@ jQuery.extend({
 	// jQuery.support is not used in Core but other projects attach their
 	// properties to it so it needs to exist.
 	support: support
-});
+} );
+
+// JSHint would error on this code due to the Symbol not being defined in ES5.
+// Defining this global in .jshintrc would create a danger of using the global
+// unguarded in another place, it seems safer to just disable JSHint for these
+// three lines.
+/* jshint ignore: start */
+if ( typeof Symbol === "function" ) {
+	jQuery.fn[ Symbol.iterator ] = arr[ Symbol.iterator ];
+}
+/* jshint ignore: end */
 
 // Populate the class2type map
-jQuery.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
+jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),
+function( i, name ) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
-});
+} );
 
-function isArraylike( obj ) {
+function isArrayLike( obj ) {
 
 	// Support: iOS 8.2 (not reproducible in simulator)
 	// `in` check used to prevent JIT error (gh-2145)
 	// hasOwn isn't used here due to false negatives
 	// regarding Nodelist length in IE
-	var length = "length" in obj && obj.length,
+	var length = !!obj && "length" in obj && obj.length,
 		type = jQuery.type( obj );
 
 	if ( type === "function" || jQuery.isWindow( obj ) ) {
 		return false;
-	}
-
-	if ( obj.nodeType === 1 && length ) {
-		return true;
 	}
 
 	return type === "array" || length === 0 ||
@@ -14332,14 +14487,14 @@ function isArraylike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v2.2.0-pre
+ * Sizzle CSS Selector Engine v2.2.1
  * http://sizzlejs.com/
  *
- * Copyright 2008, 2014 jQuery Foundation, Inc. and other contributors
+ * Copyright jQuery Foundation and other contributors
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2014-12-16
+ * Date: 2015-10-17
  */
 (function( window ) {
 
@@ -14407,25 +14562,21 @@ var i,
 
 	// Regular expressions
 
-	// Whitespace characters http://www.w3.org/TR/css3-selectors/#whitespace
+	// http://www.w3.org/TR/css3-selectors/#whitespace
 	whitespace = "[\\x20\\t\\r\\n\\f]",
-	// http://www.w3.org/TR/css3-syntax/#characters
-	characterEncoding = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",
 
-	// Loosely modeled on CSS identifier characters
-	// An unquoted value should be a CSS identifier http://www.w3.org/TR/css3-selectors/#attribute-selectors
-	// Proper syntax: http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
-	identifier = characterEncoding.replace( "w", "w#" ),
+	// http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
+	identifier = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",
 
 	// Attribute selectors: http://www.w3.org/TR/selectors/#attribute-selectors
-	attributes = "\\[" + whitespace + "*(" + characterEncoding + ")(?:" + whitespace +
+	attributes = "\\[" + whitespace + "*(" + identifier + ")(?:" + whitespace +
 		// Operator (capture 2)
 		"*([*^$|!~]?=)" + whitespace +
 		// "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
 		"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + identifier + "))|)" + whitespace +
 		"*\\]",
 
-	pseudos = ":(" + characterEncoding + ")(?:\\((" +
+	pseudos = ":(" + identifier + ")(?:\\((" +
 		// To reduce the number of selectors needing tokenize in the preFilter, prefer arguments:
 		// 1. quoted (capture 3; capture 4 or capture 5)
 		"('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|" +
@@ -14448,9 +14599,9 @@ var i,
 	ridentifier = new RegExp( "^" + identifier + "$" ),
 
 	matchExpr = {
-		"ID": new RegExp( "^#(" + characterEncoding + ")" ),
-		"CLASS": new RegExp( "^\\.(" + characterEncoding + ")" ),
-		"TAG": new RegExp( "^(" + characterEncoding.replace( "w", "w*" ) + ")" ),
+		"ID": new RegExp( "^#(" + identifier + ")" ),
+		"CLASS": new RegExp( "^\\.(" + identifier + ")" ),
+		"TAG": new RegExp( "^(" + identifier + "|[*])" ),
 		"ATTR": new RegExp( "^" + attributes ),
 		"PSEUDO": new RegExp( "^" + pseudos ),
 		"CHILD": new RegExp( "^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + whitespace +
@@ -14528,103 +14679,129 @@ try {
 }
 
 function Sizzle( selector, context, results, seed ) {
-	var match, elem, m, nodeType,
-		// QSA vars
-		i, groups, old, nid, newContext, newSelector;
+	var m, i, elem, nid, nidselect, match, groups, newSelector,
+		newContext = context && context.ownerDocument,
 
-	if ( ( context ? context.ownerDocument || context : preferredDoc ) !== document ) {
-		setDocument( context );
-	}
+		// nodeType defaults to 9, since context defaults to document
+		nodeType = context ? context.nodeType : 9;
 
-	context = context || document;
 	results = results || [];
-	nodeType = context.nodeType;
 
+	// Return early from calls with invalid selector or context
 	if ( typeof selector !== "string" || !selector ||
 		nodeType !== 1 && nodeType !== 9 && nodeType !== 11 ) {
 
 		return results;
 	}
 
-	if ( !seed && documentIsHTML ) {
+	// Try to shortcut find operations (as opposed to filters) in HTML documents
+	if ( !seed ) {
 
-		// Try to shortcut find operations when possible (e.g., not under DocumentFragment)
-		if ( nodeType !== 11 && (match = rquickExpr.exec( selector )) ) {
-			// Speed-up: Sizzle("#ID")
-			if ( (m = match[1]) ) {
-				if ( nodeType === 9 ) {
-					elem = context.getElementById( m );
-					// Check parentNode to catch when Blackberry 4.6 returns
-					// nodes that are no longer in the document (jQuery #6963)
-					if ( elem && elem.parentNode ) {
-						// Handle the case where IE, Opera, and Webkit return items
-						// by name instead of ID
-						if ( elem.id === m ) {
+		if ( ( context ? context.ownerDocument || context : preferredDoc ) !== document ) {
+			setDocument( context );
+		}
+		context = context || document;
+
+		if ( documentIsHTML ) {
+
+			// If the selector is sufficiently simple, try using a "get*By*" DOM method
+			// (excepting DocumentFragment context, where the methods don't exist)
+			if ( nodeType !== 11 && (match = rquickExpr.exec( selector )) ) {
+
+				// ID selector
+				if ( (m = match[1]) ) {
+
+					// Document context
+					if ( nodeType === 9 ) {
+						if ( (elem = context.getElementById( m )) ) {
+
+							// Support: IE, Opera, Webkit
+							// TODO: identify versions
+							// getElementById can match elements by name instead of ID
+							if ( elem.id === m ) {
+								results.push( elem );
+								return results;
+							}
+						} else {
+							return results;
+						}
+
+					// Element context
+					} else {
+
+						// Support: IE, Opera, Webkit
+						// TODO: identify versions
+						// getElementById can match elements by name instead of ID
+						if ( newContext && (elem = newContext.getElementById( m )) &&
+							contains( context, elem ) &&
+							elem.id === m ) {
+
 							results.push( elem );
 							return results;
 						}
-					} else {
-						return results;
 					}
-				} else {
-					// Context is not a document
-					if ( context.ownerDocument && (elem = context.ownerDocument.getElementById( m )) &&
-						contains( context, elem ) && elem.id === m ) {
-						results.push( elem );
-						return results;
-					}
-				}
 
-			// Speed-up: Sizzle("TAG")
-			} else if ( match[2] ) {
-				push.apply( results, context.getElementsByTagName( selector ) );
-				return results;
-
-			// Speed-up: Sizzle(".CLASS")
-			} else if ( (m = match[3]) && support.getElementsByClassName ) {
-				push.apply( results, context.getElementsByClassName( m ) );
-				return results;
-			}
-		}
-
-		// QSA path
-		if ( support.qsa && (!rbuggyQSA || !rbuggyQSA.test( selector )) ) {
-			nid = old = expando;
-			newContext = context;
-			newSelector = nodeType !== 1 && selector;
-
-			// qSA works strangely on Element-rooted queries
-			// We can work around this by specifying an extra ID on the root
-			// and working up from there (Thanks to Andrew Dupont for the technique)
-			// IE 8 doesn't work on object elements
-			if ( nodeType === 1 && context.nodeName.toLowerCase() !== "object" ) {
-				groups = tokenize( selector );
-
-				if ( (old = context.getAttribute("id")) ) {
-					nid = old.replace( rescape, "\\$&" );
-				} else {
-					context.setAttribute( "id", nid );
-				}
-				nid = "[id='" + nid + "'] ";
-
-				i = groups.length;
-				while ( i-- ) {
-					groups[i] = nid + toSelector( groups[i] );
-				}
-				newContext = rsibling.test( selector ) && testContext( context.parentNode ) || context;
-				newSelector = groups.join(",");
-			}
-
-			if ( newSelector ) {
-				try {
-					push.apply( results,
-						newContext.querySelectorAll( newSelector )
-					);
+				// Type selector
+				} else if ( match[2] ) {
+					push.apply( results, context.getElementsByTagName( selector ) );
 					return results;
-				} catch(qsaError) {
-				} finally {
-					if ( !old ) {
-						context.removeAttribute("id");
+
+				// Class selector
+				} else if ( (m = match[3]) && support.getElementsByClassName &&
+					context.getElementsByClassName ) {
+
+					push.apply( results, context.getElementsByClassName( m ) );
+					return results;
+				}
+			}
+
+			// Take advantage of querySelectorAll
+			if ( support.qsa &&
+				!compilerCache[ selector + " " ] &&
+				(!rbuggyQSA || !rbuggyQSA.test( selector )) ) {
+
+				if ( nodeType !== 1 ) {
+					newContext = context;
+					newSelector = selector;
+
+				// qSA looks outside Element context, which is not what we want
+				// Thanks to Andrew Dupont for this workaround technique
+				// Support: IE <=8
+				// Exclude object elements
+				} else if ( context.nodeName.toLowerCase() !== "object" ) {
+
+					// Capture the context ID, setting it first if necessary
+					if ( (nid = context.getAttribute( "id" )) ) {
+						nid = nid.replace( rescape, "\\$&" );
+					} else {
+						context.setAttribute( "id", (nid = expando) );
+					}
+
+					// Prefix every selector in the list
+					groups = tokenize( selector );
+					i = groups.length;
+					nidselect = ridentifier.test( nid ) ? "#" + nid : "[id='" + nid + "']";
+					while ( i-- ) {
+						groups[i] = nidselect + " " + toSelector( groups[i] );
+					}
+					newSelector = groups.join( "," );
+
+					// Expand context for sibling selectors
+					newContext = rsibling.test( selector ) && testContext( context.parentNode ) ||
+						context;
+				}
+
+				if ( newSelector ) {
+					try {
+						push.apply( results,
+							newContext.querySelectorAll( newSelector )
+						);
+						return results;
+					} catch ( qsaError ) {
+					} finally {
+						if ( nid === expando ) {
+							context.removeAttribute( "id" );
+						}
 					}
 				}
 			}
@@ -14637,7 +14814,7 @@ function Sizzle( selector, context, results, seed ) {
 
 /**
  * Create key-value caches of limited size
- * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
+ * @returns {function(string, object)} Returns the Object data after storing it on itself with
  *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
  *	deleting the oldest entry
  */
@@ -14692,7 +14869,7 @@ function assert( fn ) {
  */
 function addHandle( attrs, handler ) {
 	var arr = attrs.split("|"),
-		i = attrs.length;
+		i = arr.length;
 
 	while ( i-- ) {
 		Expr.attrHandle[ arr[i] ] = handler;
@@ -14805,32 +14982,28 @@ setDocument = Sizzle.setDocument = function( node ) {
 	var hasCompare, parent,
 		doc = node ? node.ownerDocument || node : preferredDoc;
 
-	// If no document and documentElement is available, return
+	// Return early if doc is invalid or already selected
 	if ( doc === document || doc.nodeType !== 9 || !doc.documentElement ) {
 		return document;
 	}
 
-	// Set our document
+	// Update global variables
 	document = doc;
-	docElem = doc.documentElement;
-	parent = doc.defaultView;
+	docElem = document.documentElement;
+	documentIsHTML = !isXML( document );
 
-	// Support: IE>8
-	// If iframe document is assigned to "document" variable and if iframe has been reloaded,
-	// IE will throw "permission denied" error when accessing "document" variable, see jQuery #13936
-	// IE6-8 do not support the defaultView property so parent will be undefined
-	if ( parent && parent !== parent.top ) {
-		// IE11 does not have attachEvent, so all must suffer
+	// Support: IE 9-11, Edge
+	// Accessing iframe documents after unload throws "permission denied" errors (jQuery #13936)
+	if ( (parent = document.defaultView) && parent.top !== parent ) {
+		// Support: IE 11
 		if ( parent.addEventListener ) {
 			parent.addEventListener( "unload", unloadHandler, false );
+
+		// Support: IE 9 - 10 only
 		} else if ( parent.attachEvent ) {
 			parent.attachEvent( "onunload", unloadHandler );
 		}
 	}
-
-	/* Support tests
-	---------------------------------------------------------------------- */
-	documentIsHTML = !isXML( doc );
 
 	/* Attributes
 	---------------------------------------------------------------------- */
@@ -14848,12 +15021,12 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 	// Check if getElementsByTagName("*") returns only elements
 	support.getElementsByTagName = assert(function( div ) {
-		div.appendChild( doc.createComment("") );
+		div.appendChild( document.createComment("") );
 		return !div.getElementsByTagName("*").length;
 	});
 
 	// Support: IE<9
-	support.getElementsByClassName = rnative.test( doc.getElementsByClassName );
+	support.getElementsByClassName = rnative.test( document.getElementsByClassName );
 
 	// Support: IE<10
 	// Check if getElementById returns elements by name
@@ -14861,7 +15034,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// so use a roundabout getElementsByName test
 	support.getById = assert(function( div ) {
 		docElem.appendChild( div ).id = expando;
-		return !doc.getElementsByName || !doc.getElementsByName( expando ).length;
+		return !document.getElementsByName || !document.getElementsByName( expando ).length;
 	});
 
 	// ID find and filter
@@ -14869,9 +15042,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 		Expr.find["ID"] = function( id, context ) {
 			if ( typeof context.getElementById !== "undefined" && documentIsHTML ) {
 				var m = context.getElementById( id );
-				// Check parentNode to catch when Blackberry 4.6 returns
-				// nodes that are no longer in the document #6963
-				return m && m.parentNode ? [ m ] : [];
+				return m ? [ m ] : [];
 			}
 		};
 		Expr.filter["ID"] = function( id ) {
@@ -14888,7 +15059,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 		Expr.filter["ID"] =  function( id ) {
 			var attrId = id.replace( runescape, funescape );
 			return function( elem ) {
-				var node = typeof elem.getAttributeNode !== "undefined" && elem.getAttributeNode("id");
+				var node = typeof elem.getAttributeNode !== "undefined" &&
+					elem.getAttributeNode("id");
 				return node && node.value === attrId;
 			};
 		};
@@ -14928,7 +15100,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 	// Class
 	Expr.find["CLASS"] = support.getElementsByClassName && function( className, context ) {
-		if ( documentIsHTML ) {
+		if ( typeof context.getElementsByClassName !== "undefined" && documentIsHTML ) {
 			return context.getElementsByClassName( className );
 		}
 	};
@@ -14948,7 +15120,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// See http://bugs.jquery.com/ticket/13378
 	rbuggyQSA = [];
 
-	if ( (support.qsa = rnative.test( doc.querySelectorAll )) ) {
+	if ( (support.qsa = rnative.test( document.querySelectorAll )) ) {
 		// Build QSA regex
 		// Regex strategy adopted from Diego Perini
 		assert(function( div ) {
@@ -14958,7 +15130,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			// since its presence should be enough
 			// http://bugs.jquery.com/ticket/12359
 			docElem.appendChild( div ).innerHTML = "<a id='" + expando + "'></a>" +
-				"<select id='" + expando + "-\f]' msallowcapture=''>" +
+				"<select id='" + expando + "-\r\\' msallowcapture=''>" +
 				"<option selected=''></option></select>";
 
 			// Support: IE8, Opera 11-12.16
@@ -14975,7 +15147,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 				rbuggyQSA.push( "\\[" + whitespace + "*(?:value|" + booleans + ")" );
 			}
 
-			// Support: Chrome<29, Android<4.2+, Safari<7.0+, iOS<7.0+, PhantomJS<1.9.7+
+			// Support: Chrome<29, Android<4.4, Safari<7.0+, iOS<7.0+, PhantomJS<1.9.8+
 			if ( !div.querySelectorAll( "[id~=" + expando + "-]" ).length ) {
 				rbuggyQSA.push("~=");
 			}
@@ -14998,7 +15170,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 		assert(function( div ) {
 			// Support: Windows 8 Native Apps
 			// The type and name attributes are restricted during .innerHTML assignment
-			var input = doc.createElement("input");
+			var input = document.createElement("input");
 			input.setAttribute( "type", "hidden" );
 			div.appendChild( input ).setAttribute( "name", "D" );
 
@@ -15046,7 +15218,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	hasCompare = rnative.test( docElem.compareDocumentPosition );
 
 	// Element contains another
-	// Purposefully does not implement inclusive descendent
+	// Purposefully self-exclusive
 	// As in, an element does not contain itself
 	contains = hasCompare || rnative.test( docElem.contains ) ?
 		function( a, b ) {
@@ -15100,10 +15272,10 @@ setDocument = Sizzle.setDocument = function( node ) {
 			(!support.sortDetached && b.compareDocumentPosition( a ) === compare) ) {
 
 			// Choose the first element that is related to our preferred document
-			if ( a === doc || a.ownerDocument === preferredDoc && contains(preferredDoc, a) ) {
+			if ( a === document || a.ownerDocument === preferredDoc && contains(preferredDoc, a) ) {
 				return -1;
 			}
-			if ( b === doc || b.ownerDocument === preferredDoc && contains(preferredDoc, b) ) {
+			if ( b === document || b.ownerDocument === preferredDoc && contains(preferredDoc, b) ) {
 				return 1;
 			}
 
@@ -15131,8 +15303,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 		// Parentless nodes are either documents or disconnected
 		if ( !aup || !bup ) {
-			return a === doc ? -1 :
-				b === doc ? 1 :
+			return a === document ? -1 :
+				b === document ? 1 :
 				aup ? -1 :
 				bup ? 1 :
 				sortInput ?
@@ -15169,7 +15341,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			0;
 	};
 
-	return doc;
+	return document;
 };
 
 Sizzle.matches = function( expr, elements ) {
@@ -15186,6 +15358,7 @@ Sizzle.matchesSelector = function( elem, expr ) {
 	expr = expr.replace( rattributeQuotes, "='$1']" );
 
 	if ( support.matchesSelector && documentIsHTML &&
+		!compilerCache[ expr + " " ] &&
 		( !rbuggyMatches || !rbuggyMatches.test( expr ) ) &&
 		( !rbuggyQSA     || !rbuggyQSA.test( expr ) ) ) {
 
@@ -15459,11 +15632,12 @@ Expr = Sizzle.selectors = {
 				} :
 
 				function( elem, context, xml ) {
-					var cache, outerCache, node, diff, nodeIndex, start,
+					var cache, uniqueCache, outerCache, node, nodeIndex, start,
 						dir = simple !== forward ? "nextSibling" : "previousSibling",
 						parent = elem.parentNode,
 						name = ofType && elem.nodeName.toLowerCase(),
-						useCache = !xml && !ofType;
+						useCache = !xml && !ofType,
+						diff = false;
 
 					if ( parent ) {
 
@@ -15472,7 +15646,10 @@ Expr = Sizzle.selectors = {
 							while ( dir ) {
 								node = elem;
 								while ( (node = node[ dir ]) ) {
-									if ( ofType ? node.nodeName.toLowerCase() === name : node.nodeType === 1 ) {
+									if ( ofType ?
+										node.nodeName.toLowerCase() === name :
+										node.nodeType === 1 ) {
+
 										return false;
 									}
 								}
@@ -15486,11 +15663,21 @@ Expr = Sizzle.selectors = {
 
 						// non-xml :nth-child(...) stores cache data on `parent`
 						if ( forward && useCache ) {
+
 							// Seek `elem` from a previously-cached index
-							outerCache = parent[ expando ] || (parent[ expando ] = {});
-							cache = outerCache[ type ] || [];
-							nodeIndex = cache[0] === dirruns && cache[1];
-							diff = cache[0] === dirruns && cache[2];
+
+							// ...in a gzip-friendly way
+							node = parent;
+							outerCache = node[ expando ] || (node[ expando ] = {});
+
+							// Support: IE <9 only
+							// Defend against cloned attroperties (jQuery gh-1709)
+							uniqueCache = outerCache[ node.uniqueID ] ||
+								(outerCache[ node.uniqueID ] = {});
+
+							cache = uniqueCache[ type ] || [];
+							nodeIndex = cache[ 0 ] === dirruns && cache[ 1 ];
+							diff = nodeIndex && cache[ 2 ];
 							node = nodeIndex && parent.childNodes[ nodeIndex ];
 
 							while ( (node = ++nodeIndex && node && node[ dir ] ||
@@ -15500,29 +15687,55 @@ Expr = Sizzle.selectors = {
 
 								// When found, cache indexes on `parent` and break
 								if ( node.nodeType === 1 && ++diff && node === elem ) {
-									outerCache[ type ] = [ dirruns, nodeIndex, diff ];
+									uniqueCache[ type ] = [ dirruns, nodeIndex, diff ];
 									break;
 								}
 							}
 
-						// Use previously-cached element index if available
-						} else if ( useCache && (cache = (elem[ expando ] || (elem[ expando ] = {}))[ type ]) && cache[0] === dirruns ) {
-							diff = cache[1];
-
-						// xml :nth-child(...) or :nth-last-child(...) or :nth(-last)?-of-type(...)
 						} else {
-							// Use the same loop as above to seek `elem` from the start
-							while ( (node = ++nodeIndex && node && node[ dir ] ||
-								(diff = nodeIndex = 0) || start.pop()) ) {
+							// Use previously-cached element index if available
+							if ( useCache ) {
+								// ...in a gzip-friendly way
+								node = elem;
+								outerCache = node[ expando ] || (node[ expando ] = {});
 
-								if ( ( ofType ? node.nodeName.toLowerCase() === name : node.nodeType === 1 ) && ++diff ) {
-									// Cache the index of each encountered element
-									if ( useCache ) {
-										(node[ expando ] || (node[ expando ] = {}))[ type ] = [ dirruns, diff ];
-									}
+								// Support: IE <9 only
+								// Defend against cloned attroperties (jQuery gh-1709)
+								uniqueCache = outerCache[ node.uniqueID ] ||
+									(outerCache[ node.uniqueID ] = {});
 
-									if ( node === elem ) {
-										break;
+								cache = uniqueCache[ type ] || [];
+								nodeIndex = cache[ 0 ] === dirruns && cache[ 1 ];
+								diff = nodeIndex;
+							}
+
+							// xml :nth-child(...)
+							// or :nth-last-child(...) or :nth(-last)?-of-type(...)
+							if ( diff === false ) {
+								// Use the same loop as above to seek `elem` from the start
+								while ( (node = ++nodeIndex && node && node[ dir ] ||
+									(diff = nodeIndex = 0) || start.pop()) ) {
+
+									if ( ( ofType ?
+										node.nodeName.toLowerCase() === name :
+										node.nodeType === 1 ) &&
+										++diff ) {
+
+										// Cache the index of each encountered element
+										if ( useCache ) {
+											outerCache = node[ expando ] || (node[ expando ] = {});
+
+											// Support: IE <9 only
+											// Defend against cloned attroperties (jQuery gh-1709)
+											uniqueCache = outerCache[ node.uniqueID ] ||
+												(outerCache[ node.uniqueID ] = {});
+
+											uniqueCache[ type ] = [ dirruns, diff ];
+										}
+
+										if ( node === elem ) {
+											break;
+										}
 									}
 								}
 							}
@@ -15884,10 +16097,10 @@ function addCombinator( matcher, combinator, base ) {
 
 		// Check against all ancestor/preceding elements
 		function( elem, context, xml ) {
-			var oldCache, outerCache,
+			var oldCache, uniqueCache, outerCache,
 				newCache = [ dirruns, doneName ];
 
-			// We can't set arbitrary data on XML nodes, so they don't benefit from dir caching
+			// We can't set arbitrary data on XML nodes, so they don't benefit from combinator caching
 			if ( xml ) {
 				while ( (elem = elem[ dir ]) ) {
 					if ( elem.nodeType === 1 || checkNonElements ) {
@@ -15900,14 +16113,19 @@ function addCombinator( matcher, combinator, base ) {
 				while ( (elem = elem[ dir ]) ) {
 					if ( elem.nodeType === 1 || checkNonElements ) {
 						outerCache = elem[ expando ] || (elem[ expando ] = {});
-						if ( (oldCache = outerCache[ dir ]) &&
+
+						// Support: IE <9 only
+						// Defend against cloned attroperties (jQuery gh-1709)
+						uniqueCache = outerCache[ elem.uniqueID ] || (outerCache[ elem.uniqueID ] = {});
+
+						if ( (oldCache = uniqueCache[ dir ]) &&
 							oldCache[ 0 ] === dirruns && oldCache[ 1 ] === doneName ) {
 
 							// Assign to newCache so results back-propagate to previous elements
 							return (newCache[ 2 ] = oldCache[ 2 ]);
 						} else {
 							// Reuse newcache so results back-propagate to previous elements
-							outerCache[ dir ] = newCache;
+							uniqueCache[ dir ] = newCache;
 
 							// A match means we're done; a fail means we have to keep checking
 							if ( (newCache[ 2 ] = matcher( elem, context, xml )) ) {
@@ -16132,18 +16350,21 @@ function matcherFromGroupMatchers( elementMatchers, setMatchers ) {
 				len = elems.length;
 
 			if ( outermost ) {
-				outermostContext = context !== document && context;
+				outermostContext = context === document || context || outermost;
 			}
 
 			// Add elements passing elementMatchers directly to results
-			// Keep `i` a string if there are no elements so `matchedCount` will be "00" below
 			// Support: IE<9, Safari
 			// Tolerate NodeList properties (IE: "length"; Safari: <number>) matching elements by id
 			for ( ; i !== len && (elem = elems[i]) != null; i++ ) {
 				if ( byElement && elem ) {
 					j = 0;
+					if ( !context && elem.ownerDocument !== document ) {
+						setDocument( elem );
+						xml = !documentIsHTML;
+					}
 					while ( (matcher = elementMatchers[j++]) ) {
-						if ( matcher( elem, context, xml ) ) {
+						if ( matcher( elem, context || document, xml) ) {
 							results.push( elem );
 							break;
 						}
@@ -16167,8 +16388,17 @@ function matcherFromGroupMatchers( elementMatchers, setMatchers ) {
 				}
 			}
 
-			// Apply set filters to unmatched elements
+			// `i` is now the count of elements visited above, and adding it to `matchedCount`
+			// makes the latter nonnegative.
 			matchedCount += i;
+
+			// Apply set filters to unmatched elements
+			// NOTE: This can be skipped if there are no unmatched elements (i.e., `matchedCount`
+			// equals `i`), unless we didn't visit _any_ elements in the above loop because we have
+			// no element matchers and no seed.
+			// Incrementing an initially-string "0" `i` allows `i` to remain a string only in that
+			// case, which will result in a "00" `matchedCount` that differs from `i` but is also
+			// numerically zero.
 			if ( bySet && i !== matchedCount ) {
 				j = 0;
 				while ( (matcher = setMatchers[j++]) ) {
@@ -16260,10 +16490,11 @@ select = Sizzle.select = function( selector, context, results, seed ) {
 
 	results = results || [];
 
-	// Try to minimize operations if there is no seed and only one group
+	// Try to minimize operations if there is only one selector in the list and no seed
+	// (the latter of which guarantees us context)
 	if ( match.length === 1 ) {
 
-		// Take a shortcut and set the context if the root selector is an ID
+		// Reduce context if the leading compound selector is an ID
 		tokens = match[0] = match[0].slice( 0 );
 		if ( tokens.length > 2 && (token = tokens[0]).type === "ID" &&
 				support.getById && context.nodeType === 9 && documentIsHTML &&
@@ -16318,7 +16549,7 @@ select = Sizzle.select = function( selector, context, results, seed ) {
 		context,
 		!documentIsHTML,
 		results,
-		rsibling.test( selector ) && testContext( context.parentNode ) || context
+		!context || rsibling.test( selector ) && testContext( context.parentNode ) || context
 	);
 	return results;
 };
@@ -16394,17 +16625,46 @@ return Sizzle;
 
 jQuery.find = Sizzle;
 jQuery.expr = Sizzle.selectors;
-jQuery.expr[":"] = jQuery.expr.pseudos;
-jQuery.unique = Sizzle.uniqueSort;
+jQuery.expr[ ":" ] = jQuery.expr.pseudos;
+jQuery.uniqueSort = jQuery.unique = Sizzle.uniqueSort;
 jQuery.text = Sizzle.getText;
 jQuery.isXMLDoc = Sizzle.isXML;
 jQuery.contains = Sizzle.contains;
 
 
 
+var dir = function( elem, dir, until ) {
+	var matched = [],
+		truncate = until !== undefined;
+
+	while ( ( elem = elem[ dir ] ) && elem.nodeType !== 9 ) {
+		if ( elem.nodeType === 1 ) {
+			if ( truncate && jQuery( elem ).is( until ) ) {
+				break;
+			}
+			matched.push( elem );
+		}
+	}
+	return matched;
+};
+
+
+var siblings = function( n, elem ) {
+	var matched = [];
+
+	for ( ; n; n = n.nextSibling ) {
+		if ( n.nodeType === 1 && n !== elem ) {
+			matched.push( n );
+		}
+	}
+
+	return matched;
+};
+
+
 var rneedsContext = jQuery.expr.match.needsContext;
 
-var rsingleTag = (/^<(\w+)\s*\/?>(?:<\/\1>|)$/);
+var rsingleTag = ( /^<([\w-]+)\s*\/?>(?:<\/\1>|)$/ );
 
 
 
@@ -16416,14 +16676,14 @@ function winnow( elements, qualifier, not ) {
 		return jQuery.grep( elements, function( elem, i ) {
 			/* jshint -W018 */
 			return !!qualifier.call( elem, i, elem ) !== not;
-		});
+		} );
 
 	}
 
 	if ( qualifier.nodeType ) {
 		return jQuery.grep( elements, function( elem ) {
 			return ( elem === qualifier ) !== not;
-		});
+		} );
 
 	}
 
@@ -16436,8 +16696,8 @@ function winnow( elements, qualifier, not ) {
 	}
 
 	return jQuery.grep( elements, function( elem ) {
-		return ( indexOf.call( qualifier, elem ) >= 0 ) !== not;
-	});
+		return ( indexOf.call( qualifier, elem ) > -1 ) !== not;
+	} );
 }
 
 jQuery.filter = function( expr, elems, not ) {
@@ -16451,10 +16711,10 @@ jQuery.filter = function( expr, elems, not ) {
 		jQuery.find.matchesSelector( elem, expr ) ? [ elem ] : [] :
 		jQuery.find.matches( expr, jQuery.grep( elems, function( elem ) {
 			return elem.nodeType === 1;
-		}));
+		} ) );
 };
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	find: function( selector ) {
 		var i,
 			len = this.length,
@@ -16462,13 +16722,13 @@ jQuery.fn.extend({
 			self = this;
 
 		if ( typeof selector !== "string" ) {
-			return this.pushStack( jQuery( selector ).filter(function() {
+			return this.pushStack( jQuery( selector ).filter( function() {
 				for ( i = 0; i < len; i++ ) {
 					if ( jQuery.contains( self[ i ], this ) ) {
 						return true;
 					}
 				}
-			}) );
+			} ) );
 		}
 
 		for ( i = 0; i < len; i++ ) {
@@ -16481,10 +16741,10 @@ jQuery.fn.extend({
 		return ret;
 	},
 	filter: function( selector ) {
-		return this.pushStack( winnow(this, selector || [], false) );
+		return this.pushStack( winnow( this, selector || [], false ) );
 	},
 	not: function( selector ) {
-		return this.pushStack( winnow(this, selector || [], true) );
+		return this.pushStack( winnow( this, selector || [], true ) );
 	},
 	is: function( selector ) {
 		return !!winnow(
@@ -16498,7 +16758,7 @@ jQuery.fn.extend({
 			false
 		).length;
 	}
-});
+} );
 
 
 // Initialize a jQuery object
@@ -16512,7 +16772,7 @@ var rootjQuery,
 	// Strict HTML recognition (#11290: must start with <)
 	rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,
 
-	init = jQuery.fn.init = function( selector, context ) {
+	init = jQuery.fn.init = function( selector, context, root ) {
 		var match, elem;
 
 		// HANDLE: $(""), $(null), $(undefined), $(false)
@@ -16520,9 +16780,16 @@ var rootjQuery,
 			return this;
 		}
 
+		// Method init() accepts an alternate rootjQuery
+		// so migrate can support jQuery.sub (gh-2101)
+		root = root || rootjQuery;
+
 		// Handle HTML strings
 		if ( typeof selector === "string" ) {
-			if ( selector[0] === "<" && selector[ selector.length - 1 ] === ">" && selector.length >= 3 ) {
+			if ( selector[ 0 ] === "<" &&
+				selector[ selector.length - 1 ] === ">" &&
+				selector.length >= 3 ) {
+
 				// Assume that strings that start and end with <> are HTML and skip the regex check
 				match = [ null, selector, null ];
 
@@ -16531,23 +16798,24 @@ var rootjQuery,
 			}
 
 			// Match html or make sure no context is specified for #id
-			if ( match && (match[1] || !context) ) {
+			if ( match && ( match[ 1 ] || !context ) ) {
 
 				// HANDLE: $(html) -> $(array)
-				if ( match[1] ) {
-					context = context instanceof jQuery ? context[0] : context;
+				if ( match[ 1 ] ) {
+					context = context instanceof jQuery ? context[ 0 ] : context;
 
 					// Option to run scripts is true for back-compat
 					// Intentionally let the error be thrown if parseHTML is not present
 					jQuery.merge( this, jQuery.parseHTML(
-						match[1],
+						match[ 1 ],
 						context && context.nodeType ? context.ownerDocument || context : document,
 						true
 					) );
 
 					// HANDLE: $(html, props)
-					if ( rsingleTag.test( match[1] ) && jQuery.isPlainObject( context ) ) {
+					if ( rsingleTag.test( match[ 1 ] ) && jQuery.isPlainObject( context ) ) {
 						for ( match in context ) {
+
 							// Properties of context are called as methods if possible
 							if ( jQuery.isFunction( this[ match ] ) ) {
 								this[ match ]( context[ match ] );
@@ -16563,14 +16831,15 @@ var rootjQuery,
 
 				// HANDLE: $(#id)
 				} else {
-					elem = document.getElementById( match[2] );
+					elem = document.getElementById( match[ 2 ] );
 
 					// Support: Blackberry 4.6
 					// gEBID returns nodes no longer in the document (#6963)
 					if ( elem && elem.parentNode ) {
+
 						// Inject the element directly into the jQuery object
 						this.length = 1;
-						this[0] = elem;
+						this[ 0 ] = elem;
 					}
 
 					this.context = document;
@@ -16580,7 +16849,7 @@ var rootjQuery,
 
 			// HANDLE: $(expr, $(...))
 			} else if ( !context || context.jquery ) {
-				return ( context || rootjQuery ).find( selector );
+				return ( context || root ).find( selector );
 
 			// HANDLE: $(expr, context)
 			// (which is just equivalent to: $(context).find(expr)
@@ -16590,15 +16859,16 @@ var rootjQuery,
 
 		// HANDLE: $(DOMElement)
 		} else if ( selector.nodeType ) {
-			this.context = this[0] = selector;
+			this.context = this[ 0 ] = selector;
 			this.length = 1;
 			return this;
 
 		// HANDLE: $(function)
 		// Shortcut for document ready
 		} else if ( jQuery.isFunction( selector ) ) {
-			return typeof rootjQuery.ready !== "undefined" ?
-				rootjQuery.ready( selector ) :
+			return root.ready !== undefined ?
+				root.ready( selector ) :
+
 				// Execute immediately if ready is not present
 				selector( jQuery );
 		}
@@ -16619,6 +16889,7 @@ rootjQuery = jQuery( document );
 
 
 var rparentsprev = /^(?:parents|prev(?:Until|All))/,
+
 	// Methods guaranteed to produce a unique set when starting from a unique set
 	guaranteedUnique = {
 		children: true,
@@ -16627,48 +16898,19 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 		prev: true
 	};
 
-jQuery.extend({
-	dir: function( elem, dir, until ) {
-		var matched = [],
-			truncate = until !== undefined;
-
-		while ( (elem = elem[ dir ]) && elem.nodeType !== 9 ) {
-			if ( elem.nodeType === 1 ) {
-				if ( truncate && jQuery( elem ).is( until ) ) {
-					break;
-				}
-				matched.push( elem );
-			}
-		}
-		return matched;
-	},
-
-	sibling: function( n, elem ) {
-		var matched = [];
-
-		for ( ; n; n = n.nextSibling ) {
-			if ( n.nodeType === 1 && n !== elem ) {
-				matched.push( n );
-			}
-		}
-
-		return matched;
-	}
-});
-
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	has: function( target ) {
 		var targets = jQuery( target, this ),
 			l = targets.length;
 
-		return this.filter(function() {
+		return this.filter( function() {
 			var i = 0;
 			for ( ; i < l; i++ ) {
-				if ( jQuery.contains( this, targets[i] ) ) {
+				if ( jQuery.contains( this, targets[ i ] ) ) {
 					return true;
 				}
 			}
-		});
+		} );
 	},
 
 	closest: function( selectors, context ) {
@@ -16681,14 +16923,15 @@ jQuery.fn.extend({
 				0;
 
 		for ( ; i < l; i++ ) {
-			for ( cur = this[i]; cur && cur !== context; cur = cur.parentNode ) {
+			for ( cur = this[ i ]; cur && cur !== context; cur = cur.parentNode ) {
+
 				// Always skip document fragments
-				if ( cur.nodeType < 11 && (pos ?
-					pos.index(cur) > -1 :
+				if ( cur.nodeType < 11 && ( pos ?
+					pos.index( cur ) > -1 :
 
 					// Don't pass non-elements to Sizzle
 					cur.nodeType === 1 &&
-						jQuery.find.matchesSelector(cur, selectors)) ) {
+						jQuery.find.matchesSelector( cur, selectors ) ) ) {
 
 					matched.push( cur );
 					break;
@@ -16696,7 +16939,7 @@ jQuery.fn.extend({
 			}
 		}
 
-		return this.pushStack( matched.length > 1 ? jQuery.unique( matched ) : matched );
+		return this.pushStack( matched.length > 1 ? jQuery.uniqueSort( matched ) : matched );
 	},
 
 	// Determine the position of an element within the set
@@ -16722,7 +16965,7 @@ jQuery.fn.extend({
 
 	add: function( selector, context ) {
 		return this.pushStack(
-			jQuery.unique(
+			jQuery.uniqueSort(
 				jQuery.merge( this.get(), jQuery( selector, context ) )
 			)
 		);
@@ -16730,26 +16973,26 @@ jQuery.fn.extend({
 
 	addBack: function( selector ) {
 		return this.add( selector == null ?
-			this.prevObject : this.prevObject.filter(selector)
+			this.prevObject : this.prevObject.filter( selector )
 		);
 	}
-});
+} );
 
 function sibling( cur, dir ) {
-	while ( (cur = cur[dir]) && cur.nodeType !== 1 ) {}
+	while ( ( cur = cur[ dir ] ) && cur.nodeType !== 1 ) {}
 	return cur;
 }
 
-jQuery.each({
+jQuery.each( {
 	parent: function( elem ) {
 		var parent = elem.parentNode;
 		return parent && parent.nodeType !== 11 ? parent : null;
 	},
 	parents: function( elem ) {
-		return jQuery.dir( elem, "parentNode" );
+		return dir( elem, "parentNode" );
 	},
 	parentsUntil: function( elem, i, until ) {
-		return jQuery.dir( elem, "parentNode", until );
+		return dir( elem, "parentNode", until );
 	},
 	next: function( elem ) {
 		return sibling( elem, "nextSibling" );
@@ -16758,22 +17001,22 @@ jQuery.each({
 		return sibling( elem, "previousSibling" );
 	},
 	nextAll: function( elem ) {
-		return jQuery.dir( elem, "nextSibling" );
+		return dir( elem, "nextSibling" );
 	},
 	prevAll: function( elem ) {
-		return jQuery.dir( elem, "previousSibling" );
+		return dir( elem, "previousSibling" );
 	},
 	nextUntil: function( elem, i, until ) {
-		return jQuery.dir( elem, "nextSibling", until );
+		return dir( elem, "nextSibling", until );
 	},
 	prevUntil: function( elem, i, until ) {
-		return jQuery.dir( elem, "previousSibling", until );
+		return dir( elem, "previousSibling", until );
 	},
 	siblings: function( elem ) {
-		return jQuery.sibling( ( elem.parentNode || {} ).firstChild, elem );
+		return siblings( ( elem.parentNode || {} ).firstChild, elem );
 	},
 	children: function( elem ) {
-		return jQuery.sibling( elem.firstChild );
+		return siblings( elem.firstChild );
 	},
 	contents: function( elem ) {
 		return elem.contentDocument || jQuery.merge( [], elem.childNodes );
@@ -16791,9 +17034,10 @@ jQuery.each({
 		}
 
 		if ( this.length > 1 ) {
+
 			// Remove duplicates
 			if ( !guaranteedUnique[ name ] ) {
-				jQuery.unique( matched );
+				jQuery.uniqueSort( matched );
 			}
 
 			// Reverse order for parents* and prev-derivatives
@@ -16804,20 +17048,17 @@ jQuery.each({
 
 		return this.pushStack( matched );
 	};
-});
-var rnotwhite = (/\S+/g);
+} );
+var rnotwhite = ( /\S+/g );
 
 
 
-// String to Object options format cache
-var optionsCache = {};
-
-// Convert String-formatted options into Object-formatted ones and store in cache
+// Convert String-formatted options into Object-formatted ones
 function createOptions( options ) {
-	var object = optionsCache[ options ] = {};
+	var object = {};
 	jQuery.each( options.match( rnotwhite ) || [], function( _, flag ) {
 		object[ flag ] = true;
-	});
+	} );
 	return object;
 }
 
@@ -16848,156 +17089,186 @@ jQuery.Callbacks = function( options ) {
 	// Convert options from String-formatted to Object-formatted if needed
 	// (we check in cache first)
 	options = typeof options === "string" ?
-		( optionsCache[ options ] || createOptions( options ) ) :
+		createOptions( options ) :
 		jQuery.extend( {}, options );
 
-	var // Last fire value (for non-forgettable lists)
+	var // Flag to know if list is currently firing
+		firing,
+
+		// Last fire value for non-forgettable lists
 		memory,
+
 		// Flag to know if list was already fired
 		fired,
-		// Flag to know if list is currently firing
-		firing,
-		// First callback to fire (used internally by add and fireWith)
-		firingStart,
-		// End of the loop when firing
-		firingLength,
-		// Index of currently firing callback (modified by remove if needed)
-		firingIndex,
+
+		// Flag to prevent firing
+		locked,
+
 		// Actual callback list
 		list = [],
-		// Stack of fire calls for repeatable lists
-		stack = !options.once && [],
+
+		// Queue of execution data for repeatable lists
+		queue = [],
+
+		// Index of currently firing callback (modified by add/remove as needed)
+		firingIndex = -1,
+
 		// Fire callbacks
-		fire = function( data ) {
-			memory = options.memory && data;
-			fired = true;
-			firingIndex = firingStart || 0;
-			firingStart = 0;
-			firingLength = list.length;
-			firing = true;
-			for ( ; list && firingIndex < firingLength; firingIndex++ ) {
-				if ( list[ firingIndex ].apply( data[ 0 ], data[ 1 ] ) === false && options.stopOnFalse ) {
-					memory = false; // To prevent further calls using add
-					break;
+		fire = function() {
+
+			// Enforce single-firing
+			locked = options.once;
+
+			// Execute callbacks for all pending executions,
+			// respecting firingIndex overrides and runtime changes
+			fired = firing = true;
+			for ( ; queue.length; firingIndex = -1 ) {
+				memory = queue.shift();
+				while ( ++firingIndex < list.length ) {
+
+					// Run callback and check for early termination
+					if ( list[ firingIndex ].apply( memory[ 0 ], memory[ 1 ] ) === false &&
+						options.stopOnFalse ) {
+
+						// Jump to end and forget the data so .add doesn't re-fire
+						firingIndex = list.length;
+						memory = false;
+					}
 				}
 			}
+
+			// Forget the data if we're done with it
+			if ( !options.memory ) {
+				memory = false;
+			}
+
 			firing = false;
-			if ( list ) {
-				if ( stack ) {
-					if ( stack.length ) {
-						fire( stack.shift() );
-					}
-				} else if ( memory ) {
+
+			// Clean up if we're done firing for good
+			if ( locked ) {
+
+				// Keep an empty list if we have data for future add calls
+				if ( memory ) {
 					list = [];
+
+				// Otherwise, this object is spent
 				} else {
-					self.disable();
+					list = "";
 				}
 			}
 		},
+
 		// Actual Callbacks object
 		self = {
+
 			// Add a callback or a collection of callbacks to the list
 			add: function() {
 				if ( list ) {
-					// First, we save the current length
-					var start = list.length;
-					(function add( args ) {
+
+					// If we have memory from a past run, we should fire after adding
+					if ( memory && !firing ) {
+						firingIndex = list.length - 1;
+						queue.push( memory );
+					}
+
+					( function add( args ) {
 						jQuery.each( args, function( _, arg ) {
-							var type = jQuery.type( arg );
-							if ( type === "function" ) {
+							if ( jQuery.isFunction( arg ) ) {
 								if ( !options.unique || !self.has( arg ) ) {
 									list.push( arg );
 								}
-							} else if ( arg && arg.length && type !== "string" ) {
+							} else if ( arg && arg.length && jQuery.type( arg ) !== "string" ) {
+
 								// Inspect recursively
 								add( arg );
 							}
-						});
-					})( arguments );
-					// Do we need to add the callbacks to the
-					// current firing batch?
-					if ( firing ) {
-						firingLength = list.length;
-					// With memory, if we're not firing then
-					// we should call right away
-					} else if ( memory ) {
-						firingStart = start;
-						fire( memory );
+						} );
+					} )( arguments );
+
+					if ( memory && !firing ) {
+						fire();
 					}
 				}
 				return this;
 			},
+
 			// Remove a callback from the list
 			remove: function() {
-				if ( list ) {
-					jQuery.each( arguments, function( _, arg ) {
-						var index;
-						while ( ( index = jQuery.inArray( arg, list, index ) ) > -1 ) {
-							list.splice( index, 1 );
-							// Handle firing indexes
-							if ( firing ) {
-								if ( index <= firingLength ) {
-									firingLength--;
-								}
-								if ( index <= firingIndex ) {
-									firingIndex--;
-								}
-							}
+				jQuery.each( arguments, function( _, arg ) {
+					var index;
+					while ( ( index = jQuery.inArray( arg, list, index ) ) > -1 ) {
+						list.splice( index, 1 );
+
+						// Handle firing indexes
+						if ( index <= firingIndex ) {
+							firingIndex--;
 						}
-					});
-				}
+					}
+				} );
 				return this;
 			},
+
 			// Check if a given callback is in the list.
 			// If no argument is given, return whether or not list has callbacks attached.
 			has: function( fn ) {
-				return fn ? jQuery.inArray( fn, list ) > -1 : !!( list && list.length );
+				return fn ?
+					jQuery.inArray( fn, list ) > -1 :
+					list.length > 0;
 			},
+
 			// Remove all callbacks from the list
 			empty: function() {
-				list = [];
-				firingLength = 0;
-				return this;
-			},
-			// Have the list do nothing anymore
-			disable: function() {
-				list = stack = memory = undefined;
-				return this;
-			},
-			// Is it disabled?
-			disabled: function() {
-				return !list;
-			},
-			// Lock the list in its current state
-			lock: function() {
-				stack = undefined;
-				if ( !memory ) {
-					self.disable();
+				if ( list ) {
+					list = [];
 				}
 				return this;
 			},
-			// Is it locked?
-			locked: function() {
-				return !stack;
+
+			// Disable .fire and .add
+			// Abort any current/pending executions
+			// Clear all callbacks and values
+			disable: function() {
+				locked = queue = [];
+				list = memory = "";
+				return this;
 			},
+			disabled: function() {
+				return !list;
+			},
+
+			// Disable .fire
+			// Also disable .add unless we have memory (since it would have no effect)
+			// Abort any pending executions
+			lock: function() {
+				locked = queue = [];
+				if ( !memory ) {
+					list = memory = "";
+				}
+				return this;
+			},
+			locked: function() {
+				return !!locked;
+			},
+
 			// Call all callbacks with the given context and arguments
 			fireWith: function( context, args ) {
-				if ( list && ( !fired || stack ) ) {
+				if ( !locked ) {
 					args = args || [];
 					args = [ context, args.slice ? args.slice() : args ];
-					if ( firing ) {
-						stack.push( args );
-					} else {
-						fire( args );
+					queue.push( args );
+					if ( !firing ) {
+						fire();
 					}
 				}
 				return this;
 			},
+
 			// Call all the callbacks with the given arguments
 			fire: function() {
 				self.fireWith( this, arguments );
 				return this;
 			},
+
 			// To know if the callbacks have already been called at least once
 			fired: function() {
 				return !!fired;
@@ -17008,14 +17279,15 @@ jQuery.Callbacks = function( options ) {
 };
 
 
-jQuery.extend({
+jQuery.extend( {
 
 	Deferred: function( func ) {
 		var tuples = [
+
 				// action, add listener, listener list, final state
-				[ "resolve", "done", jQuery.Callbacks("once memory"), "resolved" ],
-				[ "reject", "fail", jQuery.Callbacks("once memory"), "rejected" ],
-				[ "notify", "progress", jQuery.Callbacks("memory") ]
+				[ "resolve", "done", jQuery.Callbacks( "once memory" ), "resolved" ],
+				[ "reject", "fail", jQuery.Callbacks( "once memory" ), "rejected" ],
+				[ "notify", "progress", jQuery.Callbacks( "memory" ) ]
 			],
 			state = "pending",
 			promise = {
@@ -17028,25 +17300,30 @@ jQuery.extend({
 				},
 				then: function( /* fnDone, fnFail, fnProgress */ ) {
 					var fns = arguments;
-					return jQuery.Deferred(function( newDefer ) {
+					return jQuery.Deferred( function( newDefer ) {
 						jQuery.each( tuples, function( i, tuple ) {
 							var fn = jQuery.isFunction( fns[ i ] ) && fns[ i ];
+
 							// deferred[ done | fail | progress ] for forwarding actions to newDefer
-							deferred[ tuple[1] ](function() {
+							deferred[ tuple[ 1 ] ]( function() {
 								var returned = fn && fn.apply( this, arguments );
 								if ( returned && jQuery.isFunction( returned.promise ) ) {
 									returned.promise()
+										.progress( newDefer.notify )
 										.done( newDefer.resolve )
-										.fail( newDefer.reject )
-										.progress( newDefer.notify );
+										.fail( newDefer.reject );
 								} else {
-									newDefer[ tuple[ 0 ] + "With" ]( this === promise ? newDefer.promise() : this, fn ? [ returned ] : arguments );
+									newDefer[ tuple[ 0 ] + "With" ](
+										this === promise ? newDefer.promise() : this,
+										fn ? [ returned ] : arguments
+									);
 								}
-							});
-						});
+							} );
+						} );
 						fns = null;
-					}).promise();
+					} ).promise();
 				},
+
 				// Get a promise for this deferred
 				// If obj is provided, the promise aspect is added to the object
 				promise: function( obj ) {
@@ -17064,11 +17341,12 @@ jQuery.extend({
 				stateString = tuple[ 3 ];
 
 			// promise[ done | fail | progress ] = list.add
-			promise[ tuple[1] ] = list.add;
+			promise[ tuple[ 1 ] ] = list.add;
 
 			// Handle state
 			if ( stateString ) {
-				list.add(function() {
+				list.add( function() {
+
 					// state = [ resolved | rejected ]
 					state = stateString;
 
@@ -17077,12 +17355,12 @@ jQuery.extend({
 			}
 
 			// deferred[ resolve | reject | notify ]
-			deferred[ tuple[0] ] = function() {
-				deferred[ tuple[0] + "With" ]( this === deferred ? promise : this, arguments );
+			deferred[ tuple[ 0 ] ] = function() {
+				deferred[ tuple[ 0 ] + "With" ]( this === deferred ? promise : this, arguments );
 				return this;
 			};
-			deferred[ tuple[0] + "With" ] = list.fireWith;
-		});
+			deferred[ tuple[ 0 ] + "With" ] = list.fireWith;
+		} );
 
 		// Make the deferred a promise
 		promise.promise( deferred );
@@ -17103,9 +17381,11 @@ jQuery.extend({
 			length = resolveValues.length,
 
 			// the count of uncompleted subordinates
-			remaining = length !== 1 || ( subordinate && jQuery.isFunction( subordinate.promise ) ) ? length : 0,
+			remaining = length !== 1 ||
+				( subordinate && jQuery.isFunction( subordinate.promise ) ) ? length : 0,
 
-			// the master Deferred. If resolveValues consist of only a single Deferred, just use that.
+			// the master Deferred.
+			// If resolveValues consist of only a single Deferred, just use that.
 			deferred = remaining === 1 ? subordinate : jQuery.Deferred(),
 
 			// Update function for both resolve and progress values
@@ -17131,9 +17411,9 @@ jQuery.extend({
 			for ( ; i < length; i++ ) {
 				if ( resolveValues[ i ] && jQuery.isFunction( resolveValues[ i ].promise ) ) {
 					resolveValues[ i ].promise()
+						.progress( updateFunc( i, progressContexts, progressValues ) )
 						.done( updateFunc( i, resolveContexts, resolveValues ) )
-						.fail( deferred.reject )
-						.progress( updateFunc( i, progressContexts, progressValues ) );
+						.fail( deferred.reject );
 				} else {
 					--remaining;
 				}
@@ -17147,20 +17427,22 @@ jQuery.extend({
 
 		return deferred.promise();
 	}
-});
+} );
 
 
 // The deferred used on DOM ready
 var readyList;
 
 jQuery.fn.ready = function( fn ) {
+
 	// Add the callback
 	jQuery.ready.promise().done( fn );
 
 	return this;
 };
 
-jQuery.extend({
+jQuery.extend( {
+
 	// Is the DOM ready to be used? Set to true once it occurs.
 	isReady: false,
 
@@ -17202,14 +17484,14 @@ jQuery.extend({
 			jQuery( document ).off( "ready" );
 		}
 	}
-});
+} );
 
 /**
  * The ready event handler and self cleanup method
  */
 function completed() {
-	document.removeEventListener( "DOMContentLoaded", completed, false );
-	window.removeEventListener( "load", completed, false );
+	document.removeEventListener( "DOMContentLoaded", completed );
+	window.removeEventListener( "load", completed );
 	jQuery.ready();
 }
 
@@ -17218,20 +17500,23 @@ jQuery.ready.promise = function( obj ) {
 
 		readyList = jQuery.Deferred();
 
-		// Catch cases where $(document).ready() is called after the browser event has already occurred.
-		// We once tried to use readyState "interactive" here, but it caused issues like the one
-		// discovered by ChrisS here: http://bugs.jquery.com/ticket/12282#comment:15
-		if ( document.readyState === "complete" ) {
+		// Catch cases where $(document).ready() is called
+		// after the browser event has already occurred.
+		// Support: IE9-10 only
+		// Older IE sometimes signals "interactive" too soon
+		if ( document.readyState === "complete" ||
+			( document.readyState !== "loading" && !document.documentElement.doScroll ) ) {
+
 			// Handle it asynchronously to allow scripts the opportunity to delay ready
-			setTimeout( jQuery.ready );
+			window.setTimeout( jQuery.ready );
 
 		} else {
 
 			// Use the handy event callback
-			document.addEventListener( "DOMContentLoaded", completed, false );
+			document.addEventListener( "DOMContentLoaded", completed );
 
 			// A fallback to window.onload, that will always work
-			window.addEventListener( "load", completed, false );
+			window.addEventListener( "load", completed );
 		}
 	}
 	return readyList.promise( obj );
@@ -17245,7 +17530,7 @@ jQuery.ready.promise();
 
 // Multifunctional method to get and set values of a collection
 // The value/s can optionally be executed if it's a function
-var access = jQuery.access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
+var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 	var i = 0,
 		len = elems.length,
 		bulk = key == null;
@@ -17254,7 +17539,7 @@ var access = jQuery.access = function( elems, fn, key, value, chainable, emptyGe
 	if ( jQuery.type( key ) === "object" ) {
 		chainable = true;
 		for ( i in key ) {
-			jQuery.access( elems, fn, i, key[i], true, emptyGet, raw );
+			access( elems, fn, i, key[ i ], true, emptyGet, raw );
 		}
 
 	// Sets one value
@@ -17266,6 +17551,7 @@ var access = jQuery.access = function( elems, fn, key, value, chainable, emptyGe
 		}
 
 		if ( bulk ) {
+
 			// Bulk operations run against the entire set
 			if ( raw ) {
 				fn.call( elems, value );
@@ -17282,7 +17568,11 @@ var access = jQuery.access = function( elems, fn, key, value, chainable, emptyGe
 
 		if ( fn ) {
 			for ( ; i < len; i++ ) {
-				fn( elems[i], key, raw ? value : value.call( elems[i], i, fn( elems[i], key ) ) );
+				fn(
+					elems[ i ], key, raw ?
+					value :
+					value.call( elems[ i ], i, fn( elems[ i ], key ) )
+				);
 			}
 		}
 	}
@@ -17293,14 +17583,10 @@ var access = jQuery.access = function( elems, fn, key, value, chainable, emptyGe
 		// Gets
 		bulk ?
 			fn.call( elems ) :
-			len ? fn( elems[0], key ) : emptyGet;
+			len ? fn( elems[ 0 ], key ) : emptyGet;
 };
+var acceptData = function( owner ) {
 
-
-/**
- * Determines whether an object can have data
- */
-jQuery.acceptData = function( owner ) {
 	// Accepts only:
 	//  - Node
 	//    - Node.ELEMENT_NODE
@@ -17312,66 +17598,79 @@ jQuery.acceptData = function( owner ) {
 };
 
 
-function Data() {
-	// Support: Android<4,
-	// Old WebKit does not have Object.preventExtensions/freeze method,
-	// return new empty object instead with no [[set]] accessor
-	Object.defineProperty( this.cache = {}, 0, {
-		get: function() {
-			return {};
-		}
-	});
 
+
+function Data() {
 	this.expando = jQuery.expando + Data.uid++;
 }
 
 Data.uid = 1;
-Data.accepts = jQuery.acceptData;
 
 Data.prototype = {
-	key: function( owner ) {
+
+	register: function( owner, initial ) {
+		var value = initial || {};
+
+		// If it is a node unlikely to be stringify-ed or looped over
+		// use plain assignment
+		if ( owner.nodeType ) {
+			owner[ this.expando ] = value;
+
+		// Otherwise secure it in a non-enumerable, non-writable property
+		// configurability must be true to allow the property to be
+		// deleted with the delete operator
+		} else {
+			Object.defineProperty( owner, this.expando, {
+				value: value,
+				writable: true,
+				configurable: true
+			} );
+		}
+		return owner[ this.expando ];
+	},
+	cache: function( owner ) {
+
 		// We can accept data for non-element nodes in modern browsers,
 		// but we should not, see #8335.
-		// Always return the key for a frozen object.
-		if ( !Data.accepts( owner ) ) {
-			return 0;
+		// Always return an empty object.
+		if ( !acceptData( owner ) ) {
+			return {};
 		}
 
-		var descriptor = {},
-			// Check if the owner object already has a cache key
-			unlock = owner[ this.expando ];
+		// Check if the owner object already has a cache
+		var value = owner[ this.expando ];
 
 		// If not, create one
-		if ( !unlock ) {
-			unlock = Data.uid++;
+		if ( !value ) {
+			value = {};
 
-			// Secure it in a non-enumerable, non-writable property
-			try {
-				descriptor[ this.expando ] = { value: unlock };
-				Object.defineProperties( owner, descriptor );
+			// We can accept data for non-element nodes in modern browsers,
+			// but we should not, see #8335.
+			// Always return an empty object.
+			if ( acceptData( owner ) ) {
 
-			// Support: Android<4
-			// Fallback to a less secure definition
-			} catch ( e ) {
-				descriptor[ this.expando ] = unlock;
-				jQuery.extend( owner, descriptor );
+				// If it is a node unlikely to be stringify-ed or looped over
+				// use plain assignment
+				if ( owner.nodeType ) {
+					owner[ this.expando ] = value;
+
+				// Otherwise secure it in a non-enumerable property
+				// configurable must be true to allow the property to be
+				// deleted when data is removed
+				} else {
+					Object.defineProperty( owner, this.expando, {
+						value: value,
+						configurable: true
+					} );
+				}
 			}
 		}
 
-		// Ensure the cache object
-		if ( !this.cache[ unlock ] ) {
-			this.cache[ unlock ] = {};
-		}
-
-		return unlock;
+		return value;
 	},
 	set: function( owner, data, value ) {
 		var prop,
-			// There may be an unlock assigned to this node,
-			// if there is no entry for this "owner", create one inline
-			// and set the unlock as though an owner entry had always existed
-			unlock = this.key( owner ),
-			cache = this.cache[ unlock ];
+			cache = this.cache( owner );
 
 		// Handle: [ owner, key, value ] args
 		if ( typeof data === "string" ) {
@@ -17379,30 +17678,22 @@ Data.prototype = {
 
 		// Handle: [ owner, { properties } ] args
 		} else {
-			// Fresh assignments by object are shallow copied
-			if ( jQuery.isEmptyObject( cache ) ) {
-				jQuery.extend( this.cache[ unlock ], data );
-			// Otherwise, copy the properties one-by-one to the cache object
-			} else {
-				for ( prop in data ) {
-					cache[ prop ] = data[ prop ];
-				}
+
+			// Copy the properties one-by-one to the cache object
+			for ( prop in data ) {
+				cache[ prop ] = data[ prop ];
 			}
 		}
 		return cache;
 	},
 	get: function( owner, key ) {
-		// Either a valid cache is found, or will be created.
-		// New caches will be created and the unlock returned,
-		// allowing direct access to the newly created
-		// empty data object. A valid owner object must be provided.
-		var cache = this.cache[ this.key( owner ) ];
-
 		return key === undefined ?
-			cache : cache[ key ];
+			this.cache( owner ) :
+			owner[ this.expando ] && owner[ this.expando ][ key ];
 	},
 	access: function( owner, key, value ) {
 		var stored;
+
 		// In cases where either:
 		//
 		//   1. No key was specified
@@ -17415,15 +17706,15 @@ Data.prototype = {
 		//   2. The data stored at the key
 		//
 		if ( key === undefined ||
-				((key && typeof key === "string") && value === undefined) ) {
+				( ( key && typeof key === "string" ) && value === undefined ) ) {
 
 			stored = this.get( owner, key );
 
 			return stored !== undefined ?
-				stored : this.get( owner, jQuery.camelCase(key) );
+				stored : this.get( owner, jQuery.camelCase( key ) );
 		}
 
-		// [*]When the key is not a string, or both a key and value
+		// When the key is not a string, or both a key and value
 		// are specified, set or extend (existing objects) with either:
 		//
 		//   1. An object of properties
@@ -17437,15 +17728,20 @@ Data.prototype = {
 	},
 	remove: function( owner, key ) {
 		var i, name, camel,
-			unlock = this.key( owner ),
-			cache = this.cache[ unlock ];
+			cache = owner[ this.expando ];
+
+		if ( cache === undefined ) {
+			return;
+		}
 
 		if ( key === undefined ) {
-			this.cache[ unlock ] = {};
+			this.register( owner );
 
 		} else {
+
 			// Support array or space separated string of keys
 			if ( jQuery.isArray( key ) ) {
+
 				// If "name" is an array of keys...
 				// When data is initially created, via ("key", "val") signature,
 				// keys will be converted to camelCase.
@@ -17455,10 +17751,12 @@ Data.prototype = {
 				name = key.concat( key.map( jQuery.camelCase ) );
 			} else {
 				camel = jQuery.camelCase( key );
+
 				// Try the string as a key before any manipulation
 				if ( key in cache ) {
 					name = [ key, camel ];
 				} else {
+
 					// If a key with the spaces exists, use it.
 					// Otherwise, create an array by matching non-whitespace
 					name = camel;
@@ -17468,25 +17766,34 @@ Data.prototype = {
 			}
 
 			i = name.length;
+
 			while ( i-- ) {
 				delete cache[ name[ i ] ];
 			}
 		}
+
+		// Remove the expando if there's no more data
+		if ( key === undefined || jQuery.isEmptyObject( cache ) ) {
+
+			// Support: Chrome <= 35-45+
+			// Webkit & Blink performance suffers when deleting properties
+			// from DOM nodes, so set to undefined instead
+			// https://code.google.com/p/chromium/issues/detail?id=378607
+			if ( owner.nodeType ) {
+				owner[ this.expando ] = undefined;
+			} else {
+				delete owner[ this.expando ];
+			}
+		}
 	},
 	hasData: function( owner ) {
-		return !jQuery.isEmptyObject(
-			this.cache[ owner[ this.expando ] ] || {}
-		);
-	},
-	discard: function( owner ) {
-		if ( owner[ this.expando ] ) {
-			delete this.cache[ owner[ this.expando ] ];
-		}
+		var cache = owner[ this.expando ];
+		return cache !== undefined && !jQuery.isEmptyObject( cache );
 	}
 };
-var data_priv = new Data();
+var dataPriv = new Data();
 
-var data_user = new Data();
+var dataUser = new Data();
 
 
 
@@ -17501,7 +17808,7 @@ var data_user = new Data();
 //	6. Provide a clear path for implementation upgrade to WeakMap in 2014
 
 var rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,
-	rmultiDash = /([A-Z])/g;
+	rmultiDash = /[A-Z]/g;
 
 function dataAttr( elem, key, data ) {
 	var name;
@@ -17509,7 +17816,7 @@ function dataAttr( elem, key, data ) {
 	// If nothing was found internally, try to fetch any
 	// data from the HTML5 data-* attribute
 	if ( data === undefined && elem.nodeType === 1 ) {
-		name = "data-" + key.replace( rmultiDash, "-$1" ).toLowerCase();
+		name = "data-" + key.replace( rmultiDash, "-$&" ).toLowerCase();
 		data = elem.getAttribute( name );
 
 		if ( typeof data === "string" ) {
@@ -17517,14 +17824,15 @@ function dataAttr( elem, key, data ) {
 				data = data === "true" ? true :
 					data === "false" ? false :
 					data === "null" ? null :
+
 					// Only convert to a number if it doesn't change the string
 					+data + "" === data ? +data :
 					rbrace.test( data ) ? jQuery.parseJSON( data ) :
 					data;
-			} catch( e ) {}
+			} catch ( e ) {}
 
 			// Make sure we set the data so it isn't changed later
-			data_user.set( elem, key, data );
+			dataUser.set( elem, key, data );
 		} else {
 			data = undefined;
 		}
@@ -17532,31 +17840,31 @@ function dataAttr( elem, key, data ) {
 	return data;
 }
 
-jQuery.extend({
+jQuery.extend( {
 	hasData: function( elem ) {
-		return data_user.hasData( elem ) || data_priv.hasData( elem );
+		return dataUser.hasData( elem ) || dataPriv.hasData( elem );
 	},
 
 	data: function( elem, name, data ) {
-		return data_user.access( elem, name, data );
+		return dataUser.access( elem, name, data );
 	},
 
 	removeData: function( elem, name ) {
-		data_user.remove( elem, name );
+		dataUser.remove( elem, name );
 	},
 
 	// TODO: Now that all calls to _data and _removeData have been replaced
-	// with direct calls to data_priv methods, these can be deprecated.
+	// with direct calls to dataPriv methods, these can be deprecated.
 	_data: function( elem, name, data ) {
-		return data_priv.access( elem, name, data );
+		return dataPriv.access( elem, name, data );
 	},
 
 	_removeData: function( elem, name ) {
-		data_priv.remove( elem, name );
+		dataPriv.remove( elem, name );
 	}
-});
+} );
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	data: function( key, value ) {
 		var i, name, data,
 			elem = this[ 0 ],
@@ -17565,9 +17873,9 @@ jQuery.fn.extend({
 		// Gets all values
 		if ( key === undefined ) {
 			if ( this.length ) {
-				data = data_user.get( elem );
+				data = dataUser.get( elem );
 
-				if ( elem.nodeType === 1 && !data_priv.get( elem, "hasDataAttrs" ) ) {
+				if ( elem.nodeType === 1 && !dataPriv.get( elem, "hasDataAttrs" ) ) {
 					i = attrs.length;
 					while ( i-- ) {
 
@@ -17576,12 +17884,12 @@ jQuery.fn.extend({
 						if ( attrs[ i ] ) {
 							name = attrs[ i ].name;
 							if ( name.indexOf( "data-" ) === 0 ) {
-								name = jQuery.camelCase( name.slice(5) );
+								name = jQuery.camelCase( name.slice( 5 ) );
 								dataAttr( elem, name, data[ name ] );
 							}
 						}
 					}
-					data_priv.set( elem, "hasDataAttrs", true );
+					dataPriv.set( elem, "hasDataAttrs", true );
 				}
 			}
 
@@ -17590,14 +17898,13 @@ jQuery.fn.extend({
 
 		// Sets multiple values
 		if ( typeof key === "object" ) {
-			return this.each(function() {
-				data_user.set( this, key );
-			});
+			return this.each( function() {
+				dataUser.set( this, key );
+			} );
 		}
 
 		return access( this, function( value ) {
-			var data,
-				camelKey = jQuery.camelCase( key );
+			var data, camelKey;
 
 			// The calling jQuery object (element matches) is not empty
 			// (and therefore has an element appears at this[ 0 ]) and the
@@ -17605,16 +17912,24 @@ jQuery.fn.extend({
 			// will result in `undefined` for elem = this[ 0 ] which will
 			// throw an exception if an attempt to read a data cache is made.
 			if ( elem && value === undefined ) {
+
 				// Attempt to get data from the cache
 				// with the key as-is
-				data = data_user.get( elem, key );
+				data = dataUser.get( elem, key ) ||
+
+					// Try to find dashed key if it exists (gh-2779)
+					// This is for 2.2.x only
+					dataUser.get( elem, key.replace( rmultiDash, "-$&" ).toLowerCase() );
+
 				if ( data !== undefined ) {
 					return data;
 				}
 
+				camelKey = jQuery.camelCase( key );
+
 				// Attempt to get data from the cache
 				// with the key camelized
-				data = data_user.get( elem, camelKey );
+				data = dataUser.get( elem, camelKey );
 				if ( data !== undefined ) {
 					return data;
 				}
@@ -17631,46 +17946,48 @@ jQuery.fn.extend({
 			}
 
 			// Set the data...
-			this.each(function() {
+			camelKey = jQuery.camelCase( key );
+			this.each( function() {
+
 				// First, attempt to store a copy or reference of any
 				// data that might've been store with a camelCased key.
-				var data = data_user.get( this, camelKey );
+				var data = dataUser.get( this, camelKey );
 
 				// For HTML5 data-* attribute interop, we have to
 				// store property names with dashes in a camelCase form.
 				// This might not apply to all properties...*
-				data_user.set( this, camelKey, value );
+				dataUser.set( this, camelKey, value );
 
 				// *... In the case of properties that might _actually_
 				// have dashes, we need to also store a copy of that
 				// unchanged property.
-				if ( key.indexOf("-") !== -1 && data !== undefined ) {
-					data_user.set( this, key, value );
+				if ( key.indexOf( "-" ) > -1 && data !== undefined ) {
+					dataUser.set( this, key, value );
 				}
-			});
+			} );
 		}, null, value, arguments.length > 1, null, true );
 	},
 
 	removeData: function( key ) {
-		return this.each(function() {
-			data_user.remove( this, key );
-		});
+		return this.each( function() {
+			dataUser.remove( this, key );
+		} );
 	}
-});
+} );
 
 
-jQuery.extend({
+jQuery.extend( {
 	queue: function( elem, type, data ) {
 		var queue;
 
 		if ( elem ) {
 			type = ( type || "fx" ) + "queue";
-			queue = data_priv.get( elem, type );
+			queue = dataPriv.get( elem, type );
 
 			// Speed up dequeue by getting out quickly if this is just a lookup
 			if ( data ) {
 				if ( !queue || jQuery.isArray( data ) ) {
-					queue = data_priv.access( elem, type, jQuery.makeArray(data) );
+					queue = dataPriv.access( elem, type, jQuery.makeArray( data ) );
 				} else {
 					queue.push( data );
 				}
@@ -17717,15 +18034,15 @@ jQuery.extend({
 	// Not public - generate a queueHooks object, or return the current one
 	_queueHooks: function( elem, type ) {
 		var key = type + "queueHooks";
-		return data_priv.get( elem, key ) || data_priv.access( elem, key, {
-			empty: jQuery.Callbacks("once memory").add(function() {
-				data_priv.remove( elem, [ type + "queue", key ] );
-			})
-		});
+		return dataPriv.get( elem, key ) || dataPriv.access( elem, key, {
+			empty: jQuery.Callbacks( "once memory" ).add( function() {
+				dataPriv.remove( elem, [ type + "queue", key ] );
+			} )
+		} );
 	}
-});
+} );
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	queue: function( type, data ) {
 		var setter = 2;
 
@@ -17736,30 +18053,31 @@ jQuery.fn.extend({
 		}
 
 		if ( arguments.length < setter ) {
-			return jQuery.queue( this[0], type );
+			return jQuery.queue( this[ 0 ], type );
 		}
 
 		return data === undefined ?
 			this :
-			this.each(function() {
+			this.each( function() {
 				var queue = jQuery.queue( this, type, data );
 
 				// Ensure a hooks for this queue
 				jQuery._queueHooks( this, type );
 
-				if ( type === "fx" && queue[0] !== "inprogress" ) {
+				if ( type === "fx" && queue[ 0 ] !== "inprogress" ) {
 					jQuery.dequeue( this, type );
 				}
-			});
+			} );
 	},
 	dequeue: function( type ) {
-		return this.each(function() {
+		return this.each( function() {
 			jQuery.dequeue( this, type );
-		});
+		} );
 	},
 	clearQueue: function( type ) {
 		return this.queue( type || "fx", [] );
 	},
+
 	// Get a promise resolved when queues of a certain type
 	// are emptied (fx is the type by default)
 	promise: function( type, obj ) {
@@ -17781,7 +18099,7 @@ jQuery.fn.extend({
 		type = type || "fx";
 
 		while ( i-- ) {
-			tmp = data_priv.get( elements[ i ], type + "queueHooks" );
+			tmp = dataPriv.get( elements[ i ], type + "queueHooks" );
 			if ( tmp && tmp.empty ) {
 				count++;
 				tmp.empty.add( resolve );
@@ -17790,28 +18108,243 @@ jQuery.fn.extend({
 		resolve();
 		return defer.promise( obj );
 	}
-});
-var pnum = (/[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/).source;
+} );
+var pnum = ( /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/ ).source;
+
+var rcssNum = new RegExp( "^(?:([+-])=|)(" + pnum + ")([a-z%]*)$", "i" );
+
 
 var cssExpand = [ "Top", "Right", "Bottom", "Left" ];
 
 var isHidden = function( elem, el ) {
+
 		// isHidden might be called from jQuery#filter function;
 		// in that case, element will be second argument
 		elem = el || elem;
-		return jQuery.css( elem, "display" ) === "none" || !jQuery.contains( elem.ownerDocument, elem );
+		return jQuery.css( elem, "display" ) === "none" ||
+			!jQuery.contains( elem.ownerDocument, elem );
 	};
 
-var rcheckableType = (/^(?:checkbox|radio)$/i);
+
+
+function adjustCSS( elem, prop, valueParts, tween ) {
+	var adjusted,
+		scale = 1,
+		maxIterations = 20,
+		currentValue = tween ?
+			function() { return tween.cur(); } :
+			function() { return jQuery.css( elem, prop, "" ); },
+		initial = currentValue(),
+		unit = valueParts && valueParts[ 3 ] || ( jQuery.cssNumber[ prop ] ? "" : "px" ),
+
+		// Starting value computation is required for potential unit mismatches
+		initialInUnit = ( jQuery.cssNumber[ prop ] || unit !== "px" && +initial ) &&
+			rcssNum.exec( jQuery.css( elem, prop ) );
+
+	if ( initialInUnit && initialInUnit[ 3 ] !== unit ) {
+
+		// Trust units reported by jQuery.css
+		unit = unit || initialInUnit[ 3 ];
+
+		// Make sure we update the tween properties later on
+		valueParts = valueParts || [];
+
+		// Iteratively approximate from a nonzero starting point
+		initialInUnit = +initial || 1;
+
+		do {
+
+			// If previous iteration zeroed out, double until we get *something*.
+			// Use string for doubling so we don't accidentally see scale as unchanged below
+			scale = scale || ".5";
+
+			// Adjust and apply
+			initialInUnit = initialInUnit / scale;
+			jQuery.style( elem, prop, initialInUnit + unit );
+
+		// Update scale, tolerating zero or NaN from tween.cur()
+		// Break the loop if scale is unchanged or perfect, or if we've just had enough.
+		} while (
+			scale !== ( scale = currentValue() / initial ) && scale !== 1 && --maxIterations
+		);
+	}
+
+	if ( valueParts ) {
+		initialInUnit = +initialInUnit || +initial || 0;
+
+		// Apply relative offset (+=/-=) if specified
+		adjusted = valueParts[ 1 ] ?
+			initialInUnit + ( valueParts[ 1 ] + 1 ) * valueParts[ 2 ] :
+			+valueParts[ 2 ];
+		if ( tween ) {
+			tween.unit = unit;
+			tween.start = initialInUnit;
+			tween.end = adjusted;
+		}
+	}
+	return adjusted;
+}
+var rcheckableType = ( /^(?:checkbox|radio)$/i );
+
+var rtagName = ( /<([\w:-]+)/ );
+
+var rscriptType = ( /^$|\/(?:java|ecma)script/i );
 
 
 
-(function() {
+// We have to close these tags to support XHTML (#13200)
+var wrapMap = {
+
+	// Support: IE9
+	option: [ 1, "<select multiple='multiple'>", "</select>" ],
+
+	// XHTML parsers do not magically insert elements in the
+	// same way that tag soup parsers do. So we cannot shorten
+	// this by omitting <tbody> or other required elements.
+	thead: [ 1, "<table>", "</table>" ],
+	col: [ 2, "<table><colgroup>", "</colgroup></table>" ],
+	tr: [ 2, "<table><tbody>", "</tbody></table>" ],
+	td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
+
+	_default: [ 0, "", "" ]
+};
+
+// Support: IE9
+wrapMap.optgroup = wrapMap.option;
+
+wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
+wrapMap.th = wrapMap.td;
+
+
+function getAll( context, tag ) {
+
+	// Support: IE9-11+
+	// Use typeof to avoid zero-argument method invocation on host objects (#15151)
+	var ret = typeof context.getElementsByTagName !== "undefined" ?
+			context.getElementsByTagName( tag || "*" ) :
+			typeof context.querySelectorAll !== "undefined" ?
+				context.querySelectorAll( tag || "*" ) :
+			[];
+
+	return tag === undefined || tag && jQuery.nodeName( context, tag ) ?
+		jQuery.merge( [ context ], ret ) :
+		ret;
+}
+
+
+// Mark scripts as having already been evaluated
+function setGlobalEval( elems, refElements ) {
+	var i = 0,
+		l = elems.length;
+
+	for ( ; i < l; i++ ) {
+		dataPriv.set(
+			elems[ i ],
+			"globalEval",
+			!refElements || dataPriv.get( refElements[ i ], "globalEval" )
+		);
+	}
+}
+
+
+var rhtml = /<|&#?\w+;/;
+
+function buildFragment( elems, context, scripts, selection, ignored ) {
+	var elem, tmp, tag, wrap, contains, j,
+		fragment = context.createDocumentFragment(),
+		nodes = [],
+		i = 0,
+		l = elems.length;
+
+	for ( ; i < l; i++ ) {
+		elem = elems[ i ];
+
+		if ( elem || elem === 0 ) {
+
+			// Add nodes directly
+			if ( jQuery.type( elem ) === "object" ) {
+
+				// Support: Android<4.1, PhantomJS<2
+				// push.apply(_, arraylike) throws on ancient WebKit
+				jQuery.merge( nodes, elem.nodeType ? [ elem ] : elem );
+
+			// Convert non-html into a text node
+			} else if ( !rhtml.test( elem ) ) {
+				nodes.push( context.createTextNode( elem ) );
+
+			// Convert html into DOM nodes
+			} else {
+				tmp = tmp || fragment.appendChild( context.createElement( "div" ) );
+
+				// Deserialize a standard representation
+				tag = ( rtagName.exec( elem ) || [ "", "" ] )[ 1 ].toLowerCase();
+				wrap = wrapMap[ tag ] || wrapMap._default;
+				tmp.innerHTML = wrap[ 1 ] + jQuery.htmlPrefilter( elem ) + wrap[ 2 ];
+
+				// Descend through wrappers to the right content
+				j = wrap[ 0 ];
+				while ( j-- ) {
+					tmp = tmp.lastChild;
+				}
+
+				// Support: Android<4.1, PhantomJS<2
+				// push.apply(_, arraylike) throws on ancient WebKit
+				jQuery.merge( nodes, tmp.childNodes );
+
+				// Remember the top-level container
+				tmp = fragment.firstChild;
+
+				// Ensure the created nodes are orphaned (#12392)
+				tmp.textContent = "";
+			}
+		}
+	}
+
+	// Remove wrapper from fragment
+	fragment.textContent = "";
+
+	i = 0;
+	while ( ( elem = nodes[ i++ ] ) ) {
+
+		// Skip elements already in the context collection (trac-4087)
+		if ( selection && jQuery.inArray( elem, selection ) > -1 ) {
+			if ( ignored ) {
+				ignored.push( elem );
+			}
+			continue;
+		}
+
+		contains = jQuery.contains( elem.ownerDocument, elem );
+
+		// Append to fragment
+		tmp = getAll( fragment.appendChild( elem ), "script" );
+
+		// Preserve script evaluation history
+		if ( contains ) {
+			setGlobalEval( tmp );
+		}
+
+		// Capture executables
+		if ( scripts ) {
+			j = 0;
+			while ( ( elem = tmp[ j++ ] ) ) {
+				if ( rscriptType.test( elem.type || "" ) ) {
+					scripts.push( elem );
+				}
+			}
+		}
+	}
+
+	return fragment;
+}
+
+
+( function() {
 	var fragment = document.createDocumentFragment(),
 		div = fragment.appendChild( document.createElement( "div" ) ),
 		input = document.createElement( "input" );
 
-	// Support: Safari<=5.1
+	// Support: Android 4.0-4.3, Safari<=5.1
 	// Check state lost if the name is set (#11217)
 	// Support: Windows Web Apps (WWA)
 	// `name` and `type` must use .setAttribute for WWA (#14901)
@@ -17829,19 +18362,13 @@ var rcheckableType = (/^(?:checkbox|radio)$/i);
 	// Make sure textarea (and checkbox) defaultValue is properly cloned
 	div.innerHTML = "<textarea>x</textarea>";
 	support.noCloneChecked = !!div.cloneNode( true ).lastChild.defaultValue;
-})();
-var strundefined = typeof undefined;
-
-
-
-support.focusinBubbles = "onfocusin" in window;
+} )();
 
 
 var
 	rkeyEvent = /^key/,
-	rmouseEvent = /^(?:mouse|pointer|contextmenu)|click/,
-	rfocusMorph = /^(?:focusinfocus|focusoutblur)$/,
-	rtypenamespace = /^([^.]*)(?:\.(.+)|)$/;
+	rmouseEvent = /^(?:mouse|pointer|contextmenu|drag|drop)|click/,
+	rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
 
 function returnTrue() {
 	return true;
@@ -17851,10 +18378,73 @@ function returnFalse() {
 	return false;
 }
 
+// Support: IE9
+// See #13393 for more info
 function safeActiveElement() {
 	try {
 		return document.activeElement;
 	} catch ( err ) { }
+}
+
+function on( elem, types, selector, data, fn, one ) {
+	var origFn, type;
+
+	// Types can be a map of types/handlers
+	if ( typeof types === "object" ) {
+
+		// ( types-Object, selector, data )
+		if ( typeof selector !== "string" ) {
+
+			// ( types-Object, data )
+			data = data || selector;
+			selector = undefined;
+		}
+		for ( type in types ) {
+			on( elem, type, selector, data, types[ type ], one );
+		}
+		return elem;
+	}
+
+	if ( data == null && fn == null ) {
+
+		// ( types, fn )
+		fn = selector;
+		data = selector = undefined;
+	} else if ( fn == null ) {
+		if ( typeof selector === "string" ) {
+
+			// ( types, selector, fn )
+			fn = data;
+			data = undefined;
+		} else {
+
+			// ( types, data, fn )
+			fn = data;
+			data = selector;
+			selector = undefined;
+		}
+	}
+	if ( fn === false ) {
+		fn = returnFalse;
+	} else if ( !fn ) {
+		return elem;
+	}
+
+	if ( one === 1 ) {
+		origFn = fn;
+		fn = function( event ) {
+
+			// Can use an empty set, since event contains the info
+			jQuery().off( event );
+			return origFn.apply( this, arguments );
+		};
+
+		// Use same guid so caller can remove using origFn
+		fn.guid = origFn.guid || ( origFn.guid = jQuery.guid++ );
+	}
+	return elem.each( function() {
+		jQuery.event.add( this, types, fn, data, selector );
+	} );
 }
 
 /*
@@ -17870,7 +18460,7 @@ jQuery.event = {
 		var handleObjIn, eventHandle, tmp,
 			events, t, handleObj,
 			special, handlers, type, namespaces, origType,
-			elemData = data_priv.get( elem );
+			elemData = dataPriv.get( elem );
 
 		// Don't attach events to noData or text/comment nodes (but allow plain objects)
 		if ( !elemData ) {
@@ -17890,14 +18480,15 @@ jQuery.event = {
 		}
 
 		// Init the element's event structure and main handler, if this is the first
-		if ( !(events = elemData.events) ) {
+		if ( !( events = elemData.events ) ) {
 			events = elemData.events = {};
 		}
-		if ( !(eventHandle = elemData.handle) ) {
+		if ( !( eventHandle = elemData.handle ) ) {
 			eventHandle = elemData.handle = function( e ) {
+
 				// Discard the second event of a jQuery.event.trigger() and
 				// when an event is called after a page has unloaded
-				return typeof jQuery !== strundefined && jQuery.event.triggered !== e.type ?
+				return typeof jQuery !== "undefined" && jQuery.event.triggered !== e.type ?
 					jQuery.event.dispatch.apply( elem, arguments ) : undefined;
 			};
 		}
@@ -17906,9 +18497,9 @@ jQuery.event = {
 		types = ( types || "" ).match( rnotwhite ) || [ "" ];
 		t = types.length;
 		while ( t-- ) {
-			tmp = rtypenamespace.exec( types[t] ) || [];
-			type = origType = tmp[1];
-			namespaces = ( tmp[2] || "" ).split( "." ).sort();
+			tmp = rtypenamespace.exec( types[ t ] ) || [];
+			type = origType = tmp[ 1 ];
+			namespaces = ( tmp[ 2 ] || "" ).split( "." ).sort();
 
 			// There *must* be a type, no attaching namespace-only handlers
 			if ( !type ) {
@@ -17925,7 +18516,7 @@ jQuery.event = {
 			special = jQuery.event.special[ type ] || {};
 
 			// handleObj is passed to all event handlers
-			handleObj = jQuery.extend({
+			handleObj = jQuery.extend( {
 				type: type,
 				origType: origType,
 				data: data,
@@ -17933,18 +18524,20 @@ jQuery.event = {
 				guid: handler.guid,
 				selector: selector,
 				needsContext: selector && jQuery.expr.match.needsContext.test( selector ),
-				namespace: namespaces.join(".")
+				namespace: namespaces.join( "." )
 			}, handleObjIn );
 
 			// Init the event handler queue if we're the first
-			if ( !(handlers = events[ type ]) ) {
+			if ( !( handlers = events[ type ] ) ) {
 				handlers = events[ type ] = [];
 				handlers.delegateCount = 0;
 
 				// Only use addEventListener if the special events handler returns false
-				if ( !special.setup || special.setup.call( elem, data, namespaces, eventHandle ) === false ) {
+				if ( !special.setup ||
+					special.setup.call( elem, data, namespaces, eventHandle ) === false ) {
+
 					if ( elem.addEventListener ) {
-						elem.addEventListener( type, eventHandle, false );
+						elem.addEventListener( type, eventHandle );
 					}
 				}
 			}
@@ -17976,9 +18569,9 @@ jQuery.event = {
 		var j, origCount, tmp,
 			events, t, handleObj,
 			special, handlers, type, namespaces, origType,
-			elemData = data_priv.hasData( elem ) && data_priv.get( elem );
+			elemData = dataPriv.hasData( elem ) && dataPriv.get( elem );
 
-		if ( !elemData || !(events = elemData.events) ) {
+		if ( !elemData || !( events = elemData.events ) ) {
 			return;
 		}
 
@@ -17986,9 +18579,9 @@ jQuery.event = {
 		types = ( types || "" ).match( rnotwhite ) || [ "" ];
 		t = types.length;
 		while ( t-- ) {
-			tmp = rtypenamespace.exec( types[t] ) || [];
-			type = origType = tmp[1];
-			namespaces = ( tmp[2] || "" ).split( "." ).sort();
+			tmp = rtypenamespace.exec( types[ t ] ) || [];
+			type = origType = tmp[ 1 ];
+			namespaces = ( tmp[ 2 ] || "" ).split( "." ).sort();
 
 			// Unbind all events (on this namespace, if provided) for the element
 			if ( !type ) {
@@ -18001,7 +18594,8 @@ jQuery.event = {
 			special = jQuery.event.special[ type ] || {};
 			type = ( selector ? special.delegateType : special.bindType ) || type;
 			handlers = events[ type ] || [];
-			tmp = tmp[2] && new RegExp( "(^|\\.)" + namespaces.join("\\.(?:.*\\.|)") + "(\\.|$)" );
+			tmp = tmp[ 2 ] &&
+				new RegExp( "(^|\\.)" + namespaces.join( "\\.(?:.*\\.|)" ) + "(\\.|$)" );
 
 			// Remove matching events
 			origCount = j = handlers.length;
@@ -18011,7 +18605,8 @@ jQuery.event = {
 				if ( ( mappedTypes || origType === handleObj.origType ) &&
 					( !handler || handler.guid === handleObj.guid ) &&
 					( !tmp || tmp.test( handleObj.namespace ) ) &&
-					( !selector || selector === handleObj.selector || selector === "**" && handleObj.selector ) ) {
+					( !selector || selector === handleObj.selector ||
+						selector === "**" && handleObj.selector ) ) {
 					handlers.splice( j, 1 );
 
 					if ( handleObj.selector ) {
@@ -18026,7 +18621,9 @@ jQuery.event = {
 			// Remove generic event handler if we removed something and no more handlers exist
 			// (avoids potential for endless recursion during removal of special event handlers)
 			if ( origCount && !handlers.length ) {
-				if ( !special.teardown || special.teardown.call( elem, namespaces, elemData.handle ) === false ) {
+				if ( !special.teardown ||
+					special.teardown.call( elem, namespaces, elemData.handle ) === false ) {
+
 					jQuery.removeEvent( elem, type, elemData.handle );
 				}
 
@@ -18034,143 +18631,10 @@ jQuery.event = {
 			}
 		}
 
-		// Remove the expando if it's no longer used
+		// Remove data and the expando if it's no longer used
 		if ( jQuery.isEmptyObject( events ) ) {
-			delete elemData.handle;
-			data_priv.remove( elem, "events" );
+			dataPriv.remove( elem, "handle events" );
 		}
-	},
-
-	trigger: function( event, data, elem, onlyHandlers ) {
-
-		var i, cur, tmp, bubbleType, ontype, handle, special,
-			eventPath = [ elem || document ],
-			type = hasOwn.call( event, "type" ) ? event.type : event,
-			namespaces = hasOwn.call( event, "namespace" ) ? event.namespace.split(".") : [];
-
-		cur = tmp = elem = elem || document;
-
-		// Don't do events on text and comment nodes
-		if ( elem.nodeType === 3 || elem.nodeType === 8 ) {
-			return;
-		}
-
-		// focus/blur morphs to focusin/out; ensure we're not firing them right now
-		if ( rfocusMorph.test( type + jQuery.event.triggered ) ) {
-			return;
-		}
-
-		if ( type.indexOf(".") >= 0 ) {
-			// Namespaced trigger; create a regexp to match event type in handle()
-			namespaces = type.split(".");
-			type = namespaces.shift();
-			namespaces.sort();
-		}
-		ontype = type.indexOf(":") < 0 && "on" + type;
-
-		// Caller can pass in a jQuery.Event object, Object, or just an event type string
-		event = event[ jQuery.expando ] ?
-			event :
-			new jQuery.Event( type, typeof event === "object" && event );
-
-		// Trigger bitmask: & 1 for native handlers; & 2 for jQuery (always true)
-		event.isTrigger = onlyHandlers ? 2 : 3;
-		event.namespace = namespaces.join(".");
-		event.namespace_re = event.namespace ?
-			new RegExp( "(^|\\.)" + namespaces.join("\\.(?:.*\\.|)") + "(\\.|$)" ) :
-			null;
-
-		// Clean up the event in case it is being reused
-		event.result = undefined;
-		if ( !event.target ) {
-			event.target = elem;
-		}
-
-		// Clone any incoming data and prepend the event, creating the handler arg list
-		data = data == null ?
-			[ event ] :
-			jQuery.makeArray( data, [ event ] );
-
-		// Allow special events to draw outside the lines
-		special = jQuery.event.special[ type ] || {};
-		if ( !onlyHandlers && special.trigger && special.trigger.apply( elem, data ) === false ) {
-			return;
-		}
-
-		// Determine event propagation path in advance, per W3C events spec (#9951)
-		// Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
-		if ( !onlyHandlers && !special.noBubble && !jQuery.isWindow( elem ) ) {
-
-			bubbleType = special.delegateType || type;
-			if ( !rfocusMorph.test( bubbleType + type ) ) {
-				cur = cur.parentNode;
-			}
-			for ( ; cur; cur = cur.parentNode ) {
-				eventPath.push( cur );
-				tmp = cur;
-			}
-
-			// Only add window if we got to document (e.g., not plain obj or detached DOM)
-			if ( tmp === (elem.ownerDocument || document) ) {
-				eventPath.push( tmp.defaultView || tmp.parentWindow || window );
-			}
-		}
-
-		// Fire handlers on the event path
-		i = 0;
-		while ( (cur = eventPath[i++]) && !event.isPropagationStopped() ) {
-
-			event.type = i > 1 ?
-				bubbleType :
-				special.bindType || type;
-
-			// jQuery handler
-			handle = ( data_priv.get( cur, "events" ) || {} )[ event.type ] && data_priv.get( cur, "handle" );
-			if ( handle ) {
-				handle.apply( cur, data );
-			}
-
-			// Native handler
-			handle = ontype && cur[ ontype ];
-			if ( handle && handle.apply && jQuery.acceptData( cur ) ) {
-				event.result = handle.apply( cur, data );
-				if ( event.result === false ) {
-					event.preventDefault();
-				}
-			}
-		}
-		event.type = type;
-
-		// If nobody prevented the default action, do it now
-		if ( !onlyHandlers && !event.isDefaultPrevented() ) {
-
-			if ( (!special._default || special._default.apply( eventPath.pop(), data ) === false) &&
-				jQuery.acceptData( elem ) ) {
-
-				// Call a native DOM method on the target with the same name name as the event.
-				// Don't do default actions on window, that's where global variables be (#6170)
-				if ( ontype && jQuery.isFunction( elem[ type ] ) && !jQuery.isWindow( elem ) ) {
-
-					// Don't re-trigger an onFOO event when we call its FOO() method
-					tmp = elem[ ontype ];
-
-					if ( tmp ) {
-						elem[ ontype ] = null;
-					}
-
-					// Prevent re-triggering of the same event, since we already bubbled it above
-					jQuery.event.triggered = type;
-					elem[ type ]();
-					jQuery.event.triggered = undefined;
-
-					if ( tmp ) {
-						elem[ ontype ] = tmp;
-					}
-				}
-			}
-		}
-
-		return event.result;
 	},
 
 	dispatch: function( event ) {
@@ -18181,11 +18645,11 @@ jQuery.event = {
 		var i, j, ret, matched, handleObj,
 			handlerQueue = [],
 			args = slice.call( arguments ),
-			handlers = ( data_priv.get( this, "events" ) || {} )[ event.type ] || [],
+			handlers = ( dataPriv.get( this, "events" ) || {} )[ event.type ] || [],
 			special = jQuery.event.special[ event.type ] || {};
 
 		// Use the fix-ed jQuery.Event rather than the (read-only) native event
-		args[0] = event;
+		args[ 0 ] = event;
 		event.delegateTarget = this;
 
 		// Call the preDispatch hook for the mapped type, and let it bail if desired
@@ -18198,24 +18662,25 @@ jQuery.event = {
 
 		// Run delegates first; they may want to stop propagation beneath us
 		i = 0;
-		while ( (matched = handlerQueue[ i++ ]) && !event.isPropagationStopped() ) {
+		while ( ( matched = handlerQueue[ i++ ] ) && !event.isPropagationStopped() ) {
 			event.currentTarget = matched.elem;
 
 			j = 0;
-			while ( (handleObj = matched.handlers[ j++ ]) && !event.isImmediatePropagationStopped() ) {
+			while ( ( handleObj = matched.handlers[ j++ ] ) &&
+				!event.isImmediatePropagationStopped() ) {
 
 				// Triggered event must either 1) have no namespace, or 2) have namespace(s)
 				// a subset or equal to those in the bound event (both can have no namespace).
-				if ( !event.namespace_re || event.namespace_re.test( handleObj.namespace ) ) {
+				if ( !event.rnamespace || event.rnamespace.test( handleObj.namespace ) ) {
 
 					event.handleObj = handleObj;
 					event.data = handleObj.data;
 
-					ret = ( (jQuery.event.special[ handleObj.origType ] || {}).handle || handleObj.handler )
-							.apply( matched.elem, args );
+					ret = ( ( jQuery.event.special[ handleObj.origType ] || {} ).handle ||
+						handleObj.handler ).apply( matched.elem, args );
 
 					if ( ret !== undefined ) {
-						if ( (event.result = ret) === false ) {
+						if ( ( event.result = ret ) === false ) {
 							event.preventDefault();
 							event.stopPropagation();
 						}
@@ -18238,15 +18703,20 @@ jQuery.event = {
 			delegateCount = handlers.delegateCount,
 			cur = event.target;
 
+		// Support (at least): Chrome, IE9
 		// Find delegate handlers
 		// Black-hole SVG <use> instance trees (#13180)
-		// Avoid non-left-click bubbling in Firefox (#3861)
-		if ( delegateCount && cur.nodeType && (!event.button || event.type !== "click") ) {
+		//
+		// Support: Firefox<=42+
+		// Avoid non-left-click in FF but don't block IE radio events (#3861, gh-2343)
+		if ( delegateCount && cur.nodeType &&
+			( event.type !== "click" || isNaN( event.button ) || event.button < 1 ) ) {
 
 			for ( ; cur !== this; cur = cur.parentNode || this ) {
 
+				// Don't check non-elements (#13208)
 				// Don't process clicks on disabled elements (#6911, #8165, #11382, #11764)
-				if ( cur.disabled !== true || event.type !== "click" ) {
+				if ( cur.nodeType === 1 && ( cur.disabled !== true || event.type !== "click" ) ) {
 					matches = [];
 					for ( i = 0; i < delegateCount; i++ ) {
 						handleObj = handlers[ i ];
@@ -18256,7 +18726,7 @@ jQuery.event = {
 
 						if ( matches[ sel ] === undefined ) {
 							matches[ sel ] = handleObj.needsContext ?
-								jQuery( sel, this ).index( cur ) >= 0 :
+								jQuery( sel, this ).index( cur ) > -1 :
 								jQuery.find( sel, this, null, [ cur ] ).length;
 						}
 						if ( matches[ sel ] ) {
@@ -18264,7 +18734,7 @@ jQuery.event = {
 						}
 					}
 					if ( matches.length ) {
-						handlerQueue.push({ elem: cur, handlers: matches });
+						handlerQueue.push( { elem: cur, handlers: matches } );
 					}
 				}
 			}
@@ -18272,19 +18742,20 @@ jQuery.event = {
 
 		// Add the remaining (directly-bound) handlers
 		if ( delegateCount < handlers.length ) {
-			handlerQueue.push({ elem: this, handlers: handlers.slice( delegateCount ) });
+			handlerQueue.push( { elem: this, handlers: handlers.slice( delegateCount ) } );
 		}
 
 		return handlerQueue;
 	},
 
 	// Includes some event props shared by KeyEvent and MouseEvent
-	props: "altKey bubbles cancelable ctrlKey currentTarget eventPhase metaKey relatedTarget shiftKey target timeStamp view which".split(" "),
+	props: ( "altKey bubbles cancelable ctrlKey currentTarget detail eventPhase " +
+		"metaKey relatedTarget shiftKey target timeStamp view which" ).split( " " ),
 
 	fixHooks: {},
 
 	keyHooks: {
-		props: "char charCode key keyCode".split(" "),
+		props: "char charCode key keyCode".split( " " ),
 		filter: function( event, original ) {
 
 			// Add which for key events
@@ -18297,7 +18768,8 @@ jQuery.event = {
 	},
 
 	mouseHooks: {
-		props: "button buttons clientX clientY offsetX offsetY pageX pageY screenX screenY toElement".split(" "),
+		props: ( "button buttons clientX clientY offsetX offsetY pageX pageY " +
+			"screenX screenY toElement" ).split( " " ),
 		filter: function( event, original ) {
 			var eventDoc, doc, body,
 				button = original.button;
@@ -18308,8 +18780,12 @@ jQuery.event = {
 				doc = eventDoc.documentElement;
 				body = eventDoc.body;
 
-				event.pageX = original.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
-				event.pageY = original.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
+				event.pageX = original.clientX +
+					( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) -
+					( doc && doc.clientLeft || body && body.clientLeft || 0 );
+				event.pageY = original.clientY +
+					( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) -
+					( doc && doc.clientTop  || body && body.clientTop  || 0 );
 			}
 
 			// Add which for click: 1 === left; 2 === middle; 3 === right
@@ -18366,10 +18842,12 @@ jQuery.event = {
 
 	special: {
 		load: {
+
 			// Prevent triggered image.load events from bubbling to window.load
 			noBubble: true
 		},
 		focus: {
+
 			// Fire native event if possible so blur/focus sequence is correct
 			trigger: function() {
 				if ( this !== safeActiveElement() && this.focus ) {
@@ -18389,6 +18867,7 @@ jQuery.event = {
 			delegateType: "focusout"
 		},
 		click: {
+
 			// For checkbox, fire native event so checked state will be right
 			trigger: function() {
 				if ( this.type === "checkbox" && this.click && jQuery.nodeName( this, "input" ) ) {
@@ -18413,41 +18892,21 @@ jQuery.event = {
 				}
 			}
 		}
-	},
-
-	simulate: function( type, elem, event, bubble ) {
-		// Piggyback on a donor event to simulate a different one.
-		// Fake originalEvent to avoid donor's stopPropagation, but if the
-		// simulated event prevents default then we do the same on the donor.
-		var e = jQuery.extend(
-			new jQuery.Event(),
-			event,
-			{
-				type: type,
-				isSimulated: true,
-				originalEvent: {}
-			}
-		);
-		if ( bubble ) {
-			jQuery.event.trigger( e, null, elem );
-		} else {
-			jQuery.event.dispatch.call( elem, e );
-		}
-		if ( e.isDefaultPrevented() ) {
-			event.preventDefault();
-		}
 	}
 };
 
 jQuery.removeEvent = function( elem, type, handle ) {
+
+	// This "if" is needed for plain objects
 	if ( elem.removeEventListener ) {
-		elem.removeEventListener( type, handle, false );
+		elem.removeEventListener( type, handle );
 	}
 };
 
 jQuery.Event = function( src, props ) {
+
 	// Allow instantiation without the 'new' keyword
-	if ( !(this instanceof jQuery.Event) ) {
+	if ( !( this instanceof jQuery.Event ) ) {
 		return new jQuery.Event( src, props );
 	}
 
@@ -18460,6 +18919,7 @@ jQuery.Event = function( src, props ) {
 		// by a handler lower down the tree; reflect the correct value.
 		this.isDefaultPrevented = src.defaultPrevented ||
 				src.defaultPrevented === undefined &&
+
 				// Support: Android<4.0
 				src.returnValue === false ?
 			returnTrue :
@@ -18485,16 +18945,18 @@ jQuery.Event = function( src, props ) {
 // jQuery.Event is based on DOM3 Events as specified by the ECMAScript Language Binding
 // http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
 jQuery.Event.prototype = {
+	constructor: jQuery.Event,
 	isDefaultPrevented: returnFalse,
 	isPropagationStopped: returnFalse,
 	isImmediatePropagationStopped: returnFalse,
+	isSimulated: false,
 
 	preventDefault: function() {
 		var e = this.originalEvent;
 
 		this.isDefaultPrevented = returnTrue;
 
-		if ( e && e.preventDefault ) {
+		if ( e && !this.isSimulated ) {
 			e.preventDefault();
 		}
 	},
@@ -18503,7 +18965,7 @@ jQuery.Event.prototype = {
 
 		this.isPropagationStopped = returnTrue;
 
-		if ( e && e.stopPropagation ) {
+		if ( e && !this.isSimulated ) {
 			e.stopPropagation();
 		}
 	},
@@ -18512,7 +18974,7 @@ jQuery.Event.prototype = {
 
 		this.isImmediatePropagationStopped = returnTrue;
 
-		if ( e && e.stopImmediatePropagation ) {
+		if ( e && !this.isSimulated ) {
 			e.stopImmediatePropagation();
 		}
 
@@ -18521,8 +18983,14 @@ jQuery.Event.prototype = {
 };
 
 // Create mouseenter/leave events using mouseover/out and event-time checks
-// Support: Chrome 15+
-jQuery.each({
+// so that event delegation works in jQuery.
+// Do the same for pointerenter/pointerleave and pointerover/pointerout
+//
+// Support: Safari 7 only
+// Safari sends mouseenter too often; see:
+// https://code.google.com/p/chromium/issues/detail?id=470258
+// for the description of the bug (it existed in older Chrome versions as well).
+jQuery.each( {
 	mouseenter: "mouseover",
 	mouseleave: "mouseout",
 	pointerenter: "pointerover",
@@ -18538,9 +19006,9 @@ jQuery.each({
 				related = event.relatedTarget,
 				handleObj = event.handleObj;
 
-			// For mousenter/leave call the handler if related is outside the target.
+			// For mouseenter/leave call the handler if related is outside the target.
 			// NB: No relatedTarget if the mouse left/entered the browser window
-			if ( !related || (related !== target && !jQuery.contains( target, related )) ) {
+			if ( !related || ( related !== target && !jQuery.contains( target, related ) ) ) {
 				event.type = handleObj.origType;
 				ret = handleObj.handler.apply( this, arguments );
 				event.type = fix;
@@ -18548,115 +19016,32 @@ jQuery.each({
 			return ret;
 		}
 	};
-});
+} );
 
-// Support: Firefox, Chrome, Safari
-// Create "bubbling" focus and blur events
-if ( !support.focusinBubbles ) {
-	jQuery.each({ focus: "focusin", blur: "focusout" }, function( orig, fix ) {
-
-		// Attach a single capturing handler on the document while someone wants focusin/focusout
-		var handler = function( event ) {
-				jQuery.event.simulate( fix, event.target, jQuery.event.fix( event ), true );
-			};
-
-		jQuery.event.special[ fix ] = {
-			setup: function() {
-				var doc = this.ownerDocument || this,
-					attaches = data_priv.access( doc, fix );
-
-				if ( !attaches ) {
-					doc.addEventListener( orig, handler, true );
-				}
-				data_priv.access( doc, fix, ( attaches || 0 ) + 1 );
-			},
-			teardown: function() {
-				var doc = this.ownerDocument || this,
-					attaches = data_priv.access( doc, fix ) - 1;
-
-				if ( !attaches ) {
-					doc.removeEventListener( orig, handler, true );
-					data_priv.remove( doc, fix );
-
-				} else {
-					data_priv.access( doc, fix, attaches );
-				}
-			}
-		};
-	});
-}
-
-jQuery.fn.extend({
-
-	on: function( types, selector, data, fn, /*INTERNAL*/ one ) {
-		var origFn, type;
-
-		// Types can be a map of types/handlers
-		if ( typeof types === "object" ) {
-			// ( types-Object, selector, data )
-			if ( typeof selector !== "string" ) {
-				// ( types-Object, data )
-				data = data || selector;
-				selector = undefined;
-			}
-			for ( type in types ) {
-				this.on( type, selector, data, types[ type ], one );
-			}
-			return this;
-		}
-
-		if ( data == null && fn == null ) {
-			// ( types, fn )
-			fn = selector;
-			data = selector = undefined;
-		} else if ( fn == null ) {
-			if ( typeof selector === "string" ) {
-				// ( types, selector, fn )
-				fn = data;
-				data = undefined;
-			} else {
-				// ( types, data, fn )
-				fn = data;
-				data = selector;
-				selector = undefined;
-			}
-		}
-		if ( fn === false ) {
-			fn = returnFalse;
-		} else if ( !fn ) {
-			return this;
-		}
-
-		if ( one === 1 ) {
-			origFn = fn;
-			fn = function( event ) {
-				// Can use an empty set, since event contains the info
-				jQuery().off( event );
-				return origFn.apply( this, arguments );
-			};
-			// Use same guid so caller can remove using origFn
-			fn.guid = origFn.guid || ( origFn.guid = jQuery.guid++ );
-		}
-		return this.each( function() {
-			jQuery.event.add( this, types, fn, data, selector );
-		});
+jQuery.fn.extend( {
+	on: function( types, selector, data, fn ) {
+		return on( this, types, selector, data, fn );
 	},
 	one: function( types, selector, data, fn ) {
-		return this.on( types, selector, data, fn, 1 );
+		return on( this, types, selector, data, fn, 1 );
 	},
 	off: function( types, selector, fn ) {
 		var handleObj, type;
 		if ( types && types.preventDefault && types.handleObj ) {
+
 			// ( event )  dispatched jQuery.Event
 			handleObj = types.handleObj;
 			jQuery( types.delegateTarget ).off(
-				handleObj.namespace ? handleObj.origType + "." + handleObj.namespace : handleObj.origType,
+				handleObj.namespace ?
+					handleObj.origType + "." + handleObj.namespace :
+					handleObj.origType,
 				handleObj.selector,
 				handleObj.handler
 			);
 			return this;
 		}
 		if ( typeof types === "object" ) {
+
 			// ( types-object [, selector] )
 			for ( type in types ) {
 				this.off( type, selector, types[ type ] );
@@ -18664,6 +19049,7 @@ jQuery.fn.extend({
 			return this;
 		}
 		if ( selector === false || typeof selector === "function" ) {
+
 			// ( types [, fn] )
 			fn = selector;
 			selector = undefined;
@@ -18671,70 +19057,39 @@ jQuery.fn.extend({
 		if ( fn === false ) {
 			fn = returnFalse;
 		}
-		return this.each(function() {
+		return this.each( function() {
 			jQuery.event.remove( this, types, fn, selector );
-		});
-	},
-
-	trigger: function( type, data ) {
-		return this.each(function() {
-			jQuery.event.trigger( type, data, this );
-		});
-	},
-	triggerHandler: function( type, data ) {
-		var elem = this[0];
-		if ( elem ) {
-			return jQuery.event.trigger( type, data, elem, true );
-		}
+		} );
 	}
-});
+} );
 
 
 var
-	rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi,
-	rtagName = /<([\w:]+)/,
-	rhtml = /<|&#?\w+;/,
-	rnoInnerhtml = /<(?:script|style|link)/i,
+	rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:-]+)[^>]*)\/>/gi,
+
+	// Support: IE 10-11, Edge 10240+
+	// In IE/Edge using regex groups here causes severe slowdowns.
+	// See https://connect.microsoft.com/IE/feedback/details/1736512/
+	rnoInnerhtml = /<script|<style|<link/i,
+
 	// checked="checked" or checked
 	rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i,
-	rscriptType = /^$|\/(?:java|ecma)script/i,
 	rscriptTypeMasked = /^true\/(.*)/,
-	rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g,
+	rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
 
-	// We have to close these tags to support XHTML (#13200)
-	wrapMap = {
-
-		// Support: IE9
-		option: [ 1, "<select multiple='multiple'>", "</select>" ],
-
-		thead: [ 1, "<table>", "</table>" ],
-		col: [ 2, "<table><colgroup>", "</colgroup></table>" ],
-		tr: [ 2, "<table><tbody>", "</tbody></table>" ],
-		td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
-
-		_default: [ 0, "", "" ]
-	};
-
-// Support: IE9
-wrapMap.optgroup = wrapMap.option;
-
-wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
-wrapMap.th = wrapMap.td;
-
-// Support: 1.x compatibility
 // Manipulating tables requires a tbody
 function manipulationTarget( elem, content ) {
 	return jQuery.nodeName( elem, "table" ) &&
 		jQuery.nodeName( content.nodeType !== 11 ? content : content.firstChild, "tr" ) ?
 
-		elem.getElementsByTagName("tbody")[0] ||
-			elem.appendChild( elem.ownerDocument.createElement("tbody") ) :
+		elem.getElementsByTagName( "tbody" )[ 0 ] ||
+			elem.appendChild( elem.ownerDocument.createElement( "tbody" ) ) :
 		elem;
 }
 
 // Replace/restore the type attribute of script elements for safe DOM manipulation
 function disableScript( elem ) {
-	elem.type = (elem.getAttribute("type") !== null) + "/" + elem.type;
+	elem.type = ( elem.getAttribute( "type" ) !== null ) + "/" + elem.type;
 	return elem;
 }
 function restoreScript( elem ) {
@@ -18743,22 +19098,10 @@ function restoreScript( elem ) {
 	if ( match ) {
 		elem.type = match[ 1 ];
 	} else {
-		elem.removeAttribute("type");
+		elem.removeAttribute( "type" );
 	}
 
 	return elem;
-}
-
-// Mark scripts as having already been evaluated
-function setGlobalEval( elems, refElements ) {
-	var i = 0,
-		l = elems.length;
-
-	for ( ; i < l; i++ ) {
-		data_priv.set(
-			elems[ i ], "globalEval", !refElements || data_priv.get( refElements[ i ], "globalEval" )
-		);
-	}
 }
 
 function cloneCopyEvent( src, dest ) {
@@ -18769,9 +19112,9 @@ function cloneCopyEvent( src, dest ) {
 	}
 
 	// 1. Copy private data: events, handlers, etc.
-	if ( data_priv.hasData( src ) ) {
-		pdataOld = data_priv.access( src );
-		pdataCur = data_priv.set( dest, pdataOld );
+	if ( dataPriv.hasData( src ) ) {
+		pdataOld = dataPriv.access( src );
+		pdataCur = dataPriv.set( dest, pdataOld );
 		events = pdataOld.events;
 
 		if ( events ) {
@@ -18787,22 +19130,12 @@ function cloneCopyEvent( src, dest ) {
 	}
 
 	// 2. Copy user data
-	if ( data_user.hasData( src ) ) {
-		udataOld = data_user.access( src );
+	if ( dataUser.hasData( src ) ) {
+		udataOld = dataUser.access( src );
 		udataCur = jQuery.extend( {}, udataOld );
 
-		data_user.set( dest, udataCur );
+		dataUser.set( dest, udataCur );
 	}
-}
-
-function getAll( context, tag ) {
-	var ret = context.getElementsByTagName ? context.getElementsByTagName( tag || "*" ) :
-			context.querySelectorAll ? context.querySelectorAll( tag || "*" ) :
-			[];
-
-	return tag === undefined || tag && jQuery.nodeName( context, tag ) ?
-		jQuery.merge( [ context ], ret ) :
-		ret;
 }
 
 // Fix IE bugs, see support tests
@@ -18819,7 +19152,122 @@ function fixInput( src, dest ) {
 	}
 }
 
-jQuery.extend({
+function domManip( collection, args, callback, ignored ) {
+
+	// Flatten any nested arrays
+	args = concat.apply( [], args );
+
+	var fragment, first, scripts, hasScripts, node, doc,
+		i = 0,
+		l = collection.length,
+		iNoClone = l - 1,
+		value = args[ 0 ],
+		isFunction = jQuery.isFunction( value );
+
+	// We can't cloneNode fragments that contain checked, in WebKit
+	if ( isFunction ||
+			( l > 1 && typeof value === "string" &&
+				!support.checkClone && rchecked.test( value ) ) ) {
+		return collection.each( function( index ) {
+			var self = collection.eq( index );
+			if ( isFunction ) {
+				args[ 0 ] = value.call( this, index, self.html() );
+			}
+			domManip( self, args, callback, ignored );
+		} );
+	}
+
+	if ( l ) {
+		fragment = buildFragment( args, collection[ 0 ].ownerDocument, false, collection, ignored );
+		first = fragment.firstChild;
+
+		if ( fragment.childNodes.length === 1 ) {
+			fragment = first;
+		}
+
+		// Require either new content or an interest in ignored elements to invoke the callback
+		if ( first || ignored ) {
+			scripts = jQuery.map( getAll( fragment, "script" ), disableScript );
+			hasScripts = scripts.length;
+
+			// Use the original fragment for the last item
+			// instead of the first because it can end up
+			// being emptied incorrectly in certain situations (#8070).
+			for ( ; i < l; i++ ) {
+				node = fragment;
+
+				if ( i !== iNoClone ) {
+					node = jQuery.clone( node, true, true );
+
+					// Keep references to cloned scripts for later restoration
+					if ( hasScripts ) {
+
+						// Support: Android<4.1, PhantomJS<2
+						// push.apply(_, arraylike) throws on ancient WebKit
+						jQuery.merge( scripts, getAll( node, "script" ) );
+					}
+				}
+
+				callback.call( collection[ i ], node, i );
+			}
+
+			if ( hasScripts ) {
+				doc = scripts[ scripts.length - 1 ].ownerDocument;
+
+				// Reenable scripts
+				jQuery.map( scripts, restoreScript );
+
+				// Evaluate executable scripts on first document insertion
+				for ( i = 0; i < hasScripts; i++ ) {
+					node = scripts[ i ];
+					if ( rscriptType.test( node.type || "" ) &&
+						!dataPriv.access( node, "globalEval" ) &&
+						jQuery.contains( doc, node ) ) {
+
+						if ( node.src ) {
+
+							// Optional AJAX dependency, but won't run scripts if not present
+							if ( jQuery._evalUrl ) {
+								jQuery._evalUrl( node.src );
+							}
+						} else {
+							jQuery.globalEval( node.textContent.replace( rcleanScript, "" ) );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return collection;
+}
+
+function remove( elem, selector, keepData ) {
+	var node,
+		nodes = selector ? jQuery.filter( selector, elem ) : elem,
+		i = 0;
+
+	for ( ; ( node = nodes[ i ] ) != null; i++ ) {
+		if ( !keepData && node.nodeType === 1 ) {
+			jQuery.cleanData( getAll( node ) );
+		}
+
+		if ( node.parentNode ) {
+			if ( keepData && jQuery.contains( node.ownerDocument, node ) ) {
+				setGlobalEval( getAll( node, "script" ) );
+			}
+			node.parentNode.removeChild( node );
+		}
+	}
+
+	return elem;
+}
+
+jQuery.extend( {
+	htmlPrefilter: function( html ) {
+		return html.replace( rxhtmlTag, "<$1></$2>" );
+	},
+
 	clone: function( elem, dataAndEvents, deepDataAndEvents ) {
 		var i, l, srcElements, destElements,
 			clone = elem.cloneNode( true ),
@@ -18862,102 +19310,14 @@ jQuery.extend({
 		return clone;
 	},
 
-	buildFragment: function( elems, context, scripts, selection ) {
-		var elem, tmp, tag, wrap, contains, j,
-			fragment = context.createDocumentFragment(),
-			nodes = [],
-			i = 0,
-			l = elems.length;
-
-		for ( ; i < l; i++ ) {
-			elem = elems[ i ];
-
-			if ( elem || elem === 0 ) {
-
-				// Add nodes directly
-				if ( jQuery.type( elem ) === "object" ) {
-					// Support: QtWebKit, PhantomJS
-					// push.apply(_, arraylike) throws on ancient WebKit
-					jQuery.merge( nodes, elem.nodeType ? [ elem ] : elem );
-
-				// Convert non-html into a text node
-				} else if ( !rhtml.test( elem ) ) {
-					nodes.push( context.createTextNode( elem ) );
-
-				// Convert html into DOM nodes
-				} else {
-					tmp = tmp || fragment.appendChild( context.createElement("div") );
-
-					// Deserialize a standard representation
-					tag = ( rtagName.exec( elem ) || [ "", "" ] )[ 1 ].toLowerCase();
-					wrap = wrapMap[ tag ] || wrapMap._default;
-					tmp.innerHTML = wrap[ 1 ] + elem.replace( rxhtmlTag, "<$1></$2>" ) + wrap[ 2 ];
-
-					// Descend through wrappers to the right content
-					j = wrap[ 0 ];
-					while ( j-- ) {
-						tmp = tmp.lastChild;
-					}
-
-					// Support: QtWebKit, PhantomJS
-					// push.apply(_, arraylike) throws on ancient WebKit
-					jQuery.merge( nodes, tmp.childNodes );
-
-					// Remember the top-level container
-					tmp = fragment.firstChild;
-
-					// Ensure the created nodes are orphaned (#12392)
-					tmp.textContent = "";
-				}
-			}
-		}
-
-		// Remove wrapper from fragment
-		fragment.textContent = "";
-
-		i = 0;
-		while ( (elem = nodes[ i++ ]) ) {
-
-			// #4087 - If origin and destination elements are the same, and this is
-			// that element, do not do anything
-			if ( selection && jQuery.inArray( elem, selection ) !== -1 ) {
-				continue;
-			}
-
-			contains = jQuery.contains( elem.ownerDocument, elem );
-
-			// Append to fragment
-			tmp = getAll( fragment.appendChild( elem ), "script" );
-
-			// Preserve script evaluation history
-			if ( contains ) {
-				setGlobalEval( tmp );
-			}
-
-			// Capture executables
-			if ( scripts ) {
-				j = 0;
-				while ( (elem = tmp[ j++ ]) ) {
-					if ( rscriptType.test( elem.type || "" ) ) {
-						scripts.push( elem );
-					}
-				}
-			}
-		}
-
-		return fragment;
-	},
-
 	cleanData: function( elems ) {
-		var data, elem, type, key,
+		var data, elem, type,
 			special = jQuery.event.special,
 			i = 0;
 
-		for ( ; (elem = elems[ i ]) !== undefined; i++ ) {
-			if ( jQuery.acceptData( elem ) ) {
-				key = elem[ data_priv.expando ];
-
-				if ( key && (data = data_priv.cache[ key ]) ) {
+		for ( ; ( elem = elems[ i ] ) !== undefined; i++ ) {
+			if ( acceptData( elem ) ) {
+				if ( ( data = elem[ dataPriv.expando ] ) ) {
 					if ( data.events ) {
 						for ( type in data.events ) {
 							if ( special[ type ] ) {
@@ -18969,91 +19329,86 @@ jQuery.extend({
 							}
 						}
 					}
-					if ( data_priv.cache[ key ] ) {
-						// Discard any remaining `private` data
-						delete data_priv.cache[ key ];
-					}
+
+					// Support: Chrome <= 35-45+
+					// Assign undefined instead of using delete, see Data#remove
+					elem[ dataPriv.expando ] = undefined;
+				}
+				if ( elem[ dataUser.expando ] ) {
+
+					// Support: Chrome <= 35-45+
+					// Assign undefined instead of using delete, see Data#remove
+					elem[ dataUser.expando ] = undefined;
 				}
 			}
-			// Discard any remaining `user` data
-			delete data_user.cache[ elem[ data_user.expando ] ];
 		}
 	}
-});
+} );
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
+
+	// Keep domManip exposed until 3.0 (gh-2225)
+	domManip: domManip,
+
+	detach: function( selector ) {
+		return remove( this, selector, true );
+	},
+
+	remove: function( selector ) {
+		return remove( this, selector );
+	},
+
 	text: function( value ) {
 		return access( this, function( value ) {
 			return value === undefined ?
 				jQuery.text( this ) :
-				this.empty().each(function() {
+				this.empty().each( function() {
 					if ( this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9 ) {
 						this.textContent = value;
 					}
-				});
+				} );
 		}, null, value, arguments.length );
 	},
 
 	append: function() {
-		return this.domManip( arguments, function( elem ) {
+		return domManip( this, arguments, function( elem ) {
 			if ( this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9 ) {
 				var target = manipulationTarget( this, elem );
 				target.appendChild( elem );
 			}
-		});
+		} );
 	},
 
 	prepend: function() {
-		return this.domManip( arguments, function( elem ) {
+		return domManip( this, arguments, function( elem ) {
 			if ( this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9 ) {
 				var target = manipulationTarget( this, elem );
 				target.insertBefore( elem, target.firstChild );
 			}
-		});
+		} );
 	},
 
 	before: function() {
-		return this.domManip( arguments, function( elem ) {
+		return domManip( this, arguments, function( elem ) {
 			if ( this.parentNode ) {
 				this.parentNode.insertBefore( elem, this );
 			}
-		});
+		} );
 	},
 
 	after: function() {
-		return this.domManip( arguments, function( elem ) {
+		return domManip( this, arguments, function( elem ) {
 			if ( this.parentNode ) {
 				this.parentNode.insertBefore( elem, this.nextSibling );
 			}
-		});
-	},
-
-	remove: function( selector, keepData /* Internal Use Only */ ) {
-		var elem,
-			elems = selector ? jQuery.filter( selector, this ) : this,
-			i = 0;
-
-		for ( ; (elem = elems[i]) != null; i++ ) {
-			if ( !keepData && elem.nodeType === 1 ) {
-				jQuery.cleanData( getAll( elem ) );
-			}
-
-			if ( elem.parentNode ) {
-				if ( keepData && jQuery.contains( elem.ownerDocument, elem ) ) {
-					setGlobalEval( getAll( elem, "script" ) );
-				}
-				elem.parentNode.removeChild( elem );
-			}
-		}
-
-		return this;
+		} );
 	},
 
 	empty: function() {
 		var elem,
 			i = 0;
 
-		for ( ; (elem = this[i]) != null; i++ ) {
+		for ( ; ( elem = this[ i ] ) != null; i++ ) {
 			if ( elem.nodeType === 1 ) {
 
 				// Prevent memory leaks
@@ -19071,9 +19426,9 @@ jQuery.fn.extend({
 		dataAndEvents = dataAndEvents == null ? false : dataAndEvents;
 		deepDataAndEvents = deepDataAndEvents == null ? dataAndEvents : deepDataAndEvents;
 
-		return this.map(function() {
+		return this.map( function() {
 			return jQuery.clone( this, dataAndEvents, deepDataAndEvents );
-		});
+		} );
 	},
 
 	html: function( value ) {
@@ -19090,7 +19445,7 @@ jQuery.fn.extend({
 			if ( typeof value === "string" && !rnoInnerhtml.test( value ) &&
 				!wrapMap[ ( rtagName.exec( value ) || [ "", "" ] )[ 1 ].toLowerCase() ] ) {
 
-				value = value.replace( rxhtmlTag, "<$1></$2>" );
+				value = jQuery.htmlPrefilter( value );
 
 				try {
 					for ( ; i < l; i++ ) {
@@ -19106,7 +19461,7 @@ jQuery.fn.extend({
 					elem = 0;
 
 				// If using innerHTML throws an exception, use the fallback method
-				} catch( e ) {}
+				} catch ( e ) {}
 			}
 
 			if ( elem ) {
@@ -19116,115 +19471,25 @@ jQuery.fn.extend({
 	},
 
 	replaceWith: function() {
-		var arg = arguments[ 0 ];
+		var ignored = [];
 
-		// Make the changes, replacing each context element with the new content
-		this.domManip( arguments, function( elem ) {
-			arg = this.parentNode;
+		// Make the changes, replacing each non-ignored context element with the new content
+		return domManip( this, arguments, function( elem ) {
+			var parent = this.parentNode;
 
-			jQuery.cleanData( getAll( this ) );
-
-			if ( arg ) {
-				arg.replaceChild( elem, this );
-			}
-		});
-
-		// Force removal if there was no new content (e.g., from empty arguments)
-		return arg && (arg.length || arg.nodeType) ? this : this.remove();
-	},
-
-	detach: function( selector ) {
-		return this.remove( selector, true );
-	},
-
-	domManip: function( args, callback ) {
-
-		// Flatten any nested arrays
-		args = concat.apply( [], args );
-
-		var fragment, first, scripts, hasScripts, node, doc,
-			i = 0,
-			l = this.length,
-			set = this,
-			iNoClone = l - 1,
-			value = args[ 0 ],
-			isFunction = jQuery.isFunction( value );
-
-		// We can't cloneNode fragments that contain checked, in WebKit
-		if ( isFunction ||
-				( l > 1 && typeof value === "string" &&
-					!support.checkClone && rchecked.test( value ) ) ) {
-			return this.each(function( index ) {
-				var self = set.eq( index );
-				if ( isFunction ) {
-					args[ 0 ] = value.call( this, index, self.html() );
-				}
-				self.domManip( args, callback );
-			});
-		}
-
-		if ( l ) {
-			fragment = jQuery.buildFragment( args, this[ 0 ].ownerDocument, false, this );
-			first = fragment.firstChild;
-
-			if ( fragment.childNodes.length === 1 ) {
-				fragment = first;
-			}
-
-			if ( first ) {
-				scripts = jQuery.map( getAll( fragment, "script" ), disableScript );
-				hasScripts = scripts.length;
-
-				// Use the original fragment for the last item instead of the first because it can end up
-				// being emptied incorrectly in certain situations (#8070).
-				for ( ; i < l; i++ ) {
-					node = fragment;
-
-					if ( i !== iNoClone ) {
-						node = jQuery.clone( node, true, true );
-
-						// Keep references to cloned scripts for later restoration
-						if ( hasScripts ) {
-							// Support: QtWebKit
-							// jQuery.merge because push.apply(_, arraylike) throws
-							jQuery.merge( scripts, getAll( node, "script" ) );
-						}
-					}
-
-					callback.call( this[ i ], node, i );
-				}
-
-				if ( hasScripts ) {
-					doc = scripts[ scripts.length - 1 ].ownerDocument;
-
-					// Reenable scripts
-					jQuery.map( scripts, restoreScript );
-
-					// Evaluate executable scripts on first document insertion
-					for ( i = 0; i < hasScripts; i++ ) {
-						node = scripts[ i ];
-						if ( rscriptType.test( node.type || "" ) &&
-							!data_priv.access( node, "globalEval" ) && jQuery.contains( doc, node ) ) {
-
-							if ( node.src ) {
-								// Optional AJAX dependency, but won't run scripts if not present
-								if ( jQuery._evalUrl ) {
-									jQuery._evalUrl( node.src );
-								}
-							} else {
-								jQuery.globalEval( node.textContent.replace( rcleanScript, "" ) );
-							}
-						}
-					}
+			if ( jQuery.inArray( this, ignored ) < 0 ) {
+				jQuery.cleanData( getAll( this ) );
+				if ( parent ) {
+					parent.replaceChild( elem, this );
 				}
 			}
-		}
 
-		return this;
+		// Force callback invocation
+		}, ignored );
 	}
-});
+} );
 
-jQuery.each({
+jQuery.each( {
 	appendTo: "append",
 	prependTo: "prepend",
 	insertBefore: "before",
@@ -19249,28 +19514,29 @@ jQuery.each({
 
 		return this.pushStack( ret );
 	};
-});
+} );
 
 
 var iframe,
-	elemdisplay = {};
+	elemdisplay = {
+
+		// Support: Firefox
+		// We have to pre-define these values for FF (#10227)
+		HTML: "block",
+		BODY: "block"
+	};
 
 /**
  * Retrieve the actual display of a element
  * @param {String} name nodeName of the element
  * @param {Object} doc Document object
  */
+
 // Called only from within defaultDisplay
 function actualDisplay( name, doc ) {
-	var style,
-		elem = jQuery( doc.createElement( name ) ).appendTo( doc.body ),
+	var elem = jQuery( doc.createElement( name ) ).appendTo( doc.body ),
 
-		// getDefaultComputedStyle might be reliably used only on attached element
-		display = window.getDefaultComputedStyle && ( style = window.getDefaultComputedStyle( elem[ 0 ] ) ) ?
-
-			// Use of this method is a temporary fix (more like optimization) until something better comes along,
-			// since it was removed from specification and supported only in FF
-			style.display : jQuery.css( elem[ 0 ], "display" );
+		display = jQuery.css( elem[ 0 ], "display" );
 
 	// We don't have any data stored on the element,
 	// so use "detach" method as fast way to get rid of the element
@@ -19294,7 +19560,8 @@ function defaultDisplay( nodeName ) {
 		if ( display === "none" || !display ) {
 
 			// Use the already-created iframe if possible
-			iframe = (iframe || jQuery( "<iframe frameborder='0' width='0' height='0'/>" )).appendTo( doc.documentElement );
+			iframe = ( iframe || jQuery( "<iframe frameborder='0' width='0' height='0'/>" ) )
+				.appendTo( doc.documentElement );
 
 			// Always write a new HTML skeleton so Webkit and Firefox don't choke on reuse
 			doc = iframe[ 0 ].contentDocument;
@@ -19313,180 +19580,25 @@ function defaultDisplay( nodeName ) {
 
 	return display;
 }
-var rmargin = (/^margin/);
+var rmargin = ( /^margin/ );
 
 var rnumnonpx = new RegExp( "^(" + pnum + ")(?!px)[a-z%]+$", "i" );
 
 var getStyles = function( elem ) {
+
 		// Support: IE<=11+, Firefox<=30+ (#15098, #14150)
 		// IE throws on elements created in popups
 		// FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
-		if ( elem.ownerDocument.defaultView.opener ) {
-			return elem.ownerDocument.defaultView.getComputedStyle( elem, null );
+		var view = elem.ownerDocument.defaultView;
+
+		if ( !view || !view.opener ) {
+			view = window;
 		}
 
-		return window.getComputedStyle( elem, null );
+		return view.getComputedStyle( elem );
 	};
 
-
-
-function curCSS( elem, name, computed ) {
-	var width, minWidth, maxWidth, ret,
-		style = elem.style;
-
-	computed = computed || getStyles( elem );
-
-	// Support: IE9
-	// getPropertyValue is only needed for .css('filter') (#12537)
-	if ( computed ) {
-		ret = computed.getPropertyValue( name ) || computed[ name ];
-	}
-
-	if ( computed ) {
-
-		if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) {
-			ret = jQuery.style( elem, name );
-		}
-
-		// Support: iOS < 6
-		// A tribute to the "awesome hack by Dean Edwards"
-		// iOS < 6 (at least) returns percentage for a larger set of values, but width seems to be reliably pixels
-		// this is against the CSSOM draft spec: http://dev.w3.org/csswg/cssom/#resolved-values
-		if ( rnumnonpx.test( ret ) && rmargin.test( name ) ) {
-
-			// Remember the original values
-			width = style.width;
-			minWidth = style.minWidth;
-			maxWidth = style.maxWidth;
-
-			// Put in the new values to get a computed value out
-			style.minWidth = style.maxWidth = style.width = ret;
-			ret = computed.width;
-
-			// Revert the changed values
-			style.width = width;
-			style.minWidth = minWidth;
-			style.maxWidth = maxWidth;
-		}
-	}
-
-	return ret !== undefined ?
-		// Support: IE
-		// IE returns zIndex value as an integer.
-		ret + "" :
-		ret;
-}
-
-
-function addGetHookIf( conditionFn, hookFn ) {
-	// Define the hook, we'll check on the first run if it's really needed.
-	return {
-		get: function() {
-			if ( conditionFn() ) {
-				// Hook not needed (or it's not possible to use it due
-				// to missing dependency), remove it.
-				delete this.get;
-				return;
-			}
-
-			// Hook needed; redefine it so that the support test is not executed again.
-			return (this.get = hookFn).apply( this, arguments );
-		}
-	};
-}
-
-
-(function() {
-	var pixelPositionVal, boxSizingReliableVal,
-		docElem = document.documentElement,
-		container = document.createElement( "div" ),
-		div = document.createElement( "div" );
-
-	if ( !div.style ) {
-		return;
-	}
-
-	// Support: IE9-11+
-	// Style of cloned element affects source element cloned (#8908)
-	div.style.backgroundClip = "content-box";
-	div.cloneNode( true ).style.backgroundClip = "";
-	support.clearCloneStyle = div.style.backgroundClip === "content-box";
-
-	container.style.cssText = "border:0;width:0;height:0;top:0;left:-9999px;margin-top:1px;" +
-		"position:absolute";
-	container.appendChild( div );
-
-	// Executing both pixelPosition & boxSizingReliable tests require only one layout
-	// so they're executed at the same time to save the second computation.
-	function computePixelPositionAndBoxSizingReliable() {
-		div.style.cssText =
-			// Support: Firefox<29, Android 2.3
-			// Vendor-prefix box-sizing
-			"-webkit-box-sizing:border-box;-moz-box-sizing:border-box;" +
-			"box-sizing:border-box;display:block;margin-top:1%;top:1%;" +
-			"border:1px;padding:1px;width:4px;position:absolute";
-		div.innerHTML = "";
-		docElem.appendChild( container );
-
-		var divStyle = window.getComputedStyle( div, null );
-		pixelPositionVal = divStyle.top !== "1%";
-		boxSizingReliableVal = divStyle.width === "4px";
-
-		docElem.removeChild( container );
-	}
-
-	// Support: node.js jsdom
-	// Don't assume that getComputedStyle is a property of the global object
-	if ( window.getComputedStyle ) {
-		jQuery.extend( support, {
-			pixelPosition: function() {
-
-				// This test is executed only once but we still do memoizing
-				// since we can use the boxSizingReliable pre-computing.
-				// No need to check if the test was already performed, though.
-				computePixelPositionAndBoxSizingReliable();
-				return pixelPositionVal;
-			},
-			boxSizingReliable: function() {
-				if ( boxSizingReliableVal == null ) {
-					computePixelPositionAndBoxSizingReliable();
-				}
-				return boxSizingReliableVal;
-			},
-			reliableMarginRight: function() {
-
-				// Support: Android 2.3
-				// Check if div with explicit width and no margin-right incorrectly
-				// gets computed margin-right based on width of container. (#3333)
-				// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right
-				// This support function is only executed once so no memoizing is needed.
-				var ret,
-					marginDiv = div.appendChild( document.createElement( "div" ) );
-
-				// Reset CSS: box-sizing; display; margin; border; padding
-				marginDiv.style.cssText = div.style.cssText =
-					// Support: Firefox<29, Android 2.3
-					// Vendor-prefix box-sizing
-					"-webkit-box-sizing:content-box;-moz-box-sizing:content-box;" +
-					"box-sizing:content-box;display:block;margin:0;border:0;padding:0";
-				marginDiv.style.marginRight = marginDiv.style.width = "0";
-				div.style.width = "1px";
-				docElem.appendChild( container );
-
-				ret = !parseFloat( window.getComputedStyle( marginDiv, null ).marginRight );
-
-				docElem.removeChild( container );
-				div.removeChild( marginDiv );
-
-				return ret;
-			}
-		});
-	}
-})();
-
-
-// A method for quickly swapping in/out CSS properties to get correct calculations.
-jQuery.swap = function( elem, options, callback, args ) {
+var swap = function( elem, options, callback, args ) {
 	var ret, name,
 		old = {};
 
@@ -19507,12 +19619,198 @@ jQuery.swap = function( elem, options, callback, args ) {
 };
 
 
+var documentElement = document.documentElement;
+
+
+
+( function() {
+	var pixelPositionVal, boxSizingReliableVal, pixelMarginRightVal, reliableMarginLeftVal,
+		container = document.createElement( "div" ),
+		div = document.createElement( "div" );
+
+	// Finish early in limited (non-browser) environments
+	if ( !div.style ) {
+		return;
+	}
+
+	// Support: IE9-11+
+	// Style of cloned element affects source element cloned (#8908)
+	div.style.backgroundClip = "content-box";
+	div.cloneNode( true ).style.backgroundClip = "";
+	support.clearCloneStyle = div.style.backgroundClip === "content-box";
+
+	container.style.cssText = "border:0;width:8px;height:0;top:0;left:-9999px;" +
+		"padding:0;margin-top:1px;position:absolute";
+	container.appendChild( div );
+
+	// Executing both pixelPosition & boxSizingReliable tests require only one layout
+	// so they're executed at the same time to save the second computation.
+	function computeStyleTests() {
+		div.style.cssText =
+
+			// Support: Firefox<29, Android 2.3
+			// Vendor-prefix box-sizing
+			"-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" +
+			"position:relative;display:block;" +
+			"margin:auto;border:1px;padding:1px;" +
+			"top:1%;width:50%";
+		div.innerHTML = "";
+		documentElement.appendChild( container );
+
+		var divStyle = window.getComputedStyle( div );
+		pixelPositionVal = divStyle.top !== "1%";
+		reliableMarginLeftVal = divStyle.marginLeft === "2px";
+		boxSizingReliableVal = divStyle.width === "4px";
+
+		// Support: Android 4.0 - 4.3 only
+		// Some styles come back with percentage values, even though they shouldn't
+		div.style.marginRight = "50%";
+		pixelMarginRightVal = divStyle.marginRight === "4px";
+
+		documentElement.removeChild( container );
+	}
+
+	jQuery.extend( support, {
+		pixelPosition: function() {
+
+			// This test is executed only once but we still do memoizing
+			// since we can use the boxSizingReliable pre-computing.
+			// No need to check if the test was already performed, though.
+			computeStyleTests();
+			return pixelPositionVal;
+		},
+		boxSizingReliable: function() {
+			if ( boxSizingReliableVal == null ) {
+				computeStyleTests();
+			}
+			return boxSizingReliableVal;
+		},
+		pixelMarginRight: function() {
+
+			// Support: Android 4.0-4.3
+			// We're checking for boxSizingReliableVal here instead of pixelMarginRightVal
+			// since that compresses better and they're computed together anyway.
+			if ( boxSizingReliableVal == null ) {
+				computeStyleTests();
+			}
+			return pixelMarginRightVal;
+		},
+		reliableMarginLeft: function() {
+
+			// Support: IE <=8 only, Android 4.0 - 4.3 only, Firefox <=3 - 37
+			if ( boxSizingReliableVal == null ) {
+				computeStyleTests();
+			}
+			return reliableMarginLeftVal;
+		},
+		reliableMarginRight: function() {
+
+			// Support: Android 2.3
+			// Check if div with explicit width and no margin-right incorrectly
+			// gets computed margin-right based on width of container. (#3333)
+			// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right
+			// This support function is only executed once so no memoizing is needed.
+			var ret,
+				marginDiv = div.appendChild( document.createElement( "div" ) );
+
+			// Reset CSS: box-sizing; display; margin; border; padding
+			marginDiv.style.cssText = div.style.cssText =
+
+				// Support: Android 2.3
+				// Vendor-prefix box-sizing
+				"-webkit-box-sizing:content-box;box-sizing:content-box;" +
+				"display:block;margin:0;border:0;padding:0";
+			marginDiv.style.marginRight = marginDiv.style.width = "0";
+			div.style.width = "1px";
+			documentElement.appendChild( container );
+
+			ret = !parseFloat( window.getComputedStyle( marginDiv ).marginRight );
+
+			documentElement.removeChild( container );
+			div.removeChild( marginDiv );
+
+			return ret;
+		}
+	} );
+} )();
+
+
+function curCSS( elem, name, computed ) {
+	var width, minWidth, maxWidth, ret,
+		style = elem.style;
+
+	computed = computed || getStyles( elem );
+	ret = computed ? computed.getPropertyValue( name ) || computed[ name ] : undefined;
+
+	// Support: Opera 12.1x only
+	// Fall back to style even without computed
+	// computed is undefined for elems on document fragments
+	if ( ( ret === "" || ret === undefined ) && !jQuery.contains( elem.ownerDocument, elem ) ) {
+		ret = jQuery.style( elem, name );
+	}
+
+	// Support: IE9
+	// getPropertyValue is only needed for .css('filter') (#12537)
+	if ( computed ) {
+
+		// A tribute to the "awesome hack by Dean Edwards"
+		// Android Browser returns percentage for some values,
+		// but width seems to be reliably pixels.
+		// This is against the CSSOM draft spec:
+		// http://dev.w3.org/csswg/cssom/#resolved-values
+		if ( !support.pixelMarginRight() && rnumnonpx.test( ret ) && rmargin.test( name ) ) {
+
+			// Remember the original values
+			width = style.width;
+			minWidth = style.minWidth;
+			maxWidth = style.maxWidth;
+
+			// Put in the new values to get a computed value out
+			style.minWidth = style.maxWidth = style.width = ret;
+			ret = computed.width;
+
+			// Revert the changed values
+			style.width = width;
+			style.minWidth = minWidth;
+			style.maxWidth = maxWidth;
+		}
+	}
+
+	return ret !== undefined ?
+
+		// Support: IE9-11+
+		// IE returns zIndex value as an integer.
+		ret + "" :
+		ret;
+}
+
+
+function addGetHookIf( conditionFn, hookFn ) {
+
+	// Define the hook, we'll check on the first run if it's really needed.
+	return {
+		get: function() {
+			if ( conditionFn() ) {
+
+				// Hook not needed (or it's not possible to use it due
+				// to missing dependency), remove it.
+				delete this.get;
+				return;
+			}
+
+			// Hook needed; redefine it so that the support test is not executed again.
+			return ( this.get = hookFn ).apply( this, arguments );
+		}
+	};
+}
+
+
 var
-	// Swappable if display is none or starts with table except "table", "table-cell", or "table-caption"
+
+	// Swappable if display is none or starts with table
+	// except "table", "table-cell", or "table-caption"
 	// See here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
 	rdisplayswap = /^(none|table(?!-c[ea]).+)/,
-	rnumsplit = new RegExp( "^(" + pnum + ")(.*)$", "i" ),
-	rrelNum = new RegExp( "^([+-])=(" + pnum + ")", "i" ),
 
 	cssShow = { position: "absolute", visibility: "hidden", display: "block" },
 	cssNormalTransform = {
@@ -19520,55 +19818,61 @@ var
 		fontWeight: "400"
 	},
 
-	cssPrefixes = [ "Webkit", "O", "Moz", "ms" ];
+	cssPrefixes = [ "Webkit", "O", "Moz", "ms" ],
+	emptyStyle = document.createElement( "div" ).style;
 
 // Return a css property mapped to a potentially vendor prefixed property
-function vendorPropName( style, name ) {
+function vendorPropName( name ) {
 
 	// Shortcut for names that are not vendor prefixed
-	if ( name in style ) {
+	if ( name in emptyStyle ) {
 		return name;
 	}
 
 	// Check for vendor prefixed names
-	var capName = name[0].toUpperCase() + name.slice(1),
-		origName = name,
+	var capName = name[ 0 ].toUpperCase() + name.slice( 1 ),
 		i = cssPrefixes.length;
 
 	while ( i-- ) {
 		name = cssPrefixes[ i ] + capName;
-		if ( name in style ) {
+		if ( name in emptyStyle ) {
 			return name;
 		}
 	}
-
-	return origName;
 }
 
 function setPositiveNumber( elem, value, subtract ) {
-	var matches = rnumsplit.exec( value );
+
+	// Any relative (+/-) values have already been
+	// normalized at this point
+	var matches = rcssNum.exec( value );
 	return matches ?
+
 		// Guard against undefined "subtract", e.g., when used as in cssHooks
-		Math.max( 0, matches[ 1 ] - ( subtract || 0 ) ) + ( matches[ 2 ] || "px" ) :
+		Math.max( 0, matches[ 2 ] - ( subtract || 0 ) ) + ( matches[ 3 ] || "px" ) :
 		value;
 }
 
 function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
 	var i = extra === ( isBorderBox ? "border" : "content" ) ?
+
 		// If we already have the right measurement, avoid augmentation
 		4 :
+
 		// Otherwise initialize for horizontal or vertical properties
 		name === "width" ? 1 : 0,
 
 		val = 0;
 
 	for ( ; i < 4; i += 2 ) {
+
 		// Both box models exclude margin, so add it if we want it
 		if ( extra === "margin" ) {
 			val += jQuery.css( elem, extra + cssExpand[ i ], true, styles );
 		}
 
 		if ( isBorderBox ) {
+
 			// border-box includes padding, so remove it if we want content
 			if ( extra === "content" ) {
 				val -= jQuery.css( elem, "padding" + cssExpand[ i ], true, styles );
@@ -19579,6 +19883,7 @@ function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
 				val -= jQuery.css( elem, "border" + cssExpand[ i ] + "Width", true, styles );
 			}
 		} else {
+
 			// At this point, extra isn't content, so add padding
 			val += jQuery.css( elem, "padding" + cssExpand[ i ], true, styles );
 
@@ -19604,6 +19909,7 @@ function getWidthOrHeight( elem, name, extra ) {
 	// svg - https://bugzilla.mozilla.org/show_bug.cgi?id=649285
 	// MathML - https://bugzilla.mozilla.org/show_bug.cgi?id=491668
 	if ( val <= 0 || val == null ) {
+
 		// Fall back to computed then uncomputed css if necessary
 		val = curCSS( elem, name, styles );
 		if ( val < 0 || val == null ) {
@@ -19611,7 +19917,7 @@ function getWidthOrHeight( elem, name, extra ) {
 		}
 
 		// Computed unit is not pixels. Stop here and return.
-		if ( rnumnonpx.test(val) ) {
+		if ( rnumnonpx.test( val ) ) {
 			return val;
 		}
 
@@ -19648,9 +19954,10 @@ function showHide( elements, show ) {
 			continue;
 		}
 
-		values[ index ] = data_priv.get( elem, "olddisplay" );
+		values[ index ] = dataPriv.get( elem, "olddisplay" );
 		display = elem.style.display;
 		if ( show ) {
+
 			// Reset the inline display of this element to learn if it is
 			// being hidden by cascaded rules or not
 			if ( !values[ index ] && display === "none" ) {
@@ -19661,13 +19968,21 @@ function showHide( elements, show ) {
 			// in a stylesheet to whatever the default browser style is
 			// for such an element
 			if ( elem.style.display === "" && isHidden( elem ) ) {
-				values[ index ] = data_priv.access( elem, "olddisplay", defaultDisplay(elem.nodeName) );
+				values[ index ] = dataPriv.access(
+					elem,
+					"olddisplay",
+					defaultDisplay( elem.nodeName )
+				);
 			}
 		} else {
 			hidden = isHidden( elem );
 
 			if ( display !== "none" || !hidden ) {
-				data_priv.set( elem, "olddisplay", hidden ? display : jQuery.css( elem, "display" ) );
+				dataPriv.set(
+					elem,
+					"olddisplay",
+					hidden ? display : jQuery.css( elem, "display" )
+				);
 			}
 		}
 	}
@@ -19687,7 +20002,7 @@ function showHide( elements, show ) {
 	return elements;
 }
 
-jQuery.extend({
+jQuery.extend( {
 
 	// Add in style property hooks for overriding the default
 	// behavior of getting and setting a style property
@@ -19706,6 +20021,7 @@ jQuery.extend({
 
 	// Don't automatically add "px" to these possibly-unitless properties
 	cssNumber: {
+		"animationIterationCount": true,
 		"columnCount": true,
 		"fillOpacity": true,
 		"flexGrow": true,
@@ -19739,7 +20055,8 @@ jQuery.extend({
 			origName = jQuery.camelCase( name ),
 			style = elem.style;
 
-		name = jQuery.cssProps[ origName ] || ( jQuery.cssProps[ origName ] = vendorPropName( style, origName ) );
+		name = jQuery.cssProps[ origName ] ||
+			( jQuery.cssProps[ origName ] = vendorPropName( origName ) || origName );
 
 		// Gets hook for the prefixed version, then unprefixed version
 		hooks = jQuery.cssHooks[ name ] || jQuery.cssHooks[ origName ];
@@ -19749,8 +20066,9 @@ jQuery.extend({
 			type = typeof value;
 
 			// Convert "+=" or "-=" to relative numbers (#7345)
-			if ( type === "string" && (ret = rrelNum.exec( value )) ) {
-				value = ( ret[1] + 1 ) * ret[2] + parseFloat( jQuery.css( elem, name ) );
+			if ( type === "string" && ( ret = rcssNum.exec( value ) ) && ret[ 1 ] ) {
+				value = adjustCSS( elem, name, ret );
+
 				// Fixes bug #9237
 				type = "number";
 			}
@@ -19760,9 +20078,9 @@ jQuery.extend({
 				return;
 			}
 
-			// If a number, add 'px' to the (except for certain CSS properties)
-			if ( type === "number" && !jQuery.cssNumber[ origName ] ) {
-				value += "px";
+			// If a number was passed in, add the unit (except for certain CSS properties)
+			if ( type === "number" ) {
+				value += ret && ret[ 3 ] || ( jQuery.cssNumber[ origName ] ? "" : "px" );
 			}
 
 			// Support: IE9-11+
@@ -19772,13 +20090,18 @@ jQuery.extend({
 			}
 
 			// If a hook was provided, use that value, otherwise just set the specified value
-			if ( !hooks || !("set" in hooks) || (value = hooks.set( elem, value, extra )) !== undefined ) {
+			if ( !hooks || !( "set" in hooks ) ||
+				( value = hooks.set( elem, value, extra ) ) !== undefined ) {
+
 				style[ name ] = value;
 			}
 
 		} else {
+
 			// If a hook was provided get the non-computed value from there
-			if ( hooks && "get" in hooks && (ret = hooks.get( elem, false, extra )) !== undefined ) {
+			if ( hooks && "get" in hooks &&
+				( ret = hooks.get( elem, false, extra ) ) !== undefined ) {
+
 				return ret;
 			}
 
@@ -19792,7 +20115,8 @@ jQuery.extend({
 			origName = jQuery.camelCase( name );
 
 		// Make sure that we're working with the right name
-		name = jQuery.cssProps[ origName ] || ( jQuery.cssProps[ origName ] = vendorPropName( elem.style, origName ) );
+		name = jQuery.cssProps[ origName ] ||
+			( jQuery.cssProps[ origName ] = vendorPropName( origName ) || origName );
 
 		// Try prefixed name followed by the unprefixed name
 		hooks = jQuery.cssHooks[ name ] || jQuery.cssHooks[ origName ];
@@ -19815,54 +20139,77 @@ jQuery.extend({
 		// Make numeric if forced or a qualifier was provided and val looks numeric
 		if ( extra === "" || extra ) {
 			num = parseFloat( val );
-			return extra === true || jQuery.isNumeric( num ) ? num || 0 : val;
+			return extra === true || isFinite( num ) ? num || 0 : val;
 		}
 		return val;
 	}
-});
+} );
 
-jQuery.each([ "height", "width" ], function( i, name ) {
+jQuery.each( [ "height", "width" ], function( i, name ) {
 	jQuery.cssHooks[ name ] = {
 		get: function( elem, computed, extra ) {
 			if ( computed ) {
 
 				// Certain elements can have dimension info if we invisibly show them
 				// but it must have a current display style that would benefit
-				return rdisplayswap.test( jQuery.css( elem, "display" ) ) && elem.offsetWidth === 0 ?
-					jQuery.swap( elem, cssShow, function() {
-						return getWidthOrHeight( elem, name, extra );
-					}) :
-					getWidthOrHeight( elem, name, extra );
+				return rdisplayswap.test( jQuery.css( elem, "display" ) ) &&
+					elem.offsetWidth === 0 ?
+						swap( elem, cssShow, function() {
+							return getWidthOrHeight( elem, name, extra );
+						} ) :
+						getWidthOrHeight( elem, name, extra );
 			}
 		},
 
 		set: function( elem, value, extra ) {
-			var styles = extra && getStyles( elem );
-			return setPositiveNumber( elem, value, extra ?
-				augmentWidthOrHeight(
+			var matches,
+				styles = extra && getStyles( elem ),
+				subtract = extra && augmentWidthOrHeight(
 					elem,
 					name,
 					extra,
 					jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
 					styles
-				) : 0
-			);
+				);
+
+			// Convert to pixels if value adjustment is needed
+			if ( subtract && ( matches = rcssNum.exec( value ) ) &&
+				( matches[ 3 ] || "px" ) !== "px" ) {
+
+				elem.style[ name ] = value;
+				value = jQuery.css( elem, name );
+			}
+
+			return setPositiveNumber( elem, value, subtract );
 		}
 	};
-});
+} );
+
+jQuery.cssHooks.marginLeft = addGetHookIf( support.reliableMarginLeft,
+	function( elem, computed ) {
+		if ( computed ) {
+			return ( parseFloat( curCSS( elem, "marginLeft" ) ) ||
+				elem.getBoundingClientRect().left -
+					swap( elem, { marginLeft: 0 }, function() {
+						return elem.getBoundingClientRect().left;
+					} )
+				) + "px";
+		}
+	}
+);
 
 // Support: Android 2.3
 jQuery.cssHooks.marginRight = addGetHookIf( support.reliableMarginRight,
 	function( elem, computed ) {
 		if ( computed ) {
-			return jQuery.swap( elem, { "display": "inline-block" },
+			return swap( elem, { "display": "inline-block" },
 				curCSS, [ elem, "marginRight" ] );
 		}
 	}
 );
 
 // These hooks are used by animate to expand properties
-jQuery.each({
+jQuery.each( {
 	margin: "",
 	padding: "",
 	border: "Width"
@@ -19873,7 +20220,7 @@ jQuery.each({
 				expanded = {},
 
 				// Assumes a single number if not a string
-				parts = typeof value === "string" ? value.split(" ") : [ value ];
+				parts = typeof value === "string" ? value.split( " " ) : [ value ];
 
 			for ( ; i < 4; i++ ) {
 				expanded[ prefix + cssExpand[ i ] + suffix ] =
@@ -19887,9 +20234,9 @@ jQuery.each({
 	if ( !rmargin.test( prefix ) ) {
 		jQuery.cssHooks[ prefix + suffix ].set = setPositiveNumber;
 	}
-});
+} );
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	css: function( name, value ) {
 		return access( this, function( elem, name, value ) {
 			var styles, len,
@@ -19923,15 +20270,15 @@ jQuery.fn.extend({
 			return state ? this.show() : this.hide();
 		}
 
-		return this.each(function() {
+		return this.each( function() {
 			if ( isHidden( this ) ) {
 				jQuery( this ).show();
 			} else {
 				jQuery( this ).hide();
 			}
-		});
+		} );
 	}
-});
+} );
 
 
 function Tween( elem, options, prop, end, easing ) {
@@ -19944,7 +20291,7 @@ Tween.prototype = {
 	init: function( elem, options, prop, end, easing, unit ) {
 		this.elem = elem;
 		this.prop = prop;
-		this.easing = easing || "swing";
+		this.easing = easing || jQuery.easing._default;
 		this.options = options;
 		this.start = this.now = this.cur();
 		this.end = end;
@@ -19990,8 +20337,10 @@ Tween.propHooks = {
 		get: function( tween ) {
 			var result;
 
-			if ( tween.elem[ tween.prop ] != null &&
-				(!tween.elem.style || tween.elem.style[ tween.prop ] == null) ) {
+			// Use a property on the element directly when it is not a DOM element,
+			// or when there is no matching style property that exists.
+			if ( tween.elem.nodeType !== 1 ||
+				tween.elem[ tween.prop ] != null && tween.elem.style[ tween.prop ] == null ) {
 				return tween.elem[ tween.prop ];
 			}
 
@@ -20000,16 +20349,20 @@ Tween.propHooks = {
 			// Simple values such as "10px" are parsed to Float;
 			// complex values such as "rotate(1rad)" are returned as-is.
 			result = jQuery.css( tween.elem, tween.prop, "" );
+
 			// Empty strings, null, undefined and "auto" are converted to 0.
 			return !result || result === "auto" ? 0 : result;
 		},
 		set: function( tween ) {
+
 			// Use step hook for back compat.
 			// Use cssHook if its there.
 			// Use .style if available and use plain properties where available.
 			if ( jQuery.fx.step[ tween.prop ] ) {
 				jQuery.fx.step[ tween.prop ]( tween );
-			} else if ( tween.elem.style && ( tween.elem.style[ jQuery.cssProps[ tween.prop ] ] != null || jQuery.cssHooks[ tween.prop ] ) ) {
+			} else if ( tween.elem.nodeType === 1 &&
+				( tween.elem.style[ jQuery.cssProps[ tween.prop ] ] != null ||
+					jQuery.cssHooks[ tween.prop ] ) ) {
 				jQuery.style( tween.elem, tween.prop, tween.now + tween.unit );
 			} else {
 				tween.elem[ tween.prop ] = tween.now;
@@ -20034,7 +20387,8 @@ jQuery.easing = {
 	},
 	swing: function( p ) {
 		return 0.5 - Math.cos( p * Math.PI ) / 2;
-	}
+	},
+	_default: "swing"
 };
 
 jQuery.fx = Tween.prototype.init;
@@ -20048,65 +20402,13 @@ jQuery.fx.step = {};
 var
 	fxNow, timerId,
 	rfxtypes = /^(?:toggle|show|hide)$/,
-	rfxnum = new RegExp( "^(?:([+-])=|)(" + pnum + ")([a-z%]*)$", "i" ),
-	rrun = /queueHooks$/,
-	animationPrefilters = [ defaultPrefilter ],
-	tweeners = {
-		"*": [ function( prop, value ) {
-			var tween = this.createTween( prop, value ),
-				target = tween.cur(),
-				parts = rfxnum.exec( value ),
-				unit = parts && parts[ 3 ] || ( jQuery.cssNumber[ prop ] ? "" : "px" ),
-
-				// Starting value computation is required for potential unit mismatches
-				start = ( jQuery.cssNumber[ prop ] || unit !== "px" && +target ) &&
-					rfxnum.exec( jQuery.css( tween.elem, prop ) ),
-				scale = 1,
-				maxIterations = 20;
-
-			if ( start && start[ 3 ] !== unit ) {
-				// Trust units reported by jQuery.css
-				unit = unit || start[ 3 ];
-
-				// Make sure we update the tween properties later on
-				parts = parts || [];
-
-				// Iteratively approximate from a nonzero starting point
-				start = +target || 1;
-
-				do {
-					// If previous iteration zeroed out, double until we get *something*.
-					// Use string for doubling so we don't accidentally see scale as unchanged below
-					scale = scale || ".5";
-
-					// Adjust and apply
-					start = start / scale;
-					jQuery.style( tween.elem, prop, start + unit );
-
-				// Update scale, tolerating zero or NaN from tween.cur(),
-				// break the loop if scale is unchanged or perfect, or if we've just had enough
-				} while ( scale !== (scale = tween.cur() / target) && scale !== 1 && --maxIterations );
-			}
-
-			// Update tween properties
-			if ( parts ) {
-				start = tween.start = +start || +target || 0;
-				tween.unit = unit;
-				// If a +=/-= token was provided, we're doing a relative animation
-				tween.end = parts[ 1 ] ?
-					start + ( parts[ 1 ] + 1 ) * parts[ 2 ] :
-					+parts[ 2 ];
-			}
-
-			return tween;
-		} ]
-	};
+	rrun = /queueHooks$/;
 
 // Animations created synchronously will run synchronously
 function createFxNow() {
-	setTimeout(function() {
+	window.setTimeout( function() {
 		fxNow = undefined;
-	});
+	} );
 	return ( fxNow = jQuery.now() );
 }
 
@@ -20133,11 +20435,11 @@ function genFx( type, includeWidth ) {
 
 function createTween( value, prop, animation ) {
 	var tween,
-		collection = ( tweeners[ prop ] || [] ).concat( tweeners[ "*" ] ),
+		collection = ( Animation.tweeners[ prop ] || [] ).concat( Animation.tweeners[ "*" ] ),
 		index = 0,
 		length = collection.length;
 	for ( ; index < length; index++ ) {
-		if ( (tween = collection[ index ].call( animation, prop, value )) ) {
+		if ( ( tween = collection[ index ].call( animation, prop, value ) ) ) {
 
 			// We're done with this property
 			return tween;
@@ -20152,7 +20454,7 @@ function defaultPrefilter( elem, props, opts ) {
 		orig = {},
 		style = elem.style,
 		hidden = elem.nodeType && isHidden( elem ),
-		dataShow = data_priv.get( elem, "fxshow" );
+		dataShow = dataPriv.get( elem, "fxshow" );
 
 	// Handle queue: false promises
 	if ( !opts.queue ) {
@@ -20168,19 +20470,21 @@ function defaultPrefilter( elem, props, opts ) {
 		}
 		hooks.unqueued++;
 
-		anim.always(function() {
+		anim.always( function() {
+
 			// Ensure the complete handler is called before this completes
-			anim.always(function() {
+			anim.always( function() {
 				hooks.unqueued--;
 				if ( !jQuery.queue( elem, "fx" ).length ) {
 					hooks.empty.fire();
 				}
-			});
-		});
+			} );
+		} );
 	}
 
 	// Height/width overflow pass
 	if ( elem.nodeType === 1 && ( "height" in props || "width" in props ) ) {
+
 		// Make sure that nothing sneaks out
 		// Record all 3 overflow attributes because IE9-10 do not
 		// change the overflow attribute when overflowX and
@@ -20193,7 +20497,7 @@ function defaultPrefilter( elem, props, opts ) {
 
 		// Test default display if display is currently "none"
 		checkDisplay = display === "none" ?
-			data_priv.get( elem, "olddisplay" ) || defaultDisplay( elem.nodeName ) : display;
+			dataPriv.get( elem, "olddisplay" ) || defaultDisplay( elem.nodeName ) : display;
 
 		if ( checkDisplay === "inline" && jQuery.css( elem, "float" ) === "none" ) {
 			style.display = "inline-block";
@@ -20202,11 +20506,11 @@ function defaultPrefilter( elem, props, opts ) {
 
 	if ( opts.overflow ) {
 		style.overflow = "hidden";
-		anim.always(function() {
+		anim.always( function() {
 			style.overflow = opts.overflow[ 0 ];
 			style.overflowX = opts.overflow[ 1 ];
 			style.overflowY = opts.overflow[ 2 ];
-		});
+		} );
 	}
 
 	// show/hide pass
@@ -20217,7 +20521,8 @@ function defaultPrefilter( elem, props, opts ) {
 			toggle = toggle || value === "toggle";
 			if ( value === ( hidden ? "hide" : "show" ) ) {
 
-				// If there is dataShow left over from a stopped hide or show and we are going to proceed with show, we should pretend to be hidden
+				// If there is dataShow left over from a stopped hide or show
+				// and we are going to proceed with show, we should pretend to be hidden
 				if ( value === "show" && dataShow && dataShow[ prop ] !== undefined ) {
 					hidden = true;
 				} else {
@@ -20238,7 +20543,7 @@ function defaultPrefilter( elem, props, opts ) {
 				hidden = dataShow.hidden;
 			}
 		} else {
-			dataShow = data_priv.access( elem, "fxshow", {} );
+			dataShow = dataPriv.access( elem, "fxshow", {} );
 		}
 
 		// Store state if its toggle - enables .stop().toggle() to "reverse"
@@ -20248,18 +20553,18 @@ function defaultPrefilter( elem, props, opts ) {
 		if ( hidden ) {
 			jQuery( elem ).show();
 		} else {
-			anim.done(function() {
+			anim.done( function() {
 				jQuery( elem ).hide();
-			});
+			} );
 		}
-		anim.done(function() {
+		anim.done( function() {
 			var prop;
 
-			data_priv.remove( elem, "fxshow" );
+			dataPriv.remove( elem, "fxshow" );
 			for ( prop in orig ) {
 				jQuery.style( elem, prop, orig[ prop ] );
 			}
-		});
+		} );
 		for ( prop in orig ) {
 			tween = createTween( hidden ? dataShow[ prop ] : 0, prop, anim );
 
@@ -20273,7 +20578,7 @@ function defaultPrefilter( elem, props, opts ) {
 		}
 
 	// If this is a noop like .hide().hide(), restore an overwritten display value
-	} else if ( (display === "none" ? defaultDisplay( elem.nodeName ) : display) === "inline" ) {
+	} else if ( ( display === "none" ? defaultDisplay( elem.nodeName ) : display ) === "inline" ) {
 		style.display = display;
 	}
 }
@@ -20319,17 +20624,19 @@ function Animation( elem, properties, options ) {
 	var result,
 		stopped,
 		index = 0,
-		length = animationPrefilters.length,
+		length = Animation.prefilters.length,
 		deferred = jQuery.Deferred().always( function() {
+
 			// Don't match elem in the :animated selector
 			delete tick.elem;
-		}),
+		} ),
 		tick = function() {
 			if ( stopped ) {
 				return false;
 			}
 			var currentTime = fxNow || createFxNow(),
 				remaining = Math.max( 0, animation.startTime + animation.duration - currentTime ),
+
 				// Support: Android 2.3
 				// Archaic crash bug won't allow us to use `1 - ( 0.5 || 0 )` (#12497)
 				temp = remaining / animation.duration || 0,
@@ -20341,7 +20648,7 @@ function Animation( elem, properties, options ) {
 				animation.tweens[ index ].run( percent );
 			}
 
-			deferred.notifyWith( elem, [ animation, percent, remaining ]);
+			deferred.notifyWith( elem, [ animation, percent, remaining ] );
 
 			if ( percent < 1 && length ) {
 				return remaining;
@@ -20350,10 +20657,13 @@ function Animation( elem, properties, options ) {
 				return false;
 			}
 		},
-		animation = deferred.promise({
+		animation = deferred.promise( {
 			elem: elem,
 			props: jQuery.extend( {}, properties ),
-			opts: jQuery.extend( true, { specialEasing: {} }, options ),
+			opts: jQuery.extend( true, {
+				specialEasing: {},
+				easing: jQuery.easing._default
+			}, options ),
 			originalProperties: properties,
 			originalOptions: options,
 			startTime: fxNow || createFxNow(),
@@ -20367,6 +20677,7 @@ function Animation( elem, properties, options ) {
 			},
 			stop: function( gotoEnd ) {
 				var index = 0,
+
 					// If we are going to the end, we want to run all the tweens
 					// otherwise we skip this part
 					length = gotoEnd ? animation.tweens.length : 0;
@@ -20380,20 +20691,25 @@ function Animation( elem, properties, options ) {
 
 				// Resolve when we played the last frame; otherwise, reject
 				if ( gotoEnd ) {
+					deferred.notifyWith( elem, [ animation, 1, 0 ] );
 					deferred.resolveWith( elem, [ animation, gotoEnd ] );
 				} else {
 					deferred.rejectWith( elem, [ animation, gotoEnd ] );
 				}
 				return this;
 			}
-		}),
+		} ),
 		props = animation.props;
 
 	propFilter( props, animation.opts.specialEasing );
 
 	for ( ; index < length ; index++ ) {
-		result = animationPrefilters[ index ].call( animation, elem, props, animation.opts );
+		result = Animation.prefilters[ index ].call( animation, elem, props, animation.opts );
 		if ( result ) {
+			if ( jQuery.isFunction( result.stop ) ) {
+				jQuery._queueHooks( animation.elem, animation.opts.queue ).stop =
+					jQuery.proxy( result.stop, result );
+			}
 			return result;
 		}
 	}
@@ -20409,7 +20725,7 @@ function Animation( elem, properties, options ) {
 			elem: elem,
 			anim: animation,
 			queue: animation.opts.queue
-		})
+		} )
 	);
 
 	// attach callbacks from options
@@ -20420,13 +20736,20 @@ function Animation( elem, properties, options ) {
 }
 
 jQuery.Animation = jQuery.extend( Animation, {
+	tweeners: {
+		"*": [ function( prop, value ) {
+			var tween = this.createTween( prop, value );
+			adjustCSS( tween.elem, prop, rcssNum.exec( value ), tween );
+			return tween;
+		} ]
+	},
 
 	tweener: function( props, callback ) {
 		if ( jQuery.isFunction( props ) ) {
 			callback = props;
 			props = [ "*" ];
 		} else {
-			props = props.split(" ");
+			props = props.match( rnotwhite );
 		}
 
 		var prop,
@@ -20435,19 +20758,21 @@ jQuery.Animation = jQuery.extend( Animation, {
 
 		for ( ; index < length ; index++ ) {
 			prop = props[ index ];
-			tweeners[ prop ] = tweeners[ prop ] || [];
-			tweeners[ prop ].unshift( callback );
+			Animation.tweeners[ prop ] = Animation.tweeners[ prop ] || [];
+			Animation.tweeners[ prop ].unshift( callback );
 		}
 	},
 
+	prefilters: [ defaultPrefilter ],
+
 	prefilter: function( callback, prepend ) {
 		if ( prepend ) {
-			animationPrefilters.unshift( callback );
+			Animation.prefilters.unshift( callback );
 		} else {
-			animationPrefilters.push( callback );
+			Animation.prefilters.push( callback );
 		}
 	}
-});
+} );
 
 jQuery.speed = function( speed, easing, fn ) {
 	var opt = speed && typeof speed === "object" ? jQuery.extend( {}, speed ) : {
@@ -20457,8 +20782,9 @@ jQuery.speed = function( speed, easing, fn ) {
 		easing: fn && easing || easing && !jQuery.isFunction( easing ) && easing
 	};
 
-	opt.duration = jQuery.fx.off ? 0 : typeof opt.duration === "number" ? opt.duration :
-		opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
+	opt.duration = jQuery.fx.off ? 0 : typeof opt.duration === "number" ?
+		opt.duration : opt.duration in jQuery.fx.speeds ?
+			jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
 
 	// Normalize opt.queue - true/undefined/null -> "fx"
 	if ( opt.queue == null || opt.queue === true ) {
@@ -20481,24 +20807,25 @@ jQuery.speed = function( speed, easing, fn ) {
 	return opt;
 };
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	fadeTo: function( speed, to, easing, callback ) {
 
 		// Show any hidden elements after setting opacity to 0
 		return this.filter( isHidden ).css( "opacity", 0 ).show()
 
 			// Animate to the value specified
-			.end().animate({ opacity: to }, speed, easing, callback );
+			.end().animate( { opacity: to }, speed, easing, callback );
 	},
 	animate: function( prop, speed, easing, callback ) {
 		var empty = jQuery.isEmptyObject( prop ),
 			optall = jQuery.speed( speed, easing, callback ),
 			doAnimation = function() {
+
 				// Operate on a copy of prop so per-property easing won't be lost
 				var anim = Animation( this, jQuery.extend( {}, prop ), optall );
 
 				// Empty animations, or finishing resolves immediately
-				if ( empty || data_priv.get( this, "finish" ) ) {
+				if ( empty || dataPriv.get( this, "finish" ) ) {
 					anim.stop( true );
 				}
 			};
@@ -20524,11 +20851,11 @@ jQuery.fn.extend({
 			this.queue( type || "fx", [] );
 		}
 
-		return this.each(function() {
+		return this.each( function() {
 			var dequeue = true,
 				index = type != null && type + "queueHooks",
 				timers = jQuery.timers,
-				data = data_priv.get( this );
+				data = dataPriv.get( this );
 
 			if ( index ) {
 				if ( data[ index ] && data[ index ].stop ) {
@@ -20543,7 +20870,9 @@ jQuery.fn.extend({
 			}
 
 			for ( index = timers.length; index--; ) {
-				if ( timers[ index ].elem === this && (type == null || timers[ index ].queue === type) ) {
+				if ( timers[ index ].elem === this &&
+					( type == null || timers[ index ].queue === type ) ) {
+
 					timers[ index ].anim.stop( gotoEnd );
 					dequeue = false;
 					timers.splice( index, 1 );
@@ -20556,15 +20885,15 @@ jQuery.fn.extend({
 			if ( dequeue || !gotoEnd ) {
 				jQuery.dequeue( this, type );
 			}
-		});
+		} );
 	},
 	finish: function( type ) {
 		if ( type !== false ) {
 			type = type || "fx";
 		}
-		return this.each(function() {
+		return this.each( function() {
 			var index,
-				data = data_priv.get( this ),
+				data = dataPriv.get( this ),
 				queue = data[ type + "queue" ],
 				hooks = data[ type + "queueHooks" ],
 				timers = jQuery.timers,
@@ -20597,24 +20926,24 @@ jQuery.fn.extend({
 
 			// Turn off finishing flag
 			delete data.finish;
-		});
+		} );
 	}
-});
+} );
 
-jQuery.each([ "toggle", "show", "hide" ], function( i, name ) {
+jQuery.each( [ "toggle", "show", "hide" ], function( i, name ) {
 	var cssFn = jQuery.fn[ name ];
 	jQuery.fn[ name ] = function( speed, easing, callback ) {
 		return speed == null || typeof speed === "boolean" ?
 			cssFn.apply( this, arguments ) :
 			this.animate( genFx( name, true ), speed, easing, callback );
 	};
-});
+} );
 
 // Generate shortcuts for custom animations
-jQuery.each({
-	slideDown: genFx("show"),
-	slideUp: genFx("hide"),
-	slideToggle: genFx("toggle"),
+jQuery.each( {
+	slideDown: genFx( "show" ),
+	slideUp: genFx( "hide" ),
+	slideToggle: genFx( "toggle" ),
 	fadeIn: { opacity: "show" },
 	fadeOut: { opacity: "hide" },
 	fadeToggle: { opacity: "toggle" }
@@ -20622,7 +20951,7 @@ jQuery.each({
 	jQuery.fn[ name ] = function( speed, easing, callback ) {
 		return this.animate( props, speed, easing, callback );
 	};
-});
+} );
 
 jQuery.timers = [];
 jQuery.fx.tick = function() {
@@ -20634,6 +20963,7 @@ jQuery.fx.tick = function() {
 
 	for ( ; i < timers.length; i++ ) {
 		timer = timers[ i ];
+
 		// Checks the timer has not already been removed
 		if ( !timer() && timers[ i ] === timer ) {
 			timers.splice( i--, 1 );
@@ -20656,42 +20986,43 @@ jQuery.fx.timer = function( timer ) {
 };
 
 jQuery.fx.interval = 13;
-
 jQuery.fx.start = function() {
 	if ( !timerId ) {
-		timerId = setInterval( jQuery.fx.tick, jQuery.fx.interval );
+		timerId = window.setInterval( jQuery.fx.tick, jQuery.fx.interval );
 	}
 };
 
 jQuery.fx.stop = function() {
-	clearInterval( timerId );
+	window.clearInterval( timerId );
+
 	timerId = null;
 };
 
 jQuery.fx.speeds = {
 	slow: 600,
 	fast: 200,
+
 	// Default speed
 	_default: 400
 };
 
 
 // Based off of the plugin by Clint Helfers, with permission.
-// http://blindsignals.com/index.php/2009/07/jquery-delay/
+// http://web.archive.org/web/20100324014747/http://blindsignals.com/index.php/2009/07/jquery-delay/
 jQuery.fn.delay = function( time, type ) {
 	time = jQuery.fx ? jQuery.fx.speeds[ time ] || time : time;
 	type = type || "fx";
 
 	return this.queue( type, function( next, hooks ) {
-		var timeout = setTimeout( next, time );
+		var timeout = window.setTimeout( next, time );
 		hooks.stop = function() {
-			clearTimeout( timeout );
+			window.clearTimeout( timeout );
 		};
-	});
+	} );
 };
 
 
-(function() {
+( function() {
 	var input = document.createElement( "input" ),
 		select = document.createElement( "select" ),
 		opt = select.appendChild( document.createElement( "option" ) );
@@ -20717,36 +21048,36 @@ jQuery.fn.delay = function( time, type ) {
 	input.value = "t";
 	input.type = "radio";
 	support.radioValue = input.value === "t";
-})();
+} )();
 
 
-var nodeHook, boolHook,
+var boolHook,
 	attrHandle = jQuery.expr.attrHandle;
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	attr: function( name, value ) {
 		return access( this, jQuery.attr, name, value, arguments.length > 1 );
 	},
 
 	removeAttr: function( name ) {
-		return this.each(function() {
+		return this.each( function() {
 			jQuery.removeAttr( this, name );
-		});
+		} );
 	}
-});
+} );
 
-jQuery.extend({
+jQuery.extend( {
 	attr: function( elem, name, value ) {
-		var hooks, ret,
+		var ret, hooks,
 			nType = elem.nodeType;
 
-		// don't get/set attributes on text, comment and attribute nodes
-		if ( !elem || nType === 3 || nType === 8 || nType === 2 ) {
+		// Don't get/set attributes on text, comment and attribute nodes
+		if ( nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
 
 		// Fallback to prop when attributes are not supported
-		if ( typeof elem.getAttribute === strundefined ) {
+		if ( typeof elem.getAttribute === "undefined" ) {
 			return jQuery.prop( elem, name, value );
 		}
 
@@ -20755,53 +21086,32 @@ jQuery.extend({
 		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) {
 			name = name.toLowerCase();
 			hooks = jQuery.attrHooks[ name ] ||
-				( jQuery.expr.match.bool.test( name ) ? boolHook : nodeHook );
+				( jQuery.expr.match.bool.test( name ) ? boolHook : undefined );
 		}
 
 		if ( value !== undefined ) {
-
 			if ( value === null ) {
 				jQuery.removeAttr( elem, name );
+				return;
+			}
 
-			} else if ( hooks && "set" in hooks && (ret = hooks.set( elem, value, name )) !== undefined ) {
+			if ( hooks && "set" in hooks &&
+				( ret = hooks.set( elem, value, name ) ) !== undefined ) {
 				return ret;
-
-			} else {
-				elem.setAttribute( name, value + "" );
-				return value;
 			}
 
-		} else if ( hooks && "get" in hooks && (ret = hooks.get( elem, name )) !== null ) {
+			elem.setAttribute( name, value + "" );
+			return value;
+		}
+
+		if ( hooks && "get" in hooks && ( ret = hooks.get( elem, name ) ) !== null ) {
 			return ret;
-
-		} else {
-			ret = jQuery.find.attr( elem, name );
-
-			// Non-existent attributes return null, we normalize to undefined
-			return ret == null ?
-				undefined :
-				ret;
 		}
-	},
 
-	removeAttr: function( elem, value ) {
-		var name, propName,
-			i = 0,
-			attrNames = value && value.match( rnotwhite );
+		ret = jQuery.find.attr( elem, name );
 
-		if ( attrNames && elem.nodeType === 1 ) {
-			while ( (name = attrNames[i++]) ) {
-				propName = jQuery.propFix[ name ] || name;
-
-				// Boolean attributes get special treatment (#10870)
-				if ( jQuery.expr.match.bool.test( name ) ) {
-					// Set corresponding property to false
-					elem[ propName ] = false;
-				}
-
-				elem.removeAttribute( name );
-			}
-		}
+		// Non-existent attributes return null, we normalize to undefined
+		return ret == null ? undefined : ret;
 	},
 
 	attrHooks: {
@@ -20818,13 +21128,35 @@ jQuery.extend({
 				}
 			}
 		}
+	},
+
+	removeAttr: function( elem, value ) {
+		var name, propName,
+			i = 0,
+			attrNames = value && value.match( rnotwhite );
+
+		if ( attrNames && elem.nodeType === 1 ) {
+			while ( ( name = attrNames[ i++ ] ) ) {
+				propName = jQuery.propFix[ name ] || name;
+
+				// Boolean attributes get special treatment (#10870)
+				if ( jQuery.expr.match.bool.test( name ) ) {
+
+					// Set corresponding property to false
+					elem[ propName ] = false;
+				}
+
+				elem.removeAttribute( name );
+			}
+		}
 	}
-});
+} );
 
 // Hooks for boolean attributes
 boolHook = {
 	set: function( elem, value, name ) {
 		if ( value === false ) {
+
 			// Remove boolean attributes when set to false
 			jQuery.removeAttr( elem, name );
 		} else {
@@ -20839,6 +21171,7 @@ jQuery.each( jQuery.expr.match.bool.source.match( /\w+/g ), function( i, name ) 
 	attrHandle[ name ] = function( elem, name, isXML ) {
 		var ret, handle;
 		if ( !isXML ) {
+
 			// Avoid an infinite loop by temporarily removing this function from the getter
 			handle = attrHandle[ name ];
 			attrHandle[ name ] = ret;
@@ -20849,71 +21182,91 @@ jQuery.each( jQuery.expr.match.bool.source.match( /\w+/g ), function( i, name ) 
 		}
 		return ret;
 	};
-});
+} );
 
 
 
 
-var rfocusable = /^(?:input|select|textarea|button)$/i;
+var rfocusable = /^(?:input|select|textarea|button)$/i,
+	rclickable = /^(?:a|area)$/i;
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	prop: function( name, value ) {
 		return access( this, jQuery.prop, name, value, arguments.length > 1 );
 	},
 
 	removeProp: function( name ) {
-		return this.each(function() {
+		return this.each( function() {
 			delete this[ jQuery.propFix[ name ] || name ];
-		});
+		} );
 	}
-});
+} );
 
-jQuery.extend({
-	propFix: {
-		"for": "htmlFor",
-		"class": "className"
-	},
-
+jQuery.extend( {
 	prop: function( elem, name, value ) {
-		var ret, hooks, notxml,
+		var ret, hooks,
 			nType = elem.nodeType;
 
 		// Don't get/set properties on text, comment and attribute nodes
-		if ( !elem || nType === 3 || nType === 8 || nType === 2 ) {
+		if ( nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
 
-		notxml = nType !== 1 || !jQuery.isXMLDoc( elem );
+		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) {
 
-		if ( notxml ) {
 			// Fix name and attach hooks
 			name = jQuery.propFix[ name ] || name;
 			hooks = jQuery.propHooks[ name ];
 		}
 
 		if ( value !== undefined ) {
-			return hooks && "set" in hooks && (ret = hooks.set( elem, value, name )) !== undefined ?
-				ret :
-				( elem[ name ] = value );
+			if ( hooks && "set" in hooks &&
+				( ret = hooks.set( elem, value, name ) ) !== undefined ) {
+				return ret;
+			}
 
-		} else {
-			return hooks && "get" in hooks && (ret = hooks.get( elem, name )) !== null ?
-				ret :
-				elem[ name ];
+			return ( elem[ name ] = value );
 		}
+
+		if ( hooks && "get" in hooks && ( ret = hooks.get( elem, name ) ) !== null ) {
+			return ret;
+		}
+
+		return elem[ name ];
 	},
 
 	propHooks: {
 		tabIndex: {
 			get: function( elem ) {
-				return elem.hasAttribute( "tabindex" ) || rfocusable.test( elem.nodeName ) || elem.href ?
-					elem.tabIndex :
-					-1;
+
+				// elem.tabIndex doesn't always return the
+				// correct value when it hasn't been explicitly set
+				// http://fluidproject.org/blog/2008/01/09/getting-setting-and-removing-tabindex-values-with-javascript/
+				// Use proper attribute retrieval(#12072)
+				var tabindex = jQuery.find.attr( elem, "tabindex" );
+
+				return tabindex ?
+					parseInt( tabindex, 10 ) :
+					rfocusable.test( elem.nodeName ) ||
+						rclickable.test( elem.nodeName ) && elem.href ?
+							0 :
+							-1;
 			}
 		}
-	}
-});
+	},
 
+	propFix: {
+		"for": "htmlFor",
+		"class": "className"
+	}
+} );
+
+// Support: IE <=11 only
+// Accessing the selectedIndex property
+// forces the browser to respect setting selected
+// on the option
+// The getter ensures a default option is selected
+// when in an optgroup
 if ( !support.optSelected ) {
 	jQuery.propHooks.selected = {
 		get: function( elem ) {
@@ -20922,11 +21275,21 @@ if ( !support.optSelected ) {
 				parent.parentNode.selectedIndex;
 			}
 			return null;
+		},
+		set: function( elem ) {
+			var parent = elem.parentNode;
+			if ( parent ) {
+				parent.selectedIndex;
+
+				if ( parent.parentNode ) {
+					parent.parentNode.selectedIndex;
+				}
+			}
 		}
 	};
 }
 
-jQuery.each([
+jQuery.each( [
 	"tabIndex",
 	"readOnly",
 	"maxLength",
@@ -20939,49 +21302,48 @@ jQuery.each([
 	"contentEditable"
 ], function() {
 	jQuery.propFix[ this.toLowerCase() ] = this;
-});
+} );
 
 
 
 
 var rclass = /[\t\r\n\f]/g;
 
-jQuery.fn.extend({
+function getClass( elem ) {
+	return elem.getAttribute && elem.getAttribute( "class" ) || "";
+}
+
+jQuery.fn.extend( {
 	addClass: function( value ) {
-		var classes, elem, cur, clazz, j, finalValue,
-			proceed = typeof value === "string" && value,
-			i = 0,
-			len = this.length;
+		var classes, elem, cur, curValue, clazz, j, finalValue,
+			i = 0;
 
 		if ( jQuery.isFunction( value ) ) {
-			return this.each(function( j ) {
-				jQuery( this ).addClass( value.call( this, j, this.className ) );
-			});
+			return this.each( function( j ) {
+				jQuery( this ).addClass( value.call( this, j, getClass( this ) ) );
+			} );
 		}
 
-		if ( proceed ) {
-			// The disjunction here is for better compressibility (see removeClass)
-			classes = ( value || "" ).match( rnotwhite ) || [];
+		if ( typeof value === "string" && value ) {
+			classes = value.match( rnotwhite ) || [];
 
-			for ( ; i < len; i++ ) {
-				elem = this[ i ];
-				cur = elem.nodeType === 1 && ( elem.className ?
-					( " " + elem.className + " " ).replace( rclass, " " ) :
-					" "
-				);
+			while ( ( elem = this[ i++ ] ) ) {
+				curValue = getClass( elem );
+				cur = elem.nodeType === 1 &&
+					( " " + curValue + " " ).replace( rclass, " " );
 
 				if ( cur ) {
 					j = 0;
-					while ( (clazz = classes[j++]) ) {
+					while ( ( clazz = classes[ j++ ] ) ) {
 						if ( cur.indexOf( " " + clazz + " " ) < 0 ) {
 							cur += clazz + " ";
 						}
 					}
 
-					// only assign if different to avoid unneeded rendering.
+					// Only assign if different to avoid unneeded rendering.
 					finalValue = jQuery.trim( cur );
-					if ( elem.className !== finalValue ) {
-						elem.className = finalValue;
+					if ( curValue !== finalValue ) {
+						elem.setAttribute( "class", finalValue );
 					}
 				}
 			}
@@ -20991,40 +21353,43 @@ jQuery.fn.extend({
 	},
 
 	removeClass: function( value ) {
-		var classes, elem, cur, clazz, j, finalValue,
-			proceed = arguments.length === 0 || typeof value === "string" && value,
-			i = 0,
-			len = this.length;
+		var classes, elem, cur, curValue, clazz, j, finalValue,
+			i = 0;
 
 		if ( jQuery.isFunction( value ) ) {
-			return this.each(function( j ) {
-				jQuery( this ).removeClass( value.call( this, j, this.className ) );
-			});
+			return this.each( function( j ) {
+				jQuery( this ).removeClass( value.call( this, j, getClass( this ) ) );
+			} );
 		}
-		if ( proceed ) {
-			classes = ( value || "" ).match( rnotwhite ) || [];
 
-			for ( ; i < len; i++ ) {
-				elem = this[ i ];
+		if ( !arguments.length ) {
+			return this.attr( "class", "" );
+		}
+
+		if ( typeof value === "string" && value ) {
+			classes = value.match( rnotwhite ) || [];
+
+			while ( ( elem = this[ i++ ] ) ) {
+				curValue = getClass( elem );
+
 				// This expression is here for better compressibility (see addClass)
-				cur = elem.nodeType === 1 && ( elem.className ?
-					( " " + elem.className + " " ).replace( rclass, " " ) :
-					""
-				);
+				cur = elem.nodeType === 1 &&
+					( " " + curValue + " " ).replace( rclass, " " );
 
 				if ( cur ) {
 					j = 0;
-					while ( (clazz = classes[j++]) ) {
+					while ( ( clazz = classes[ j++ ] ) ) {
+
 						// Remove *all* instances
-						while ( cur.indexOf( " " + clazz + " " ) >= 0 ) {
+						while ( cur.indexOf( " " + clazz + " " ) > -1 ) {
 							cur = cur.replace( " " + clazz + " ", " " );
 						}
 					}
 
 					// Only assign if different to avoid unneeded rendering.
-					finalValue = value ? jQuery.trim( cur ) : "";
-					if ( elem.className !== finalValue ) {
-						elem.className = finalValue;
+					finalValue = jQuery.trim( cur );
+					if ( curValue !== finalValue ) {
+						elem.setAttribute( "class", finalValue );
 					}
 				}
 			}
@@ -21041,20 +21406,26 @@ jQuery.fn.extend({
 		}
 
 		if ( jQuery.isFunction( value ) ) {
-			return this.each(function( i ) {
-				jQuery( this ).toggleClass( value.call(this, i, this.className, stateVal), stateVal );
-			});
+			return this.each( function( i ) {
+				jQuery( this ).toggleClass(
+					value.call( this, i, getClass( this ), stateVal ),
+					stateVal
+				);
+			} );
 		}
 
-		return this.each(function() {
-			if ( type === "string" ) {
-				// Toggle individual class names
-				var className,
-					i = 0,
-					self = jQuery( this ),
-					classNames = value.match( rnotwhite ) || [];
+		return this.each( function() {
+			var className, i, self, classNames;
 
-				while ( (className = classNames[ i++ ]) ) {
+			if ( type === "string" ) {
+
+				// Toggle individual class names
+				i = 0;
+				self = jQuery( this );
+				classNames = value.match( rnotwhite ) || [];
+
+				while ( ( className = classNames[ i++ ] ) ) {
+
 					// Check each className given, space separated list
 					if ( self.hasClass( className ) ) {
 						self.removeClass( className );
@@ -21064,58 +21435,77 @@ jQuery.fn.extend({
 				}
 
 			// Toggle whole class name
-			} else if ( type === strundefined || type === "boolean" ) {
-				if ( this.className ) {
-					// store className if set
-					data_priv.set( this, "__className__", this.className );
+			} else if ( value === undefined || type === "boolean" ) {
+				className = getClass( this );
+				if ( className ) {
+
+					// Store className if set
+					dataPriv.set( this, "__className__", className );
 				}
 
 				// If the element has a class name or if we're passed `false`,
 				// then remove the whole classname (if there was one, the above saved it).
 				// Otherwise bring back whatever was previously saved (if anything),
 				// falling back to the empty string if nothing was stored.
-				this.className = this.className || value === false ? "" : data_priv.get( this, "__className__" ) || "";
+				if ( this.setAttribute ) {
+					this.setAttribute( "class",
+						className || value === false ?
+						"" :
+						dataPriv.get( this, "__className__" ) || ""
+					);
+				}
 			}
-		});
+		} );
 	},
 
 	hasClass: function( selector ) {
-		var className = " " + selector + " ",
-			i = 0,
-			l = this.length;
-		for ( ; i < l; i++ ) {
-			if ( this[i].nodeType === 1 && (" " + this[i].className + " ").replace(rclass, " ").indexOf( className ) >= 0 ) {
+		var className, elem,
+			i = 0;
+
+		className = " " + selector + " ";
+		while ( ( elem = this[ i++ ] ) ) {
+			if ( elem.nodeType === 1 &&
+				( " " + getClass( elem ) + " " ).replace( rclass, " " )
+					.indexOf( className ) > -1
+			) {
 				return true;
 			}
 		}
 
 		return false;
 	}
-});
+} );
 
 
 
 
-var rreturn = /\r/g;
+var rreturn = /\r/g,
+	rspaces = /[\x20\t\r\n\f]+/g;
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	val: function( value ) {
 		var hooks, ret, isFunction,
-			elem = this[0];
+			elem = this[ 0 ];
 
 		if ( !arguments.length ) {
 			if ( elem ) {
-				hooks = jQuery.valHooks[ elem.type ] || jQuery.valHooks[ elem.nodeName.toLowerCase() ];
+				hooks = jQuery.valHooks[ elem.type ] ||
+					jQuery.valHooks[ elem.nodeName.toLowerCase() ];
 
-				if ( hooks && "get" in hooks && (ret = hooks.get( elem, "value" )) !== undefined ) {
+				if ( hooks &&
+					"get" in hooks &&
+					( ret = hooks.get( elem, "value" ) ) !== undefined
+				) {
 					return ret;
 				}
 
 				ret = elem.value;
 
 				return typeof ret === "string" ?
+
 					// Handle most common string cases
-					ret.replace(rreturn, "") :
+					ret.replace( rreturn, "" ) :
+
 					// Handle cases where value is null/undef or number
 					ret == null ? "" : ret;
 			}
@@ -21125,7 +21515,7 @@ jQuery.fn.extend({
 
 		isFunction = jQuery.isFunction( value );
 
-		return this.each(function( i ) {
+		return this.each( function( i ) {
 			var val;
 
 			if ( this.nodeType !== 1 ) {
@@ -21148,29 +21538,33 @@ jQuery.fn.extend({
 			} else if ( jQuery.isArray( val ) ) {
 				val = jQuery.map( val, function( value ) {
 					return value == null ? "" : value + "";
-				});
+				} );
 			}
 
 			hooks = jQuery.valHooks[ this.type ] || jQuery.valHooks[ this.nodeName.toLowerCase() ];
 
 			// If set returns undefined, fall back to normal setting
-			if ( !hooks || !("set" in hooks) || hooks.set( this, val, "value" ) === undefined ) {
+			if ( !hooks || !( "set" in hooks ) || hooks.set( this, val, "value" ) === undefined ) {
 				this.value = val;
 			}
-		});
+		} );
 	}
-});
+} );
 
-jQuery.extend({
+jQuery.extend( {
 	valHooks: {
 		option: {
 			get: function( elem ) {
+
 				var val = jQuery.find.attr( elem, "value" );
 				return val != null ?
 					val :
+
 					// Support: IE10-11+
 					// option.text throws exceptions (#14686, #14858)
-					jQuery.trim( jQuery.text( elem ) );
+					// Strip and collapse whitespace
+					// https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+					jQuery.trim( jQuery.text( elem ) ).replace( rspaces, " " );
 			}
 		},
 		select: {
@@ -21189,11 +21583,14 @@ jQuery.extend({
 				for ( ; i < max; i++ ) {
 					option = options[ i ];
 
-					// IE6-9 doesn't update selected after form reset (#2551)
+					// IE8-9 doesn't update selected after form reset (#2551)
 					if ( ( option.selected || i === index ) &&
+
 							// Don't return options that are disabled or in a disabled optgroup
-							( support.optDisabled ? !option.disabled : option.getAttribute( "disabled" ) === null ) &&
-							( !option.parentNode.disabled || !jQuery.nodeName( option.parentNode, "optgroup" ) ) ) {
+							( support.optDisabled ?
+								!option.disabled : option.getAttribute( "disabled" ) === null ) &&
+							( !option.parentNode.disabled ||
+								!jQuery.nodeName( option.parentNode, "optgroup" ) ) ) {
 
 						// Get the specific value for the option
 						value = jQuery( option ).val();
@@ -21219,7 +21616,9 @@ jQuery.extend({
 
 				while ( i-- ) {
 					option = options[ i ];
-					if ( (option.selected = jQuery.inArray( option.value, values ) >= 0) ) {
+					if ( option.selected =
+						jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
+					) {
 						optionSet = true;
 					}
 				}
@@ -21232,23 +21631,23 @@ jQuery.extend({
 			}
 		}
 	}
-});
+} );
 
 // Radios and checkboxes getter/setter
-jQuery.each([ "radio", "checkbox" ], function() {
+jQuery.each( [ "radio", "checkbox" ], function() {
 	jQuery.valHooks[ this ] = {
 		set: function( elem, value ) {
 			if ( jQuery.isArray( value ) ) {
-				return ( elem.checked = jQuery.inArray( jQuery(elem).val(), value ) >= 0 );
+				return ( elem.checked = jQuery.inArray( jQuery( elem ).val(), value ) > -1 );
 			}
 		}
 	};
 	if ( !support.checkOn ) {
 		jQuery.valHooks[ this ].get = function( elem ) {
-			return elem.getAttribute("value") === null ? "on" : elem.value;
+			return elem.getAttribute( "value" ) === null ? "on" : elem.value;
 		};
 	}
-});
+} );
 
 
 
@@ -21256,9 +21655,182 @@ jQuery.each([ "radio", "checkbox" ], function() {
 // Return jQuery for attributes-only inclusion
 
 
-jQuery.each( ("blur focus focusin focusout load resize scroll unload click dblclick " +
+var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/;
+
+jQuery.extend( jQuery.event, {
+
+	trigger: function( event, data, elem, onlyHandlers ) {
+
+		var i, cur, tmp, bubbleType, ontype, handle, special,
+			eventPath = [ elem || document ],
+			type = hasOwn.call( event, "type" ) ? event.type : event,
+			namespaces = hasOwn.call( event, "namespace" ) ? event.namespace.split( "." ) : [];
+
+		cur = tmp = elem = elem || document;
+
+		// Don't do events on text and comment nodes
+		if ( elem.nodeType === 3 || elem.nodeType === 8 ) {
+			return;
+		}
+
+		// focus/blur morphs to focusin/out; ensure we're not firing them right now
+		if ( rfocusMorph.test( type + jQuery.event.triggered ) ) {
+			return;
+		}
+
+		if ( type.indexOf( "." ) > -1 ) {
+
+			// Namespaced trigger; create a regexp to match event type in handle()
+			namespaces = type.split( "." );
+			type = namespaces.shift();
+			namespaces.sort();
+		}
+		ontype = type.indexOf( ":" ) < 0 && "on" + type;
+
+		// Caller can pass in a jQuery.Event object, Object, or just an event type string
+		event = event[ jQuery.expando ] ?
+			event :
+			new jQuery.Event( type, typeof event === "object" && event );
+
+		// Trigger bitmask: & 1 for native handlers; & 2 for jQuery (always true)
+		event.isTrigger = onlyHandlers ? 2 : 3;
+		event.namespace = namespaces.join( "." );
+		event.rnamespace = event.namespace ?
+			new RegExp( "(^|\\.)" + namespaces.join( "\\.(?:.*\\.|)" ) + "(\\.|$)" ) :
+			null;
+
+		// Clean up the event in case it is being reused
+		event.result = undefined;
+		if ( !event.target ) {
+			event.target = elem;
+		}
+
+		// Clone any incoming data and prepend the event, creating the handler arg list
+		data = data == null ?
+			[ event ] :
+			jQuery.makeArray( data, [ event ] );
+
+		// Allow special events to draw outside the lines
+		special = jQuery.event.special[ type ] || {};
+		if ( !onlyHandlers && special.trigger && special.trigger.apply( elem, data ) === false ) {
+			return;
+		}
+
+		// Determine event propagation path in advance, per W3C events spec (#9951)
+		// Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
+		if ( !onlyHandlers && !special.noBubble && !jQuery.isWindow( elem ) ) {
+
+			bubbleType = special.delegateType || type;
+			if ( !rfocusMorph.test( bubbleType + type ) ) {
+				cur = cur.parentNode;
+			}
+			for ( ; cur; cur = cur.parentNode ) {
+				eventPath.push( cur );
+				tmp = cur;
+			}
+
+			// Only add window if we got to document (e.g., not plain obj or detached DOM)
+			if ( tmp === ( elem.ownerDocument || document ) ) {
+				eventPath.push( tmp.defaultView || tmp.parentWindow || window );
+			}
+		}
+
+		// Fire handlers on the event path
+		i = 0;
+		while ( ( cur = eventPath[ i++ ] ) && !event.isPropagationStopped() ) {
+
+			event.type = i > 1 ?
+				bubbleType :
+				special.bindType || type;
+
+			// jQuery handler
+			handle = ( dataPriv.get( cur, "events" ) || {} )[ event.type ] &&
+				dataPriv.get( cur, "handle" );
+			if ( handle ) {
+				handle.apply( cur, data );
+			}
+
+			// Native handler
+			handle = ontype && cur[ ontype ];
+			if ( handle && handle.apply && acceptData( cur ) ) {
+				event.result = handle.apply( cur, data );
+				if ( event.result === false ) {
+					event.preventDefault();
+				}
+			}
+		}
+		event.type = type;
+
+		// If nobody prevented the default action, do it now
+		if ( !onlyHandlers && !event.isDefaultPrevented() ) {
+
+			if ( ( !special._default ||
+				special._default.apply( eventPath.pop(), data ) === false ) &&
+				acceptData( elem ) ) {
+
+				// Call a native DOM method on the target with the same name name as the event.
+				// Don't do default actions on window, that's where global variables be (#6170)
+				if ( ontype && jQuery.isFunction( elem[ type ] ) && !jQuery.isWindow( elem ) ) {
+
+					// Don't re-trigger an onFOO event when we call its FOO() method
+					tmp = elem[ ontype ];
+
+					if ( tmp ) {
+						elem[ ontype ] = null;
+					}
+
+					// Prevent re-triggering of the same event, since we already bubbled it above
+					jQuery.event.triggered = type;
+					elem[ type ]();
+					jQuery.event.triggered = undefined;
+
+					if ( tmp ) {
+						elem[ ontype ] = tmp;
+					}
+				}
+			}
+		}
+
+		return event.result;
+	},
+
+	// Piggyback on a donor event to simulate a different one
+	// Used only for `focus(in | out)` events
+	simulate: function( type, elem, event ) {
+		var e = jQuery.extend(
+			new jQuery.Event(),
+			event,
+			{
+				type: type,
+				isSimulated: true
+			}
+		);
+
+		jQuery.event.trigger( e, null, elem );
+	}
+
+} );
+
+jQuery.fn.extend( {
+
+	trigger: function( type, data ) {
+		return this.each( function() {
+			jQuery.event.trigger( type, data, this );
+		} );
+	},
+	triggerHandler: function( type, data ) {
+		var elem = this[ 0 ];
+		if ( elem ) {
+			return jQuery.event.trigger( type, data, elem, true );
+		}
+	}
+} );
+
+
+jQuery.each( ( "blur focus focusin focusout load resize scroll unload click dblclick " +
 	"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-	"change select submit keydown keypress keyup error contextmenu").split(" "), function( i, name ) {
+	"change select submit keydown keypress keyup error contextmenu" ).split( " " ),
+	function( i, name ) {
 
 	// Handle event binding
 	jQuery.fn[ name ] = function( data, fn ) {
@@ -21266,33 +21838,66 @@ jQuery.each( ("blur focus focusin focusout load resize scroll unload click dblcl
 			this.on( name, null, data, fn ) :
 			this.trigger( name );
 	};
-});
+} );
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	hover: function( fnOver, fnOut ) {
 		return this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );
-	},
-
-	bind: function( types, data, fn ) {
-		return this.on( types, null, data, fn );
-	},
-	unbind: function( types, fn ) {
-		return this.off( types, null, fn );
-	},
-
-	delegate: function( selector, types, data, fn ) {
-		return this.on( types, selector, data, fn );
-	},
-	undelegate: function( selector, types, fn ) {
-		// ( namespace ) or ( selector, types [, fn] )
-		return arguments.length === 1 ? this.off( selector, "**" ) : this.off( types, selector || "**", fn );
 	}
-});
+} );
 
+
+
+
+support.focusin = "onfocusin" in window;
+
+
+// Support: Firefox
+// Firefox doesn't have focus(in | out) events
+// Related ticket - https://bugzilla.mozilla.org/show_bug.cgi?id=687787
+//
+// Support: Chrome, Safari
+// focus(in | out) events fire after focus & blur events,
+// which is spec violation - http://www.w3.org/TR/DOM-Level-3-Events/#events-focusevent-event-order
+// Related ticket - https://code.google.com/p/chromium/issues/detail?id=449857
+if ( !support.focusin ) {
+	jQuery.each( { focus: "focusin", blur: "focusout" }, function( orig, fix ) {
+
+		// Attach a single capturing handler on the document while someone wants focusin/focusout
+		var handler = function( event ) {
+			jQuery.event.simulate( fix, event.target, jQuery.event.fix( event ) );
+		};
+
+		jQuery.event.special[ fix ] = {
+			setup: function() {
+				var doc = this.ownerDocument || this,
+					attaches = dataPriv.access( doc, fix );
+
+				if ( !attaches ) {
+					doc.addEventListener( orig, handler, true );
+				}
+				dataPriv.access( doc, fix, ( attaches || 0 ) + 1 );
+			},
+			teardown: function() {
+				var doc = this.ownerDocument || this,
+					attaches = dataPriv.access( doc, fix ) - 1;
+
+				if ( !attaches ) {
+					doc.removeEventListener( orig, handler, true );
+					dataPriv.remove( doc, fix );
+
+				} else {
+					dataPriv.access( doc, fix, attaches );
+				}
+			}
+		};
+	} );
+}
+var location = window.location;
 
 var nonce = jQuery.now();
 
-var rquery = (/\?/);
+var rquery = ( /\?/ );
 
 
 
@@ -21305,15 +21910,14 @@ jQuery.parseJSON = function( data ) {
 
 // Cross-browser xml parsing
 jQuery.parseXML = function( data ) {
-	var xml, tmp;
+	var xml;
 	if ( !data || typeof data !== "string" ) {
 		return null;
 	}
 
 	// Support: IE9
 	try {
-		tmp = new DOMParser();
-		xml = tmp.parseFromString( data, "text/xml" );
+		xml = ( new window.DOMParser() ).parseFromString( data, "text/xml" );
 	} catch ( e ) {
 		xml = undefined;
 	}
@@ -21329,11 +21933,11 @@ var
 	rhash = /#.*$/,
 	rts = /([?&])_=[^&]*/,
 	rheaders = /^(.*?):[ \t]*([^\r\n]*)$/mg,
+
 	// #7653, #8125, #8152: local protocol detection
 	rlocalProtocol = /^(?:about|app|app-storage|.+-extension|file|res|widget):$/,
 	rnoContent = /^(?:GET|HEAD)$/,
 	rprotocol = /^\/\//,
-	rurl = /^([\w.+-]+:)(?:\/\/(?:[^\/?#]*@|)([^\/?#:]*)(?::(\d+)|)|)/,
 
 	/* Prefilters
 	 * 1) They are useful to introduce custom dataTypes (see ajax/jsonp.js for an example)
@@ -21356,11 +21960,9 @@ var
 	// Avoid comment-prolog char sequence (#10098); must appease lint and evade compression
 	allTypes = "*/".concat( "*" ),
 
-	// Document location
-	ajaxLocation = window.location.href,
-
-	// Segment location into parts
-	ajaxLocParts = rurl.exec( ajaxLocation.toLowerCase() ) || [];
+	// Anchor tag for parsing the document origin
+	originAnchor = document.createElement( "a" );
+	originAnchor.href = location.href;
 
 // Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
 function addToPrefiltersOrTransports( structure ) {
@@ -21378,16 +21980,18 @@ function addToPrefiltersOrTransports( structure ) {
 			dataTypes = dataTypeExpression.toLowerCase().match( rnotwhite ) || [];
 
 		if ( jQuery.isFunction( func ) ) {
+
 			// For each dataType in the dataTypeExpression
-			while ( (dataType = dataTypes[i++]) ) {
+			while ( ( dataType = dataTypes[ i++ ] ) ) {
+
 				// Prepend if requested
-				if ( dataType[0] === "+" ) {
+				if ( dataType[ 0 ] === "+" ) {
 					dataType = dataType.slice( 1 ) || "*";
-					(structure[ dataType ] = structure[ dataType ] || []).unshift( func );
+					( structure[ dataType ] = structure[ dataType ] || [] ).unshift( func );
 
 				// Otherwise append
 				} else {
-					(structure[ dataType ] = structure[ dataType ] || []).push( func );
+					( structure[ dataType ] = structure[ dataType ] || [] ).push( func );
 				}
 			}
 		}
@@ -21405,14 +22009,16 @@ function inspectPrefiltersOrTransports( structure, options, originalOptions, jqX
 		inspected[ dataType ] = true;
 		jQuery.each( structure[ dataType ] || [], function( _, prefilterOrFactory ) {
 			var dataTypeOrTransport = prefilterOrFactory( options, originalOptions, jqXHR );
-			if ( typeof dataTypeOrTransport === "string" && !seekingTransport && !inspected[ dataTypeOrTransport ] ) {
+			if ( typeof dataTypeOrTransport === "string" &&
+				!seekingTransport && !inspected[ dataTypeOrTransport ] ) {
+
 				options.dataTypes.unshift( dataTypeOrTransport );
 				inspect( dataTypeOrTransport );
 				return false;
 			} else if ( seekingTransport ) {
 				return !( selected = dataTypeOrTransport );
 			}
-		});
+		} );
 		return selected;
 	}
 
@@ -21428,7 +22034,7 @@ function ajaxExtend( target, src ) {
 
 	for ( key in src ) {
 		if ( src[ key ] !== undefined ) {
-			( flatOptions[ key ] ? target : ( deep || (deep = {}) ) )[ key ] = src[ key ];
+			( flatOptions[ key ] ? target : ( deep || ( deep = {} ) ) )[ key ] = src[ key ];
 		}
 	}
 	if ( deep ) {
@@ -21452,7 +22058,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 	while ( dataTypes[ 0 ] === "*" ) {
 		dataTypes.shift();
 		if ( ct === undefined ) {
-			ct = s.mimeType || jqXHR.getResponseHeader("Content-Type");
+			ct = s.mimeType || jqXHR.getResponseHeader( "Content-Type" );
 		}
 	}
 
@@ -21470,9 +22076,10 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 	if ( dataTypes[ 0 ] in responses ) {
 		finalDataType = dataTypes[ 0 ];
 	} else {
+
 		// Try convertible dataTypes
 		for ( type in responses ) {
-			if ( !dataTypes[ 0 ] || s.converters[ type + " " + dataTypes[0] ] ) {
+			if ( !dataTypes[ 0 ] || s.converters[ type + " " + dataTypes[ 0 ] ] ) {
 				finalDataType = type;
 				break;
 			}
@@ -21480,6 +22087,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 				firstDataType = type;
 			}
 		}
+
 		// Or just use first one
 		finalDataType = finalDataType || firstDataType;
 	}
@@ -21501,6 +22109,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 function ajaxConvert( s, response, jqXHR, isSuccess ) {
 	var conv2, current, conv, tmp, prev,
 		converters = {},
+
 		// Work with a copy of dataTypes in case we need to modify it for conversion
 		dataTypes = s.dataTypes.slice();
 
@@ -21553,6 +22162,7 @@ function ajaxConvert( s, response, jqXHR, isSuccess ) {
 							conv = converters[ prev + " " + tmp[ 0 ] ] ||
 								converters[ "* " + tmp[ 0 ] ];
 							if ( conv ) {
+
 								// Condense equivalence converters
 								if ( conv === true ) {
 									conv = converters[ conv2 ];
@@ -21572,13 +22182,16 @@ function ajaxConvert( s, response, jqXHR, isSuccess ) {
 				if ( conv !== true ) {
 
 					// Unless errors are allowed to bubble, catch and return them
-					if ( conv && s[ "throws" ] ) {
+					if ( conv && s.throws ) {
 						response = conv( response );
 					} else {
 						try {
 							response = conv( response );
 						} catch ( e ) {
-							return { state: "parsererror", error: conv ? e : "No conversion from " + prev + " to " + current };
+							return {
+								state: "parsererror",
+								error: conv ? e : "No conversion from " + prev + " to " + current
+							};
 						}
 					}
 				}
@@ -21589,7 +22202,7 @@ function ajaxConvert( s, response, jqXHR, isSuccess ) {
 	return { state: "success", data: response };
 }
 
-jQuery.extend({
+jQuery.extend( {
 
 	// Counter for holding the number of active queries
 	active: 0,
@@ -21599,9 +22212,9 @@ jQuery.extend({
 	etag: {},
 
 	ajaxSettings: {
-		url: ajaxLocation,
+		url: location.href,
 		type: "GET",
-		isLocal: rlocalProtocol.test( ajaxLocParts[ 1 ] ),
+		isLocal: rlocalProtocol.test( location.protocol ),
 		global: true,
 		processData: true,
 		async: true,
@@ -21627,9 +22240,9 @@ jQuery.extend({
 		},
 
 		contents: {
-			xml: /xml/,
-			html: /html/,
-			json: /json/
+			xml: /\bxml\b/,
+			html: /\bhtml/,
+			json: /\bjson\b/
 		},
 
 		responseFields: {
@@ -21694,39 +22307,55 @@ jQuery.extend({
 		options = options || {};
 
 		var transport,
+
 			// URL without anti-cache param
 			cacheURL,
+
 			// Response headers
 			responseHeadersString,
 			responseHeaders,
+
 			// timeout handle
 			timeoutTimer,
-			// Cross-domain detection vars
-			parts,
+
+			// Url cleanup var
+			urlAnchor,
+
 			// To know if global events are to be dispatched
 			fireGlobals,
+
 			// Loop variable
 			i,
+
 			// Create the final options object
 			s = jQuery.ajaxSetup( {}, options ),
+
 			// Callbacks context
 			callbackContext = s.context || s,
+
 			// Context for global events is callbackContext if it is a DOM node or jQuery collection
-			globalEventContext = s.context && ( callbackContext.nodeType || callbackContext.jquery ) ?
-				jQuery( callbackContext ) :
-				jQuery.event,
+			globalEventContext = s.context &&
+				( callbackContext.nodeType || callbackContext.jquery ) ?
+					jQuery( callbackContext ) :
+					jQuery.event,
+
 			// Deferreds
 			deferred = jQuery.Deferred(),
-			completeDeferred = jQuery.Callbacks("once memory"),
+			completeDeferred = jQuery.Callbacks( "once memory" ),
+
 			// Status-dependent callbacks
 			statusCode = s.statusCode || {},
+
 			// Headers (they are sent all at once)
 			requestHeaders = {},
 			requestHeadersNames = {},
+
 			// The jqXHR state
 			state = 0,
+
 			// Default abort message
 			strAbort = "canceled",
+
 			// Fake xhr
 			jqXHR = {
 				readyState: 0,
@@ -21737,8 +22366,8 @@ jQuery.extend({
 					if ( state === 2 ) {
 						if ( !responseHeaders ) {
 							responseHeaders = {};
-							while ( (match = rheaders.exec( responseHeadersString )) ) {
-								responseHeaders[ match[1].toLowerCase() ] = match[ 2 ];
+							while ( ( match = rheaders.exec( responseHeadersString ) ) ) {
+								responseHeaders[ match[ 1 ].toLowerCase() ] = match[ 2 ];
 							}
 						}
 						match = responseHeaders[ key.toLowerCase() ];
@@ -21775,10 +22404,12 @@ jQuery.extend({
 					if ( map ) {
 						if ( state < 2 ) {
 							for ( code in map ) {
+
 								// Lazy-add the new callback in a way that preserves old ones
 								statusCode[ code ] = [ statusCode[ code ], map[ code ] ];
 							}
 						} else {
+
 							// Execute the appropriate callbacks
 							jqXHR.always( map[ jqXHR.status ] );
 						}
@@ -21806,8 +22437,8 @@ jQuery.extend({
 		// Add protocol if not provided (prefilters might expect it)
 		// Handle falsy url in the settings object (#10093: consistency with old signature)
 		// We also use the url parameter if available
-		s.url = ( ( url || s.url || ajaxLocation ) + "" ).replace( rhash, "" )
-			.replace( rprotocol, ajaxLocParts[ 1 ] + "//" );
+		s.url = ( ( url || s.url || location.href ) + "" ).replace( rhash, "" )
+			.replace( rprotocol, location.protocol + "//" );
 
 		// Alias method option to type as per ticket #12004
 		s.type = options.method || options.type || s.method || s.type;
@@ -21815,14 +22446,26 @@ jQuery.extend({
 		// Extract dataTypes list
 		s.dataTypes = jQuery.trim( s.dataType || "*" ).toLowerCase().match( rnotwhite ) || [ "" ];
 
-		// A cross-domain request is in order when we have a protocol:host:port mismatch
+		// A cross-domain request is in order when the origin doesn't match the current origin.
 		if ( s.crossDomain == null ) {
-			parts = rurl.exec( s.url.toLowerCase() );
-			s.crossDomain = !!( parts &&
-				( parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
-					( parts[ 3 ] || ( parts[ 1 ] === "http:" ? "80" : "443" ) ) !==
-						( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? "80" : "443" ) ) )
-			);
+			urlAnchor = document.createElement( "a" );
+
+			// Support: IE8-11+
+			// IE throws exception if url is malformed, e.g. http://example.com:80x/
+			try {
+				urlAnchor.href = s.url;
+
+				// Support: IE8-11+
+				// Anchor's host property isn't correctly set when s.url is relative
+				urlAnchor.href = urlAnchor.href;
+				s.crossDomain = originAnchor.protocol + "//" + originAnchor.host !==
+					urlAnchor.protocol + "//" + urlAnchor.host;
+			} catch ( e ) {
+
+				// If there is an error parsing the URL, assume it is crossDomain,
+				// it can be rejected by the transport if it is invalid
+				s.crossDomain = true;
+			}
 		}
 
 		// Convert data if not already a string
@@ -21844,7 +22487,7 @@ jQuery.extend({
 
 		// Watch for a new set of requests
 		if ( fireGlobals && jQuery.active++ === 0 ) {
-			jQuery.event.trigger("ajaxStart");
+			jQuery.event.trigger( "ajaxStart" );
 		}
 
 		// Uppercase the type
@@ -21863,6 +22506,7 @@ jQuery.extend({
 			// If data is available, append data to url
 			if ( s.data ) {
 				cacheURL = ( s.url += ( rquery.test( cacheURL ) ? "&" : "?" ) + s.data );
+
 				// #9682: remove data so that it's not used in an eventual retry
 				delete s.data;
 			}
@@ -21897,8 +22541,9 @@ jQuery.extend({
 		// Set the Accepts header for the server, depending on the dataType
 		jqXHR.setRequestHeader(
 			"Accept",
-			s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[0] ] ?
-				s.accepts[ s.dataTypes[0] ] + ( s.dataTypes[ 0 ] !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
+			s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[ 0 ] ] ?
+				s.accepts[ s.dataTypes[ 0 ] ] +
+					( s.dataTypes[ 0 ] !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
 				s.accepts[ "*" ]
 		);
 
@@ -21908,7 +22553,9 @@ jQuery.extend({
 		}
 
 		// Allow custom headers/mimetypes and early abort
-		if ( s.beforeSend && ( s.beforeSend.call( callbackContext, jqXHR, s ) === false || state === 2 ) ) {
+		if ( s.beforeSend &&
+			( s.beforeSend.call( callbackContext, jqXHR, s ) === false || state === 2 ) ) {
+
 			// Abort if not done already and return
 			return jqXHR.abort();
 		}
@@ -21934,10 +22581,16 @@ jQuery.extend({
 			if ( fireGlobals ) {
 				globalEventContext.trigger( "ajaxSend", [ jqXHR, s ] );
 			}
+
+			// If request was aborted inside ajaxSend, stop there
+			if ( state === 2 ) {
+				return jqXHR;
+			}
+
 			// Timeout
 			if ( s.async && s.timeout > 0 ) {
-				timeoutTimer = setTimeout(function() {
-					jqXHR.abort("timeout");
+				timeoutTimer = window.setTimeout( function() {
+					jqXHR.abort( "timeout" );
 				}, s.timeout );
 			}
 
@@ -21945,9 +22598,11 @@ jQuery.extend({
 				state = 1;
 				transport.send( requestHeaders, done );
 			} catch ( e ) {
+
 				// Propagate exception as error if not done
 				if ( state < 2 ) {
 					done( -1, e );
+
 				// Simply rethrow otherwise
 				} else {
 					throw e;
@@ -21970,7 +22625,7 @@ jQuery.extend({
 
 			// Clear timeout if it exists
 			if ( timeoutTimer ) {
-				clearTimeout( timeoutTimer );
+				window.clearTimeout( timeoutTimer );
 			}
 
 			// Dereference transport for early garbage collection
@@ -21999,11 +22654,11 @@ jQuery.extend({
 
 				// Set the If-Modified-Since and/or If-None-Match header, if in ifModified mode.
 				if ( s.ifModified ) {
-					modified = jqXHR.getResponseHeader("Last-Modified");
+					modified = jqXHR.getResponseHeader( "Last-Modified" );
 					if ( modified ) {
 						jQuery.lastModified[ cacheURL ] = modified;
 					}
-					modified = jqXHR.getResponseHeader("etag");
+					modified = jqXHR.getResponseHeader( "etag" );
 					if ( modified ) {
 						jQuery.etag[ cacheURL ] = modified;
 					}
@@ -22025,6 +22680,7 @@ jQuery.extend({
 					isSuccess = !error;
 				}
 			} else {
+
 				// Extract error from statusText and normalize for non-aborts
 				error = statusText;
 				if ( status || !statusText ) {
@@ -22060,9 +22716,10 @@ jQuery.extend({
 
 			if ( fireGlobals ) {
 				globalEventContext.trigger( "ajaxComplete", [ jqXHR, s ] );
+
 				// Handle the global AJAX counter
 				if ( !( --jQuery.active ) ) {
-					jQuery.event.trigger("ajaxStop");
+					jQuery.event.trigger( "ajaxStop" );
 				}
 			}
 		}
@@ -22077,10 +22734,11 @@ jQuery.extend({
 	getScript: function( url, callback ) {
 		return jQuery.get( url, undefined, callback, "script" );
 	}
-});
+} );
 
 jQuery.each( [ "get", "post" ], function( i, method ) {
 	jQuery[ method ] = function( url, data, callback, type ) {
+
 		// Shift arguments if data argument was omitted
 		if ( jQuery.isFunction( data ) ) {
 			type = type || callback;
@@ -22088,37 +22746,40 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 			data = undefined;
 		}
 
-		return jQuery.ajax({
+		// The url can be an options object (which then must have .url)
+		return jQuery.ajax( jQuery.extend( {
 			url: url,
 			type: method,
 			dataType: type,
 			data: data,
 			success: callback
-		});
+		}, jQuery.isPlainObject( url ) && url ) );
 	};
-});
+} );
 
 
 jQuery._evalUrl = function( url ) {
-	return jQuery.ajax({
+	return jQuery.ajax( {
 		url: url,
+
+		// Make this explicit, since user can override this through ajaxSetup (#11264)
 		type: "GET",
 		dataType: "script",
 		async: false,
 		global: false,
 		"throws": true
-	});
+	} );
 };
 
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	wrapAll: function( html ) {
 		var wrap;
 
 		if ( jQuery.isFunction( html ) ) {
-			return this.each(function( i ) {
-				jQuery( this ).wrapAll( html.call(this, i) );
-			});
+			return this.each( function( i ) {
+				jQuery( this ).wrapAll( html.call( this, i ) );
+			} );
 		}
 
 		if ( this[ 0 ] ) {
@@ -22130,7 +22791,7 @@ jQuery.fn.extend({
 				wrap.insertBefore( this[ 0 ] );
 			}
 
-			wrap.map(function() {
+			wrap.map( function() {
 				var elem = this;
 
 				while ( elem.firstElementChild ) {
@@ -22138,7 +22799,7 @@ jQuery.fn.extend({
 				}
 
 				return elem;
-			}).append( this );
+			} ).append( this );
 		}
 
 		return this;
@@ -22146,12 +22807,12 @@ jQuery.fn.extend({
 
 	wrapInner: function( html ) {
 		if ( jQuery.isFunction( html ) ) {
-			return this.each(function( i ) {
-				jQuery( this ).wrapInner( html.call(this, i) );
-			});
+			return this.each( function( i ) {
+				jQuery( this ).wrapInner( html.call( this, i ) );
+			} );
 		}
 
-		return this.each(function() {
+		return this.each( function() {
 			var self = jQuery( this ),
 				contents = self.contents();
 
@@ -22161,34 +22822,37 @@ jQuery.fn.extend({
 			} else {
 				self.append( html );
 			}
-		});
+		} );
 	},
 
 	wrap: function( html ) {
 		var isFunction = jQuery.isFunction( html );
 
-		return this.each(function( i ) {
-			jQuery( this ).wrapAll( isFunction ? html.call(this, i) : html );
-		});
+		return this.each( function( i ) {
+			jQuery( this ).wrapAll( isFunction ? html.call( this, i ) : html );
+		} );
 	},
 
 	unwrap: function() {
-		return this.parent().each(function() {
+		return this.parent().each( function() {
 			if ( !jQuery.nodeName( this, "body" ) ) {
 				jQuery( this ).replaceWith( this.childNodes );
 			}
-		}).end();
+		} ).end();
 	}
-});
+} );
 
 
 jQuery.expr.filters.hidden = function( elem ) {
-	// Support: Opera <= 12.12
-	// Opera reports offsetWidths and offsetHeights less than zero on some elements
-	return elem.offsetWidth <= 0 && elem.offsetHeight <= 0;
+	return !jQuery.expr.filters.visible( elem );
 };
 jQuery.expr.filters.visible = function( elem ) {
-	return !jQuery.expr.filters.hidden( elem );
+
+	// Support: Opera <= 12.12
+	// Opera reports offsetWidths and offsetHeights less than zero on some elements
+	// Use OR instead of AND as the element is not visible if either is true
+	// See tickets #10406 and #13132
+	return elem.offsetWidth > 0 || elem.offsetHeight > 0 || elem.getClientRects().length > 0;
 };
 
 
@@ -22204,25 +22868,35 @@ function buildParams( prefix, obj, traditional, add ) {
 	var name;
 
 	if ( jQuery.isArray( obj ) ) {
+
 		// Serialize array item.
 		jQuery.each( obj, function( i, v ) {
 			if ( traditional || rbracket.test( prefix ) ) {
+
 				// Treat each array item as a scalar.
 				add( prefix, v );
 
 			} else {
+
 				// Item is non-scalar (array or object), encode its numeric index.
-				buildParams( prefix + "[" + ( typeof v === "object" ? i : "" ) + "]", v, traditional, add );
+				buildParams(
+					prefix + "[" + ( typeof v === "object" && v != null ? i : "" ) + "]",
+					v,
+					traditional,
+					add
+				);
 			}
-		});
+		} );
 
 	} else if ( !traditional && jQuery.type( obj ) === "object" ) {
+
 		// Serialize object item.
 		for ( name in obj ) {
 			buildParams( prefix + "[" + name + "]", obj[ name ], traditional, add );
 		}
 
 	} else {
+
 		// Serialize scalar item.
 		add( prefix, obj );
 	}
@@ -22234,6 +22908,7 @@ jQuery.param = function( a, traditional ) {
 	var prefix,
 		s = [],
 		add = function( key, value ) {
+
 			// If value is a function, invoke it and return its value
 			value = jQuery.isFunction( value ) ? value() : ( value == null ? "" : value );
 			s[ s.length ] = encodeURIComponent( key ) + "=" + encodeURIComponent( value );
@@ -22246,12 +22921,14 @@ jQuery.param = function( a, traditional ) {
 
 	// If an array was passed in, assume that it is an array of form elements.
 	if ( jQuery.isArray( a ) || ( a.jquery && !jQuery.isPlainObject( a ) ) ) {
+
 		// Serialize the form elements
 		jQuery.each( a, function() {
 			add( this.name, this.value );
-		});
+		} );
 
 	} else {
+
 		// If traditional, encode the "old" way (the way 1.3.2 or older
 		// did it), otherwise encode params recursively.
 		for ( prefix in a ) {
@@ -22263,25 +22940,26 @@ jQuery.param = function( a, traditional ) {
 	return s.join( "&" ).replace( r20, "+" );
 };
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	serialize: function() {
 		return jQuery.param( this.serializeArray() );
 	},
 	serializeArray: function() {
-		return this.map(function() {
+		return this.map( function() {
+
 			// Can add propHook for "elements" to filter or add form elements
 			var elements = jQuery.prop( this, "elements" );
 			return elements ? jQuery.makeArray( elements ) : this;
-		})
-		.filter(function() {
+		} )
+		.filter( function() {
 			var type = this.type;
 
 			// Use .is( ":disabled" ) so that fieldset[disabled] works
 			return this.name && !jQuery( this ).is( ":disabled" ) &&
 				rsubmittable.test( this.nodeName ) && !rsubmitterTypes.test( type ) &&
 				( this.checked || !rcheckableType.test( type ) );
-		})
-		.map(function( i, elem ) {
+		} )
+		.map( function( i, elem ) {
 			var val = jQuery( this ).val();
 
 			return val == null ?
@@ -22289,56 +22967,50 @@ jQuery.fn.extend({
 				jQuery.isArray( val ) ?
 					jQuery.map( val, function( val ) {
 						return { name: elem.name, value: val.replace( rCRLF, "\r\n" ) };
-					}) :
+					} ) :
 					{ name: elem.name, value: val.replace( rCRLF, "\r\n" ) };
-		}).get();
+		} ).get();
 	}
-});
+} );
 
 
 jQuery.ajaxSettings.xhr = function() {
 	try {
-		return new XMLHttpRequest();
-	} catch( e ) {}
+		return new window.XMLHttpRequest();
+	} catch ( e ) {}
 };
 
-var xhrId = 0,
-	xhrCallbacks = {},
-	xhrSuccessStatus = {
-		// file protocol always yields status code 0, assume 200
+var xhrSuccessStatus = {
+
+		// File protocol always yields status code 0, assume 200
 		0: 200,
+
 		// Support: IE9
 		// #1450: sometimes IE returns 1223 when it should be 204
 		1223: 204
 	},
 	xhrSupported = jQuery.ajaxSettings.xhr();
 
-// Support: IE9
-// Open requests must be manually aborted on unload (#5280)
-// See https://support.microsoft.com/kb/2856746 for more info
-if ( window.attachEvent ) {
-	window.attachEvent( "onunload", function() {
-		for ( var key in xhrCallbacks ) {
-			xhrCallbacks[ key ]();
-		}
-	});
-}
-
 support.cors = !!xhrSupported && ( "withCredentials" in xhrSupported );
 support.ajax = xhrSupported = !!xhrSupported;
 
-jQuery.ajaxTransport(function( options ) {
-	var callback;
+jQuery.ajaxTransport( function( options ) {
+	var callback, errorCallback;
 
 	// Cross domain only allowed if supported through XMLHttpRequest
 	if ( support.cors || xhrSupported && !options.crossDomain ) {
 		return {
 			send: function( headers, complete ) {
 				var i,
-					xhr = options.xhr(),
-					id = ++xhrId;
+					xhr = options.xhr();
 
-				xhr.open( options.type, options.url, options.async, options.username, options.password );
+				xhr.open(
+					options.type,
+					options.url,
+					options.async,
+					options.username,
+					options.password
+				);
 
 				// Apply custom fields if provided
 				if ( options.xhrFields ) {
@@ -22357,8 +23029,8 @@ jQuery.ajaxTransport(function( options ) {
 				// akin to a jigsaw puzzle, we simply never set it to be sure.
 				// (it can always be set on a per-request basis or even using ajaxSetup)
 				// For same-domain requests, won't change header if already provided.
-				if ( !options.crossDomain && !headers["X-Requested-With"] ) {
-					headers["X-Requested-With"] = "XMLHttpRequest";
+				if ( !options.crossDomain && !headers[ "X-Requested-With" ] ) {
+					headers[ "X-Requested-With" ] = "XMLHttpRequest";
 				}
 
 				// Set headers
@@ -22370,27 +23042,38 @@ jQuery.ajaxTransport(function( options ) {
 				callback = function( type ) {
 					return function() {
 						if ( callback ) {
-							delete xhrCallbacks[ id ];
-							callback = xhr.onload = xhr.onerror = null;
+							callback = errorCallback = xhr.onload =
+								xhr.onerror = xhr.onabort = xhr.onreadystatechange = null;
 
 							if ( type === "abort" ) {
 								xhr.abort();
 							} else if ( type === "error" ) {
-								complete(
-									// file: protocol always yields status 0; see #8605, #14207
-									xhr.status,
-									xhr.statusText
-								);
+
+								// Support: IE9
+								// On a manual native abort, IE9 throws
+								// errors on any property access that is not readyState
+								if ( typeof xhr.status !== "number" ) {
+									complete( 0, "error" );
+								} else {
+									complete(
+
+										// File: protocol always yields status 0; see #8605, #14207
+										xhr.status,
+										xhr.statusText
+									);
+								}
 							} else {
 								complete(
 									xhrSuccessStatus[ xhr.status ] || xhr.status,
 									xhr.statusText,
-									// Support: IE9
-									// Accessing binary-data responseText throws an exception
-									// (#11426)
-									typeof xhr.responseText === "string" ? {
-										text: xhr.responseText
-									} : undefined,
+
+									// Support: IE9 only
+									// IE9 has no XHR2 but throws on binary (trac-11426)
+									// For XHR2 non-text, let the caller handle it (gh-2498)
+									( xhr.responseType || "text" ) !== "text"  ||
+									typeof xhr.responseText !== "string" ?
+										{ binary: xhr.response } :
+										{ text: xhr.responseText },
 									xhr.getAllResponseHeaders()
 								);
 							}
@@ -22400,15 +23083,41 @@ jQuery.ajaxTransport(function( options ) {
 
 				// Listen to events
 				xhr.onload = callback();
-				xhr.onerror = callback("error");
+				errorCallback = xhr.onerror = callback( "error" );
+
+				// Support: IE9
+				// Use onreadystatechange to replace onabort
+				// to handle uncaught aborts
+				if ( xhr.onabort !== undefined ) {
+					xhr.onabort = errorCallback;
+				} else {
+					xhr.onreadystatechange = function() {
+
+						// Check readyState before timeout as it changes
+						if ( xhr.readyState === 4 ) {
+
+							// Allow onerror to be called first,
+							// but that will not handle a native abort
+							// Also, save errorCallback to a variable
+							// as xhr.onerror cannot be accessed
+							window.setTimeout( function() {
+								if ( callback ) {
+									errorCallback();
+								}
+							} );
+						}
+					};
+				}
 
 				// Create the abort callback
-				callback = xhrCallbacks[ id ] = callback("abort");
+				callback = callback( "abort" );
 
 				try {
+
 					// Do send the request (this may raise an exception)
 					xhr.send( options.hasContent && options.data || null );
 				} catch ( e ) {
+
 					// #14683: Only rethrow if this hasn't been notified as an error yet
 					if ( callback ) {
 						throw e;
@@ -22423,18 +23132,19 @@ jQuery.ajaxTransport(function( options ) {
 			}
 		};
 	}
-});
+} );
 
 
 
 
 // Install script dataType
-jQuery.ajaxSetup({
+jQuery.ajaxSetup( {
 	accepts: {
-		script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"
+		script: "text/javascript, application/javascript, " +
+			"application/ecmascript, application/x-ecmascript"
 	},
 	contents: {
-		script: /(?:java|ecma)script/
+		script: /\b(?:java|ecma)script\b/
 	},
 	converters: {
 		"text script": function( text ) {
@@ -22442,7 +23152,7 @@ jQuery.ajaxSetup({
 			return text;
 		}
 	}
-});
+} );
 
 // Handle cache's special case and crossDomain
 jQuery.ajaxPrefilter( "script", function( s ) {
@@ -22452,20 +23162,20 @@ jQuery.ajaxPrefilter( "script", function( s ) {
 	if ( s.crossDomain ) {
 		s.type = "GET";
 	}
-});
+} );
 
 // Bind script tag hack transport
 jQuery.ajaxTransport( "script", function( s ) {
+
 	// This transport only deals with cross domain requests
 	if ( s.crossDomain ) {
 		var script, callback;
 		return {
 			send: function( _, complete ) {
-				script = jQuery("<script>").prop({
-					async: true,
+				script = jQuery( "<script>" ).prop( {
 					charset: s.scriptCharset,
 					src: s.url
-				}).on(
+				} ).on(
 					"load error",
 					callback = function( evt ) {
 						script.remove();
@@ -22475,6 +23185,8 @@ jQuery.ajaxTransport( "script", function( s ) {
 						}
 					}
 				);
+
+				// Use native DOM manipulation to avoid our domManip AJAX trickery
 				document.head.appendChild( script[ 0 ] );
 			},
 			abort: function() {
@@ -22484,7 +23196,7 @@ jQuery.ajaxTransport( "script", function( s ) {
 			}
 		};
 	}
-});
+} );
 
 
 
@@ -22493,14 +23205,14 @@ var oldCallbacks = [],
 	rjsonp = /(=)\?(?=&|$)|\?\?/;
 
 // Default jsonp settings
-jQuery.ajaxSetup({
+jQuery.ajaxSetup( {
 	jsonp: "callback",
 	jsonpCallback: function() {
 		var callback = oldCallbacks.pop() || ( jQuery.expando + "_" + ( nonce++ ) );
 		this[ callback ] = true;
 		return callback;
 	}
-});
+} );
 
 // Detect, normalize options and install callbacks for jsonp requests
 jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
@@ -22508,7 +23220,10 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 	var callbackName, overwritten, responseContainer,
 		jsonProp = s.jsonp !== false && ( rjsonp.test( s.url ) ?
 			"url" :
-			typeof s.data === "string" && !( s.contentType || "" ).indexOf("application/x-www-form-urlencoded") && rjsonp.test( s.data ) && "data"
+			typeof s.data === "string" &&
+				( s.contentType || "" )
+					.indexOf( "application/x-www-form-urlencoded" ) === 0 &&
+				rjsonp.test( s.data ) && "data"
 		);
 
 	// Handle iff the expected data type is "jsonp" or we have a parameter to set
@@ -22527,14 +23242,14 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 		}
 
 		// Use data converter to retrieve json after script execution
-		s.converters["script json"] = function() {
+		s.converters[ "script json" ] = function() {
 			if ( !responseContainer ) {
 				jQuery.error( callbackName + " was not called" );
 			}
 			return responseContainer[ 0 ];
 		};
 
-		// force json dataType
+		// Force json dataType
 		s.dataTypes[ 0 ] = "json";
 
 		// Install callback
@@ -22544,16 +23259,24 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 		};
 
 		// Clean-up function (fires after converters)
-		jqXHR.always(function() {
-			// Restore preexisting value
-			window[ callbackName ] = overwritten;
+		jqXHR.always( function() {
+
+			// If previous value didn't exist - remove it
+			if ( overwritten === undefined ) {
+				jQuery( window ).removeProp( callbackName );
+
+			// Otherwise restore preexisting value
+			} else {
+				window[ callbackName ] = overwritten;
+			}
 
 			// Save back as free
 			if ( s[ callbackName ] ) {
-				// make sure that re-using the options doesn't screw things around
+
+				// Make sure that re-using the options doesn't screw things around
 				s.jsonpCallback = originalSettings.jsonpCallback;
 
-				// save the callback name for future use
+				// Save the callback name for future use
 				oldCallbacks.push( callbackName );
 			}
 
@@ -22563,18 +23286,19 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 			}
 
 			responseContainer = overwritten = undefined;
-		});
+		} );
 
 		// Delegate to script
 		return "script";
 	}
-});
+} );
 
 
 
 
-// data: string of html
-// context (optional): If specified, the fragment will be created in this context, defaults to document
+// Argument "data" should be string of html
+// context (optional): If specified, the fragment will be created in this context,
+// defaults to document
 // keepScripts (optional): If true, will include scripts passed in the html string
 jQuery.parseHTML = function( data, context, keepScripts ) {
 	if ( !data || typeof data !== "string" ) {
@@ -22591,10 +23315,10 @@ jQuery.parseHTML = function( data, context, keepScripts ) {
 
 	// Single tag
 	if ( parsed ) {
-		return [ context.createElement( parsed[1] ) ];
+		return [ context.createElement( parsed[ 1 ] ) ];
 	}
 
-	parsed = jQuery.buildFragment( [ data ], context, scripts );
+	parsed = buildFragment( [ data ], context, scripts );
 
 	if ( scripts && scripts.length ) {
 		jQuery( scripts ).remove();
@@ -22617,9 +23341,9 @@ jQuery.fn.load = function( url, params, callback ) {
 
 	var selector, type, response,
 		self = this,
-		off = url.indexOf(" ");
+		off = url.indexOf( " " );
 
-	if ( off >= 0 ) {
+	if ( off > -1 ) {
 		selector = jQuery.trim( url.slice( off ) );
 		url = url.slice( 0, off );
 	}
@@ -22638,14 +23362,16 @@ jQuery.fn.load = function( url, params, callback ) {
 
 	// If we have elements to modify, make the request
 	if ( self.length > 0 ) {
-		jQuery.ajax({
+		jQuery.ajax( {
 			url: url,
 
-			// if "type" variable is undefined, then "GET" method will be used
-			type: type,
+			// If "type" variable is undefined, then "GET" method will be used.
+			// Make value of this field explicit since
+			// user can override it through ajaxSetup method
+			type: type || "GET",
 			dataType: "html",
 			data: params
-		}).done(function( responseText ) {
+		} ).done( function( responseText ) {
 
 			// Save response for use in complete callback
 			response = arguments;
@@ -22654,14 +23380,19 @@ jQuery.fn.load = function( url, params, callback ) {
 
 				// If a selector was specified, locate the right elements in a dummy div
 				// Exclude scripts to avoid IE 'Permission Denied' errors
-				jQuery("<div>").append( jQuery.parseHTML( responseText ) ).find( selector ) :
+				jQuery( "<div>" ).append( jQuery.parseHTML( responseText ) ).find( selector ) :
 
 				// Otherwise use the full result
 				responseText );
 
-		}).complete( callback && function( jqXHR, status ) {
-			self.each( callback, response || [ jqXHR.responseText, status, jqXHR ] );
-		});
+		// If the request succeeds, this function gets "data", "status", "jqXHR"
+		// but they are ignored because response was set above.
+		// If it fails, this function gets "jqXHR", "status", "error"
+		} ).always( callback && function( jqXHR, status ) {
+			self.each( function() {
+				callback.apply( this, response || [ jqXHR.responseText, status, jqXHR ] );
+			} );
+		} );
 	}
 
 	return this;
@@ -22671,25 +23402,30 @@ jQuery.fn.load = function( url, params, callback ) {
 
 
 // Attach a bunch of functions for handling common AJAX events
-jQuery.each( [ "ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend" ], function( i, type ) {
+jQuery.each( [
+	"ajaxStart",
+	"ajaxStop",
+	"ajaxComplete",
+	"ajaxError",
+	"ajaxSuccess",
+	"ajaxSend"
+], function( i, type ) {
 	jQuery.fn[ type ] = function( fn ) {
 		return this.on( type, fn );
 	};
-});
+} );
 
 
 
 
 jQuery.expr.filters.animated = function( elem ) {
-	return jQuery.grep(jQuery.timers, function( fn ) {
+	return jQuery.grep( jQuery.timers, function( fn ) {
 		return elem === fn.elem;
-	}).length;
+	} ).length;
 };
 
 
 
-
-var docElem = window.document.documentElement;
 
 /**
  * Gets a window from an element
@@ -22714,7 +23450,7 @@ jQuery.offset = {
 		curCSSTop = jQuery.css( elem, "top" );
 		curCSSLeft = jQuery.css( elem, "left" );
 		calculatePosition = ( position === "absolute" || position === "fixed" ) &&
-			( curCSSTop + curCSSLeft ).indexOf("auto") > -1;
+			( curCSSTop + curCSSLeft ).indexOf( "auto" ) > -1;
 
 		// Need to be able to calculate position if either
 		// top or left is auto and position is either absolute or fixed
@@ -22729,7 +23465,9 @@ jQuery.offset = {
 		}
 
 		if ( jQuery.isFunction( options ) ) {
-			options = options.call( elem, i, curOffset );
+
+			// Use jQuery.extend here to allow modification of coordinates argument (gh-1848)
+			options = options.call( elem, i, jQuery.extend( {}, curOffset ) );
 		}
 
 		if ( options.top != null ) {
@@ -22748,14 +23486,14 @@ jQuery.offset = {
 	}
 };
 
-jQuery.fn.extend({
+jQuery.fn.extend( {
 	offset: function( options ) {
 		if ( arguments.length ) {
 			return options === undefined ?
 				this :
-				this.each(function( i ) {
+				this.each( function( i ) {
 					jQuery.offset.setOffset( this, options, i );
-				});
+				} );
 		}
 
 		var docElem, win,
@@ -22774,11 +23512,7 @@ jQuery.fn.extend({
 			return box;
 		}
 
-		// Support: BlackBerry 5, iOS 3 (original iPhone)
-		// If we don't have gBCR, just use 0,0 rather than error
-		if ( typeof elem.getBoundingClientRect !== strundefined ) {
-			box = elem.getBoundingClientRect();
-		}
+		box = elem.getBoundingClientRect();
 		win = getWindow( doc );
 		return {
 			top: box.top + win.pageYOffset - docElem.clientTop,
@@ -22795,12 +23529,15 @@ jQuery.fn.extend({
 			elem = this[ 0 ],
 			parentOffset = { top: 0, left: 0 };
 
-		// Fixed elements are offset from window (parentOffset = {top:0, left: 0}, because it is its only offset parent
+		// Fixed elements are offset from window (parentOffset = {top:0, left: 0},
+		// because it is its only offset parent
 		if ( jQuery.css( elem, "position" ) === "fixed" ) {
+
 			// Assume getBoundingClientRect is there when computed position is fixed
 			offset = elem.getBoundingClientRect();
 
 		} else {
+
 			// Get *real* offsetParent
 			offsetParent = this.offsetParent();
 
@@ -22822,18 +23559,28 @@ jQuery.fn.extend({
 		};
 	},
 
+	// This method will return documentElement in the following cases:
+	// 1) For the element inside the iframe without offsetParent, this method will return
+	//    documentElement of the parent window
+	// 2) For the hidden or detached element
+	// 3) For body or html element, i.e. in case of the html node - it will return itself
+	//
+	// but those exceptions were never presented as a real life use-cases
+	// and might be considered as more preferable results.
+	//
+	// This logic, however, is not guaranteed and can change at any point in the future
 	offsetParent: function() {
-		return this.map(function() {
-			var offsetParent = this.offsetParent || docElem;
+		return this.map( function() {
+			var offsetParent = this.offsetParent;
 
-			while ( offsetParent && ( !jQuery.nodeName( offsetParent, "html" ) && jQuery.css( offsetParent, "position" ) === "static" ) ) {
+			while ( offsetParent && jQuery.css( offsetParent, "position" ) === "static" ) {
 				offsetParent = offsetParent.offsetParent;
 			}
 
-			return offsetParent || docElem;
-		});
+			return offsetParent || documentElement;
+		} );
 	}
-});
+} );
 
 // Create scrollLeft and scrollTop methods
 jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( method, prop ) {
@@ -22849,18 +23596,18 @@ jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( 
 
 			if ( win ) {
 				win.scrollTo(
-					!top ? val : window.pageXOffset,
-					top ? val : window.pageYOffset
+					!top ? val : win.pageXOffset,
+					top ? val : win.pageYOffset
 				);
 
 			} else {
 				elem[ method ] = val;
 			}
-		}, method, val, arguments.length, null );
+		}, method, val, arguments.length );
 	};
-});
+} );
 
-// Support: Safari<7+, Chrome<37+
+// Support: Safari<7-8+, Chrome<37-44+
 // Add the top/left cssHooks using jQuery.fn.position
 // Webkit bug: https://bugs.webkit.org/show_bug.cgi?id=29084
 // Blink bug: https://code.google.com/p/chromium/issues/detail?id=229280
@@ -22871,6 +23618,7 @@ jQuery.each( [ "top", "left" ], function( i, prop ) {
 		function( elem, computed ) {
 			if ( computed ) {
 				computed = curCSS( elem, prop );
+
 				// If curCSS returns percentage, fallback to offset
 				return rnumnonpx.test( computed ) ?
 					jQuery( elem ).position()[ prop ] + "px" :
@@ -22878,12 +23626,14 @@ jQuery.each( [ "top", "left" ], function( i, prop ) {
 			}
 		}
 	);
-});
+} );
 
 
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
 jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
-	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name }, function( defaultExtra, funcName ) {
+	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name },
+		function( defaultExtra, funcName ) {
+
 		// Margin is only for outerHeight, outerWidth
 		jQuery.fn[ funcName ] = function( margin, value ) {
 			var chainable = arguments.length && ( defaultExtra || typeof margin !== "boolean" ),
@@ -22893,6 +23643,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 				var doc;
 
 				if ( jQuery.isWindow( elem ) ) {
+
 					// As of 5/8/2012 this will yield incorrect results for Mobile Safari, but there
 					// isn't a whole lot we can do. See pull request at this URL for discussion:
 					// https://github.com/jquery/jquery/pull/764
@@ -22913,6 +23664,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 				}
 
 				return value === undefined ?
+
 					// Get width or height on the element, requesting but not forcing parseFloat
 					jQuery.css( elem, type, extra ) :
 
@@ -22920,14 +23672,33 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 					jQuery.style( elem, type, value, extra );
 			}, type, chainable ? margin : undefined, chainable, null );
 		};
-	});
-});
+	} );
+} );
 
 
-// The number of elements contained in the matched element set
-jQuery.fn.size = function() {
-	return this.length;
-};
+jQuery.fn.extend( {
+
+	bind: function( types, data, fn ) {
+		return this.on( types, null, data, fn );
+	},
+	unbind: function( types, fn ) {
+		return this.off( types, null, fn );
+	},
+
+	delegate: function( selector, types, data, fn ) {
+		return this.on( types, selector, data, fn );
+	},
+	undelegate: function( selector, types, fn ) {
+
+		// ( namespace ) or ( selector, types [, fn] )
+		return arguments.length === 1 ?
+			this.off( selector, "**" ) :
+			this.off( types, selector || "**", fn );
+	},
+	size: function() {
+		return this.length;
+	}
+} );
 
 jQuery.fn.andSelf = jQuery.fn.addBack;
 
@@ -22950,13 +23721,13 @@ jQuery.fn.andSelf = jQuery.fn.addBack;
 if ( typeof define === "function" && define.amd ) {
 	define( "jquery", [], function() {
 		return jQuery;
-	});
+	} );
 }
 
 
 
-
 var
+
 	// Map over jQuery in case of overwrite
 	_jQuery = window.jQuery,
 
@@ -22978,22 +23749,18 @@ jQuery.noConflict = function( deep ) {
 // Expose jQuery and $ identifiers, even in AMD
 // (#7102#comment:10, https://github.com/jquery/jquery/pull/557)
 // and CommonJS for browser emulators (#13566)
-if ( typeof noGlobal === strundefined ) {
+if ( !noGlobal ) {
 	window.jQuery = window.$ = jQuery;
 }
 
-
-
-
 return jQuery;
-
 }));
 
 },{}],24:[function(require,module,exports){
 (function (global){
 /**
  * @license
- * lodash 3.9.3 (Custom Build) <https://lodash.com/>
+ * lodash 3.10.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern -d -o ./index.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -23006,7 +23773,7 @@ return jQuery;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '3.9.3';
+  var VERSION = '3.10.1';
 
   /** Used to compose bitmasks for wrapper metadata. */
   var BIND_FLAG = 1,
@@ -23027,9 +23794,11 @@ return jQuery;
   var HOT_COUNT = 150,
       HOT_SPAN = 16;
 
+  /** Used as the size to enable large array optimizations. */
+  var LARGE_ARRAY_SIZE = 200;
+
   /** Used to indicate the type of lazy iteratees. */
-  var LAZY_DROP_WHILE_FLAG = 0,
-      LAZY_FILTER_FLAG = 1,
+  var LAZY_FILTER_FLAG = 1,
       LAZY_MAP_FLAG = 2;
 
   /** Used as the `TypeError` message for "Functions" methods. */
@@ -23086,11 +23855,10 @@ return jQuery;
       rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
 
   /**
-   * Used to match `RegExp` [special characters](http://www.regular-expressions.info/characters.html#special).
-   * In addition to special characters the forward slash is escaped to allow for
-   * easier `eval` use and `Function` compilation.
+   * Used to match `RegExp` [syntax characters](http://ecma-international.org/ecma-262/6.0/#sec-patterns)
+   * and those outlined by [`EscapeRegExpPattern`](http://ecma-international.org/ecma-262/6.0/#sec-escaperegexppattern).
    */
-  var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
+  var reRegExpChars = /^[:!,]|[\\^$.*+?()[\]{}|\/]|(^[0-9a-fA-Fnrtuvx])|([\n\r\u2028\u2029])/g,
       reHasRegExpChars = RegExp(reRegExpChars.source);
 
   /** Used to match [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks). */
@@ -23099,7 +23867,7 @@ return jQuery;
   /** Used to match backslashes in property paths. */
   var reEscapeChar = /\\(\\)?/g;
 
-  /** Used to match [ES template delimiters](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-template-literal-lexical-components). */
+  /** Used to match [ES template delimiters](http://ecma-international.org/ecma-262/6.0/#sec-template-literal-lexical-components). */
   var reEsTemplate = /\$\{([^\\}]*(?:\\.[^\\}]*)*)\}/g;
 
   /** Used to match `RegExp` flags from their coerced string values. */
@@ -23131,25 +23899,13 @@ return jQuery;
     return RegExp(upper + '+(?=' + upper + lower + ')|' + upper + '?' + lower + '|' + upper + '+|[0-9]+', 'g');
   }());
 
-  /** Used to detect and test for whitespace. */
-  var whitespace = (
-    // Basic whitespace characters.
-    ' \t\x0b\f\xa0\ufeff' +
-
-    // Line terminators.
-    '\n\r\u2028\u2029' +
-
-    // Unicode category "Zs" space separators.
-    '\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000'
-  );
-
   /** Used to assign default `context` object properties. */
   var contextProps = [
     'Array', 'ArrayBuffer', 'Date', 'Error', 'Float32Array', 'Float64Array',
     'Function', 'Int8Array', 'Int16Array', 'Int32Array', 'Math', 'Number',
-    'Object', 'RegExp', 'Set', 'String', '_', 'clearTimeout', 'document',
-    'isFinite', 'parseFloat', 'parseInt', 'setTimeout', 'TypeError', 'Uint8Array',
-    'Uint8ClampedArray', 'Uint16Array', 'Uint32Array', 'WeakMap', 'window'
+    'Object', 'RegExp', 'Set', 'String', '_', 'clearTimeout', 'isFinite',
+    'parseFloat', 'parseInt', 'setTimeout', 'TypeError', 'Uint8Array',
+    'Uint8ClampedArray', 'Uint16Array', 'Uint32Array', 'WeakMap'
   ];
 
   /** Used to make template sourceURLs easier to identify. */
@@ -23184,13 +23940,6 @@ return jQuery;
   cloneableTags[errorTag] = cloneableTags[funcTag] =
   cloneableTags[mapTag] = cloneableTags[setTag] =
   cloneableTags[weakMapTag] = false;
-
-  /** Used as an internal `_.debounce` options object by `_.throttle`. */
-  var debounceOptions = {
-    'leading': false,
-    'maxWait': 0,
-    'trailing': false
-  };
 
   /** Used to map latin-1 supplementary letters to basic latin letters. */
   var deburredLetters = {
@@ -23237,6 +23986,15 @@ return jQuery;
   var objectTypes = {
     'function': true,
     'object': true
+  };
+
+  /** Used to escape characters for inclusion in compiled regexes. */
+  var regexpEscapes = {
+    '0': 'x30', '1': 'x31', '2': 'x32', '3': 'x33', '4': 'x34',
+    '5': 'x35', '6': 'x36', '7': 'x37', '8': 'x38', '9': 'x39',
+    'A': 'x41', 'B': 'x42', 'C': 'x43', 'D': 'x44', 'E': 'x45', 'F': 'x46',
+    'a': 'x61', 'b': 'x62', 'c': 'x63', 'd': 'x64', 'e': 'x65', 'f': 'x66',
+    'n': 'x6e', 'r': 'x72', 't': 'x74', 'u': 'x75', 'v': 'x76', 'x': 'x78'
   };
 
   /** Used to escape characters for inclusion in compiled string literals. */
@@ -23379,9 +24137,6 @@ return jQuery;
    * @returns {string} Returns the string.
    */
   function baseToString(value) {
-    if (typeof value == 'string') {
-      return value;
-    }
     return value == null ? '' : (value + '');
   }
 
@@ -23423,8 +24178,8 @@ return jQuery;
    * sort them in ascending order.
    *
    * @private
-   * @param {Object} object The object to compare to `other`.
-   * @param {Object} other The object to compare to `object`.
+   * @param {Object} object The object to compare.
+   * @param {Object} other The other object to compare.
    * @returns {number} Returns the sort order indicator for `object`.
    */
   function compareAscending(object, other) {
@@ -23432,16 +24187,16 @@ return jQuery;
   }
 
   /**
-   * Used by `_.sortByOrder` to compare multiple properties of each element
-   * in a collection and stable sort them in the following order:
+   * Used by `_.sortByOrder` to compare multiple properties of a value to another
+   * and stable sort them.
    *
-   * If `orders` is unspecified, sort in ascending order for all properties.
-   * Otherwise, for each property, sort in ascending order if its corresponding value in
-   * orders is true, and descending order if false.
+   * If `orders` is unspecified, all valuess are sorted in ascending order. Otherwise,
+   * a value is sorted in ascending order if its corresponding order is "asc", and
+   * descending if "desc".
    *
    * @private
-   * @param {Object} object The object to compare to `other`.
-   * @param {Object} other The object to compare to `object`.
+   * @param {Object} object The object to compare.
+   * @param {Object} other The other object to compare.
    * @param {boolean[]} orders The order to sort by for each property.
    * @returns {number} Returns the sort order indicator for `object`.
    */
@@ -23458,7 +24213,8 @@ return jQuery;
         if (index >= ordersLength) {
           return result;
         }
-        return result * (orders[index] ? 1 : -1);
+        var order = orders[index];
+        return result * ((order === 'asc' || order === true) ? 1 : -1);
       }
     }
     // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
@@ -23494,8 +24250,25 @@ return jQuery;
   }
 
   /**
-   * Used by `_.template` to escape characters for inclusion in compiled
-   * string literals.
+   * Used by `_.escapeRegExp` to escape characters for inclusion in compiled regexes.
+   *
+   * @private
+   * @param {string} chr The matched character to escape.
+   * @param {string} leadingChar The capture group for a leading character.
+   * @param {string} whitespaceChar The capture group for a whitespace character.
+   * @returns {string} Returns the escaped character.
+   */
+  function escapeRegExpChar(chr, leadingChar, whitespaceChar) {
+    if (leadingChar) {
+      chr = regexpEscapes[chr];
+    } else if (whitespaceChar) {
+      chr = stringEscapes[chr];
+    }
+    return '\\' + chr;
+  }
+
+  /**
+   * Used by `_.template` to escape characters for inclusion in compiled string literals.
    *
    * @private
    * @param {string} chr The matched character to escape.
@@ -23706,9 +24479,6 @@ return jQuery;
         objectProto = Object.prototype,
         stringProto = String.prototype;
 
-    /** Used to detect DOM support. */
-    var document = (document = context.window) ? document.document : null;
-
     /** Used to resolve the decompiled source of functions. */
     var fnToString = Function.prototype.toString;
 
@@ -23719,56 +24489,42 @@ return jQuery;
     var idCounter = 0;
 
     /**
-     * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+     * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
      * of values.
      */
     var objToString = objectProto.toString;
 
     /** Used to restore the original `_` reference in `_.noConflict`. */
-    var oldDash = context._;
+    var oldDash = root._;
 
     /** Used to detect if a method is native. */
     var reIsNative = RegExp('^' +
-      escapeRegExp(fnToString.call(hasOwnProperty))
+      fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
       .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
     );
 
     /** Native method references. */
-    var ArrayBuffer = getNative(context, 'ArrayBuffer'),
-        bufferSlice = getNative(ArrayBuffer && new ArrayBuffer(0), 'slice'),
-        ceil = Math.ceil,
+    var ArrayBuffer = context.ArrayBuffer,
         clearTimeout = context.clearTimeout,
-        floor = Math.floor,
-        getPrototypeOf = getNative(Object, 'getPrototypeOf'),
         parseFloat = context.parseFloat,
-        push = arrayProto.push,
+        pow = Math.pow,
+        propertyIsEnumerable = objectProto.propertyIsEnumerable,
         Set = getNative(context, 'Set'),
         setTimeout = context.setTimeout,
         splice = arrayProto.splice,
-        Uint8Array = getNative(context, 'Uint8Array'),
+        Uint8Array = context.Uint8Array,
         WeakMap = getNative(context, 'WeakMap');
 
-    /** Used to clone array buffers. */
-    var Float64Array = (function() {
-      // Safari 5 errors when using an array buffer to initialize a typed array
-      // where the array buffer's `byteLength` is not a multiple of the typed
-      // array's `BYTES_PER_ELEMENT`.
-      try {
-        var func = getNative(context, 'Float64Array'),
-            result = new func(new ArrayBuffer(10), 0, 1) && func;
-      } catch(e) {}
-      return result || null;
-    }());
-
     /* Native method references for those with the same name as other `lodash` methods. */
-    var nativeCreate = getNative(Object, 'create'),
+    var nativeCeil = Math.ceil,
+        nativeCreate = getNative(Object, 'create'),
+        nativeFloor = Math.floor,
         nativeIsArray = getNative(Array, 'isArray'),
         nativeIsFinite = context.isFinite,
         nativeKeys = getNative(Object, 'keys'),
         nativeMax = Math.max,
         nativeMin = Math.min,
         nativeNow = getNative(Date, 'now'),
-        nativeNumIsFinite = getNative(Number, 'isFinite'),
         nativeParseInt = context.parseInt,
         nativeRandom = Math.random;
 
@@ -23781,11 +24537,8 @@ return jQuery;
         MAX_ARRAY_INDEX = MAX_ARRAY_LENGTH - 1,
         HALF_MAX_ARRAY_LENGTH = MAX_ARRAY_LENGTH >>> 1;
 
-    /** Used as the size, in bytes, of each `Float64Array` element. */
-    var FLOAT64_BYTES_PER_ELEMENT = Float64Array ? Float64Array.BYTES_PER_ELEMENT : 0;
-
     /**
-     * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+     * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
      * of an array-like value.
      */
     var MAX_SAFE_INTEGER = 9007199254740991;
@@ -23801,15 +24554,16 @@ return jQuery;
     /**
      * Creates a `lodash` object which wraps `value` to enable implicit chaining.
      * Methods that operate on and return arrays, collections, and functions can
-     * be chained together. Methods that return a boolean or single value will
-     * automatically end the chain returning the unwrapped value. Explicit chaining
-     * may be enabled using `_.chain`. The execution of chained methods is lazy,
-     * that is, execution is deferred until `_#value` is implicitly or explicitly
-     * called.
+     * be chained together. Methods that retrieve a single value or may return a
+     * primitive value will automatically end the chain returning the unwrapped
+     * value. Explicit chaining may be enabled using `_.chain`. The execution of
+     * chained methods is lazy, that is, execution is deferred until `_#value`
+     * is implicitly or explicitly called.
      *
      * Lazy evaluation allows several methods to support shortcut fusion. Shortcut
-     * fusion is an optimization that merges iteratees to avoid creating intermediate
-     * arrays and reduce the number of iteratee executions.
+     * fusion is an optimization strategy which merge iteratee calls; this can help
+     * to avoid the creation of intermediate data structures and greatly reduce the
+     * number of iteratee executions.
      *
      * Chaining is supported in custom builds as long as the `_#value` method is
      * directly or indirectly included in the build.
@@ -23832,36 +24586,37 @@ return jQuery;
      * The chainable wrapper methods are:
      * `after`, `ary`, `assign`, `at`, `before`, `bind`, `bindAll`, `bindKey`,
      * `callback`, `chain`, `chunk`, `commit`, `compact`, `concat`, `constant`,
-     * `countBy`, `create`, `curry`, `debounce`, `defaults`, `defer`, `delay`,
-     * `difference`, `drop`, `dropRight`, `dropRightWhile`, `dropWhile`, `fill`,
-     * `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`, `forEach`,
-     * `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`, `functions`,
-     * `groupBy`, `indexBy`, `initial`, `intersection`, `invert`, `invoke`, `keys`,
-     * `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`, `matchesProperty`,
-     * `memoize`, `merge`, `method`, `methodOf`, `mixin`, `negate`, `omit`, `once`,
-     * `pairs`, `partial`, `partialRight`, `partition`, `pick`, `plant`, `pluck`,
-     * `property`, `propertyOf`, `pull`, `pullAt`, `push`, `range`, `rearg`,
-     * `reject`, `remove`, `rest`, `restParam`, `reverse`, `set`, `shuffle`,
-     * `slice`, `sort`, `sortBy`, `sortByAll`, `sortByOrder`, `splice`, `spread`,
-     * `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `tap`, `throttle`,
-     * `thru`, `times`, `toArray`, `toPlainObject`, `transform`, `union`, `uniq`,
-     * `unshift`, `unzip`, `unzipWith`, `values`, `valuesIn`, `where`, `without`,
-     * `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
+     * `countBy`, `create`, `curry`, `debounce`, `defaults`, `defaultsDeep`,
+     * `defer`, `delay`, `difference`, `drop`, `dropRight`, `dropRightWhile`,
+     * `dropWhile`, `fill`, `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`,
+     * `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`,
+     * `functions`, `groupBy`, `indexBy`, `initial`, `intersection`, `invert`,
+     * `invoke`, `keys`, `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`,
+     * `matchesProperty`, `memoize`, `merge`, `method`, `methodOf`, `mixin`,
+     * `modArgs`, `negate`, `omit`, `once`, `pairs`, `partial`, `partialRight`,
+     * `partition`, `pick`, `plant`, `pluck`, `property`, `propertyOf`, `pull`,
+     * `pullAt`, `push`, `range`, `rearg`, `reject`, `remove`, `rest`, `restParam`,
+     * `reverse`, `set`, `shuffle`, `slice`, `sort`, `sortBy`, `sortByAll`,
+     * `sortByOrder`, `splice`, `spread`, `take`, `takeRight`, `takeRightWhile`,
+     * `takeWhile`, `tap`, `throttle`, `thru`, `times`, `toArray`, `toPlainObject`,
+     * `transform`, `union`, `uniq`, `unshift`, `unzip`, `unzipWith`, `values`,
+     * `valuesIn`, `where`, `without`, `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
      *
      * The wrapper methods that are **not** chainable by default are:
-     * `add`, `attempt`, `camelCase`, `capitalize`, `clone`, `cloneDeep`, `deburr`,
-     * `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`, `findKey`,
-     * `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`, `get`,
-     * `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`, `inRange`, `isArguments`,
-     * `isArray`, `isBoolean`, `isDate`, `isElement`, `isEmpty`, `isEqual`, `isError`,
-     * `isFinite` `isFunction`, `isMatch`, `isNative`, `isNaN`, `isNull`, `isNumber`,
-     * `isObject`, `isPlainObject`, `isRegExp`, `isString`, `isUndefined`,
-     * `isTypedArray`, `join`, `kebabCase`, `last`, `lastIndexOf`, `lt`, `lte`,
-     * `max`, `min`, `noConflict`, `noop`, `now`, `pad`, `padLeft`, `padRight`,
-     * `parseInt`, `pop`, `random`, `reduce`, `reduceRight`, `repeat`, `result`,
-     * `runInContext`, `shift`, `size`, `snakeCase`, `some`, `sortedIndex`,
-     * `sortedLastIndex`, `startCase`, `startsWith`, `sum`, `template`, `trim`,
-     * `trimLeft`, `trimRight`, `trunc`, `unescape`, `uniqueId`, `value`, and `words`
+     * `add`, `attempt`, `camelCase`, `capitalize`, `ceil`, `clone`, `cloneDeep`,
+     * `deburr`, `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`,
+     * `findKey`, `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`,
+     * `floor`, `get`, `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`,
+     * `inRange`, `isArguments`, `isArray`, `isBoolean`, `isDate`, `isElement`,
+     * `isEmpty`, `isEqual`, `isError`, `isFinite` `isFunction`, `isMatch`,
+     * `isNative`, `isNaN`, `isNull`, `isNumber`, `isObject`, `isPlainObject`,
+     * `isRegExp`, `isString`, `isUndefined`, `isTypedArray`, `join`, `kebabCase`,
+     * `last`, `lastIndexOf`, `lt`, `lte`, `max`, `min`, `noConflict`, `noop`,
+     * `now`, `pad`, `padLeft`, `padRight`, `parseInt`, `pop`, `random`, `reduce`,
+     * `reduceRight`, `repeat`, `result`, `round`, `runInContext`, `shift`, `size`,
+     * `snakeCase`, `some`, `sortedIndex`, `sortedLastIndex`, `startCase`,
+     * `startsWith`, `sum`, `template`, `trim`, `trimLeft`, `trimRight`, `trunc`,
+     * `unescape`, `uniqueId`, `value`, and `words`
      *
      * The wrapper method `sample` will return a wrapped value when `n` is provided,
      * otherwise an unwrapped value is returned.
@@ -23936,27 +24691,6 @@ return jQuery;
      */
     var support = lodash.support = {};
 
-    (function(x) {
-      var Ctor = function() { this.x = x; },
-          object = { '0': x, 'length': x },
-          props = [];
-
-      Ctor.prototype = { 'valueOf': x, 'y': x };
-      for (var key in new Ctor) { props.push(key); }
-
-      /**
-       * Detect if the DOM is supported.
-       *
-       * @memberOf _.support
-       * @type boolean
-       */
-      try {
-        support.dom = document.createDocumentFragment().nodeType === 11;
-      } catch(e) {
-        support.dom = false;
-      }
-    }(1, 0));
-
     /**
      * By default, the template delimiters used by lodash are like those in
      * embedded Ruby (ERB). Change the following template settings to use
@@ -24028,13 +24762,12 @@ return jQuery;
      */
     function LazyWrapper(value) {
       this.__wrapped__ = value;
-      this.__actions__ = null;
+      this.__actions__ = [];
       this.__dir__ = 1;
-      this.__dropCount__ = 0;
       this.__filtered__ = false;
-      this.__iteratees__ = null;
+      this.__iteratees__ = [];
       this.__takeCount__ = POSITIVE_INFINITY;
-      this.__views__ = null;
+      this.__views__ = [];
     }
 
     /**
@@ -24046,17 +24779,13 @@ return jQuery;
      * @returns {Object} Returns the cloned `LazyWrapper` object.
      */
     function lazyClone() {
-      var actions = this.__actions__,
-          iteratees = this.__iteratees__,
-          views = this.__views__,
-          result = new LazyWrapper(this.__wrapped__);
-
-      result.__actions__ = actions ? arrayCopy(actions) : null;
+      var result = new LazyWrapper(this.__wrapped__);
+      result.__actions__ = arrayCopy(this.__actions__);
       result.__dir__ = this.__dir__;
       result.__filtered__ = this.__filtered__;
-      result.__iteratees__ = iteratees ? arrayCopy(iteratees) : null;
+      result.__iteratees__ = arrayCopy(this.__iteratees__);
       result.__takeCount__ = this.__takeCount__;
-      result.__views__ = views ? arrayCopy(views) : null;
+      result.__views__ = arrayCopy(this.__views__);
       return result;
     }
 
@@ -24089,22 +24818,25 @@ return jQuery;
      * @returns {*} Returns the unwrapped value.
      */
     function lazyValue() {
-      var array = this.__wrapped__.value();
-      if (!isArray(array)) {
-        return baseWrapperValue(array, this.__actions__);
-      }
-      var dir = this.__dir__,
+      var array = this.__wrapped__.value(),
+          dir = this.__dir__,
+          isArr = isArray(array),
           isRight = dir < 0,
-          view = getView(0, array.length, this.__views__),
+          arrLength = isArr ? array.length : 0,
+          view = getView(0, arrLength, this.__views__),
           start = view.start,
           end = view.end,
           length = end - start,
           index = isRight ? end : (start - 1),
-          takeCount = nativeMin(length, this.__takeCount__),
           iteratees = this.__iteratees__,
-          iterLength = iteratees ? iteratees.length : 0,
+          iterLength = iteratees.length,
           resIndex = 0,
-          result = [];
+          takeCount = nativeMin(length, this.__takeCount__);
+
+      if (!isArr || arrLength < LARGE_ARRAY_SIZE || (arrLength == length && takeCount == length)) {
+        return baseWrapperValue((isRight && isArr) ? array.reverse() : array, this.__actions__);
+      }
+      var result = [];
 
       outer:
       while (length-- && resIndex < takeCount) {
@@ -24116,30 +24848,16 @@ return jQuery;
         while (++iterIndex < iterLength) {
           var data = iteratees[iterIndex],
               iteratee = data.iteratee,
-              type = data.type;
+              type = data.type,
+              computed = iteratee(value);
 
-          if (type == LAZY_DROP_WHILE_FLAG) {
-            if (data.done && (isRight ? (index > data.index) : (index < data.index))) {
-              data.count = 0;
-              data.done = false;
-            }
-            data.index = index;
-            if (!data.done) {
-              var limit = data.limit;
-              if (!(data.done = limit > -1 ? (data.count++ >= limit) : !iteratee(value))) {
-                continue outer;
-              }
-            }
-          } else {
-            var computed = iteratee(value);
-            if (type == LAZY_MAP_FLAG) {
-              value = computed;
-            } else if (!computed) {
-              if (type == LAZY_FILTER_FLAG) {
-                continue outer;
-              } else {
-                break outer;
-              }
+          if (type == LAZY_MAP_FLAG) {
+            value = computed;
+          } else if (!computed) {
+            if (type == LAZY_FILTER_FLAG) {
+              continue outer;
+            } else {
+              break outer;
             }
           }
         }
@@ -24270,6 +24988,30 @@ return jQuery;
     }
 
     /*------------------------------------------------------------------------*/
+
+    /**
+     * Creates a new array joining `array` with `other`.
+     *
+     * @private
+     * @param {Array} array The array to join.
+     * @param {Array} other The other array to join.
+     * @returns {Array} Returns the new concatenated array.
+     */
+    function arrayConcat(array, other) {
+      var index = -1,
+          length = array.length,
+          othIndex = -1,
+          othLength = other.length,
+          result = Array(length + othLength);
+
+      while (++index < length) {
+        result[index] = array[index];
+      }
+      while (++othIndex < othLength) {
+        result[index++] = other[othIndex];
+      }
+      return result;
+    }
 
     /**
      * Copies the values of `source` to `array`.
@@ -24427,6 +25169,25 @@ return jQuery;
     }
 
     /**
+     * Appends the elements of `values` to `array`.
+     *
+     * @private
+     * @param {Array} array The array to modify.
+     * @param {Array} values The values to append.
+     * @returns {Array} Returns `array`.
+     */
+    function arrayPush(array, values) {
+      var index = -1,
+          length = values.length,
+          offset = array.length;
+
+      while (++index < length) {
+        array[offset + index] = values[index];
+      }
+      return array;
+    }
+
+    /**
      * A specialized version of `_.reduce` for arrays without support for callback
      * shorthands and `this` binding.
      *
@@ -24497,18 +25258,20 @@ return jQuery;
     }
 
     /**
-     * A specialized version of `_.sum` for arrays without support for iteratees.
+     * A specialized version of `_.sum` for arrays without support for callback
+     * shorthands and `this` binding..
      *
      * @private
      * @param {Array} array The array to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
      * @returns {number} Returns the sum.
      */
-    function arraySum(array) {
+    function arraySum(array, iteratee) {
       var length = array.length,
           result = 0;
 
       while (length--) {
-        result += +array[length] || 0;
+        result += +iteratee(array[length]) || 0;
       }
       return result;
     }
@@ -24712,7 +25475,7 @@ return jQuery;
             : (object ? value : {});
         }
       }
-      // Check for circular references and return corresponding clone.
+      // Check for circular references and return its corresponding clone.
       stackA || (stackA = []);
       stackB || (stackB = []);
 
@@ -24747,7 +25510,7 @@ return jQuery;
         if (isObject(prototype)) {
           object.prototype = prototype;
           var result = new object;
-          object.prototype = null;
+          object.prototype = undefined;
         }
         return result || {};
       };
@@ -24789,7 +25552,7 @@ return jQuery;
       var index = -1,
           indexOf = getIndexOf(),
           isCommon = indexOf == baseIndexOf,
-          cache = (isCommon && values.length >= 200) ? createCache(values) : null,
+          cache = (isCommon && values.length >= LARGE_ARRAY_SIZE) ? createCache(values) : null,
           valuesLength = values.length;
 
       if (cache) {
@@ -24965,13 +25728,14 @@ return jQuery;
      * @param {Array} array The array to flatten.
      * @param {boolean} [isDeep] Specify a deep flatten.
      * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
+     * @param {Array} [result=[]] The initial result value.
      * @returns {Array} Returns the new flattened array.
      */
-    function baseFlatten(array, isDeep, isStrict) {
+    function baseFlatten(array, isDeep, isStrict, result) {
+      result || (result = []);
+
       var index = -1,
-          length = array.length,
-          resIndex = -1,
-          result = [];
+          length = array.length;
 
       while (++index < length) {
         var value = array[index];
@@ -24979,16 +25743,12 @@ return jQuery;
             (isStrict || isArray(value) || isArguments(value))) {
           if (isDeep) {
             // Recursively flatten arrays (susceptible to call stack limits).
-            value = baseFlatten(value, isDeep, isStrict);
-          }
-          var valIndex = -1,
-              valLength = value.length;
-
-          while (++valIndex < valLength) {
-            result[++resIndex] = value[valIndex];
+            baseFlatten(value, isDeep, isStrict, result);
+          } else {
+            arrayPush(result, value);
           }
         } else if (!isStrict) {
-          result[++resIndex] = value;
+          result[result.length] = value;
         }
       }
       return result;
@@ -25343,7 +26103,7 @@ return jQuery;
      * @private
      * @param {Object} object The destination object.
      * @param {Object} source The source object.
-     * @param {Function} [customizer] The function to customize merging properties.
+     * @param {Function} [customizer] The function to customize merged values.
      * @param {Array} [stackA=[]] Tracks traversed source objects.
      * @param {Array} [stackB=[]] Associates values with source counterparts.
      * @returns {Object} Returns `object`.
@@ -25353,7 +26113,7 @@ return jQuery;
         return object;
       }
       var isSrcArr = isArrayLike(source) && (isArray(source) || isTypedArray(source)),
-          props = isSrcArr ? null : keys(source);
+          props = isSrcArr ? undefined : keys(source);
 
       arrayEach(props || source, function(srcValue, key) {
         if (props) {
@@ -25392,7 +26152,7 @@ return jQuery;
      * @param {Object} source The source object.
      * @param {string} key The key of the value to merge.
      * @param {Function} mergeFunc The function to merge values.
-     * @param {Function} [customizer] The function to customize merging properties.
+     * @param {Function} [customizer] The function to customize merged values.
      * @param {Array} [stackA=[]] Tracks traversed source objects.
      * @param {Array} [stackB=[]] Associates values with source counterparts.
      * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
@@ -25499,7 +26259,7 @@ return jQuery;
      * @returns {number} Returns the random number.
      */
     function baseRandom(min, max) {
-      return min + floor(nativeRandom() * (max - min + 1));
+      return min + nativeFloor(nativeRandom() * (max - min + 1));
     }
 
     /**
@@ -25665,7 +26425,7 @@ return jQuery;
           indexOf = getIndexOf(),
           length = array.length,
           isCommon = indexOf == baseIndexOf,
-          isLarge = isCommon && length >= 200,
+          isLarge = isCommon && length >= LARGE_ARRAY_SIZE,
           seen = isLarge ? createCache() : null,
           result = [];
 
@@ -25764,11 +26524,8 @@ return jQuery;
           length = actions.length;
 
       while (++index < length) {
-        var args = [result],
-            action = actions[index];
-
-        push.apply(args, action.args);
-        result = action.func.apply(action.thisArg, args);
+        var action = actions[index];
+        result = action.func.apply(action.thisArg, arrayPush([result], action.args));
       }
       return result;
     }
@@ -25827,7 +26584,7 @@ return jQuery;
           valIsUndef = value === undefined;
 
       while (low < high) {
-        var mid = floor((low + high) / 2),
+        var mid = nativeFloor((low + high) / 2),
             computed = iteratee(array[mid]),
             isDef = computed !== undefined,
             isReflexive = computed === computed;
@@ -25896,26 +26653,11 @@ return jQuery;
      * @returns {ArrayBuffer} Returns the cloned array buffer.
      */
     function bufferClone(buffer) {
-      return bufferSlice.call(buffer, 0);
-    }
-    if (!bufferSlice) {
-      // PhantomJS has `ArrayBuffer` and `Uint8Array` but not `Float64Array`.
-      bufferClone = !(ArrayBuffer && Uint8Array) ? constant(null) : function(buffer) {
-        var byteLength = buffer.byteLength,
-            floatLength = Float64Array ? floor(byteLength / FLOAT64_BYTES_PER_ELEMENT) : 0,
-            offset = floatLength * FLOAT64_BYTES_PER_ELEMENT,
-            result = new ArrayBuffer(byteLength);
+      var result = new ArrayBuffer(buffer.byteLength),
+          view = new Uint8Array(result);
 
-        if (floatLength) {
-          var view = new Float64Array(result, 0, floatLength);
-          view.set(new Float64Array(buffer, 0, floatLength));
-        }
-        if (byteLength != offset) {
-          view = new Uint8Array(result, offset);
-          view.set(new Uint8Array(buffer, offset));
-        }
-        return result;
-      };
+      view.set(new Uint8Array(buffer));
+      return result;
     }
 
     /**
@@ -25934,7 +26676,7 @@ return jQuery;
           argsLength = nativeMax(args.length - holdersLength, 0),
           leftIndex = -1,
           leftLength = partials.length,
-          result = Array(argsLength + leftLength);
+          result = Array(leftLength + argsLength);
 
       while (++leftIndex < leftLength) {
         result[leftIndex] = partials[leftIndex];
@@ -25981,12 +26723,7 @@ return jQuery;
     }
 
     /**
-     * Creates a function that aggregates a collection, creating an accumulator
-     * object composed from the results of running each element in the collection
-     * through an iteratee.
-     *
-     * **Note:** This function is used to create `_.countBy`, `_.groupBy`, `_.indexBy`,
-     * and `_.partition`.
+     * Creates a `_.countBy`, `_.groupBy`, `_.indexBy`, or `_.partition` function.
      *
      * @private
      * @param {Function} setter The function to set keys and values of the accumulator object.
@@ -26016,10 +26753,7 @@ return jQuery;
     }
 
     /**
-     * Creates a function that assigns properties of source object(s) to a given
-     * destination object.
-     *
-     * **Note:** This function is used to create `_.assign`, `_.defaults`, and `_.merge`.
+     * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
      *
      * @private
      * @param {Function} assigner The function to assign values.
@@ -26130,9 +26864,9 @@ return jQuery;
      * @param {Array} [values] The values to cache.
      * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
      */
-    var createCache = !(nativeCreate && Set) ? constant(null) : function(values) {
-      return new SetCache(values);
-    };
+    function createCache(values) {
+      return (nativeCreate && Set) ? new SetCache(values) : null;
+    }
 
     /**
      * Creates a function that produces compound words out of the words in a
@@ -26167,7 +26901,7 @@ return jQuery;
     function createCtorWrapper(Ctor) {
       return function() {
         // Use a `switch` statement to work with class constructors.
-        // See https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-function-objects-call-thisargument-argumentslist
+        // See http://ecma-international.org/ecma-262/6.0/#sec-ecmascript-function-objects-call-thisargument-argumentslist
         // for more details.
         var args = arguments;
         switch (args.length) {
@@ -26177,6 +26911,8 @@ return jQuery;
           case 3: return new Ctor(args[0], args[1], args[2]);
           case 4: return new Ctor(args[0], args[1], args[2], args[3]);
           case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+          case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+          case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
         }
         var thisBinding = baseCreate(Ctor.prototype),
             result = Ctor.apply(thisBinding, args);
@@ -26197,13 +26933,32 @@ return jQuery;
     function createCurry(flag) {
       function curryFunc(func, arity, guard) {
         if (guard && isIterateeCall(func, arity, guard)) {
-          arity = null;
+          arity = undefined;
         }
-        var result = createWrapper(func, flag, null, null, null, null, null, arity);
+        var result = createWrapper(func, flag, undefined, undefined, undefined, undefined, undefined, arity);
         result.placeholder = curryFunc.placeholder;
         return result;
       }
       return curryFunc;
+    }
+
+    /**
+     * Creates a `_.defaults` or `_.defaultsDeep` function.
+     *
+     * @private
+     * @param {Function} assigner The function to assign values.
+     * @param {Function} customizer The function to customize assigned values.
+     * @returns {Function} Returns the new defaults function.
+     */
+    function createDefaults(assigner, customizer) {
+      return restParam(function(args) {
+        var object = args[0];
+        if (object == null) {
+          return object;
+        }
+        args.push(customizer);
+        return assigner.apply(undefined, args);
+      });
     }
 
     /**
@@ -26217,11 +26972,11 @@ return jQuery;
     function createExtremum(comparator, exValue) {
       return function(collection, iteratee, thisArg) {
         if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
-          iteratee = null;
+          iteratee = undefined;
         }
         iteratee = getCallback(iteratee, thisArg, 3);
         if (iteratee.length == 1) {
-          collection = toIterable(collection);
+          collection = isArray(collection) ? collection : toIterable(collection);
           var result = arrayExtremum(collection, iteratee, comparator, exValue);
           if (!(collection.length && result === exValue)) {
             return result;
@@ -26302,7 +27057,7 @@ return jQuery;
             throw new TypeError(FUNC_ERROR_TEXT);
           }
           if (!wrapper && LodashWrapper.prototype.thru && getFuncName(func) == 'wrapper') {
-            wrapper = new LodashWrapper([]);
+            wrapper = new LodashWrapper([], true);
           }
         }
         index = wrapper ? -1 : length;
@@ -26310,7 +27065,7 @@ return jQuery;
           func = funcs[index];
 
           var funcName = getFuncName(func),
-              data = funcName == 'wrapper' ? getData(func) : null;
+              data = funcName == 'wrapper' ? getData(func) : undefined;
 
           if (data && isLaziable(data[0]) && data[1] == (ARY_FLAG | CURRY_FLAG | PARTIAL_FLAG | REARG_FLAG) && !data[4].length && data[9] == 1) {
             wrapper = wrapper[getFuncName(data[0])].apply(wrapper, data[3]);
@@ -26319,12 +27074,14 @@ return jQuery;
           }
         }
         return function() {
-          var args = arguments;
-          if (wrapper && args.length == 1 && isArray(args[0])) {
-            return wrapper.plant(args[0]).value();
+          var args = arguments,
+              value = args[0];
+
+          if (wrapper && args.length == 1 && isArray(value) && value.length >= LARGE_ARRAY_SIZE) {
+            return wrapper.plant(value).value();
           }
           var index = 0,
-              result = length ? funcs[index].apply(this, args) : args[0];
+              result = length ? funcs[index].apply(this, args) : value;
 
           while (++index < length) {
             result = funcs[index].call(this, result);
@@ -26428,7 +27185,7 @@ return jQuery;
     function createPartial(flag) {
       var partialFunc = restParam(function(func, partials) {
         var holders = replaceHolders(partials, partialFunc.placeholder);
-        return createWrapper(func, flag, null, partials, holders);
+        return createWrapper(func, flag, undefined, partials, holders);
       });
       return partialFunc;
     }
@@ -26474,7 +27231,7 @@ return jQuery;
           isCurry = bitmask & CURRY_FLAG,
           isCurryBound = bitmask & CURRY_BOUND_FLAG,
           isCurryRight = bitmask & CURRY_RIGHT_FLAG,
-          Ctor = isBindKey ? null : createCtorWrapper(func);
+          Ctor = isBindKey ? undefined : createCtorWrapper(func);
 
       function wrapper() {
         // Avoid `arguments` object use disqualifying optimizations by
@@ -26498,12 +27255,12 @@ return jQuery;
 
           length -= argsHolders.length;
           if (length < arity) {
-            var newArgPos = argPos ? arrayCopy(argPos) : null,
+            var newArgPos = argPos ? arrayCopy(argPos) : undefined,
                 newArity = nativeMax(arity - length, 0),
-                newsHolders = isCurry ? argsHolders : null,
-                newHoldersRight = isCurry ? null : argsHolders,
-                newPartials = isCurry ? args : null,
-                newPartialsRight = isCurry ? null : args;
+                newsHolders = isCurry ? argsHolders : undefined,
+                newHoldersRight = isCurry ? undefined : argsHolders,
+                newPartials = isCurry ? args : undefined,
+                newPartialsRight = isCurry ? undefined : args;
 
             bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
             bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
@@ -26557,7 +27314,7 @@ return jQuery;
       }
       var padLength = length - strLength;
       chars = chars == null ? ' ' : (chars + '');
-      return repeat(chars, ceil(padLength / chars.length)).slice(0, padLength);
+      return repeat(chars, nativeCeil(padLength / chars.length)).slice(0, padLength);
     }
 
     /**
@@ -26583,7 +27340,7 @@ return jQuery;
             argsLength = arguments.length,
             leftIndex = -1,
             leftLength = partials.length,
-            args = Array(argsLength + leftLength);
+            args = Array(leftLength + argsLength);
 
         while (++leftIndex < leftLength) {
           args[leftIndex] = partials[leftIndex];
@@ -26595,6 +27352,25 @@ return jQuery;
         return fn.apply(isBind ? thisArg : this, args);
       }
       return wrapper;
+    }
+
+    /**
+     * Creates a `_.ceil`, `_.floor`, or `_.round` function.
+     *
+     * @private
+     * @param {string} methodName The name of the `Math` method to use when rounding.
+     * @returns {Function} Returns the new round function.
+     */
+    function createRound(methodName) {
+      var func = Math[methodName];
+      return function(number, precision) {
+        precision = precision === undefined ? 0 : (+precision || 0);
+        if (precision) {
+          precision = pow(10, precision);
+          return func(number * precision) / precision;
+        }
+        return func(number);
+      };
     }
 
     /**
@@ -26646,16 +27422,16 @@ return jQuery;
       var length = partials ? partials.length : 0;
       if (!length) {
         bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
-        partials = holders = null;
+        partials = holders = undefined;
       }
       length -= (holders ? holders.length : 0);
       if (bitmask & PARTIAL_RIGHT_FLAG) {
         var partialsRight = partials,
             holdersRight = holders;
 
-        partials = holders = null;
+        partials = holders = undefined;
       }
-      var data = isBindKey ? null : getData(func),
+      var data = isBindKey ? undefined : getData(func),
           newData = [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity];
 
       if (data) {
@@ -26734,7 +27510,7 @@ return jQuery;
      * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
      *
      * @private
-     * @param {Object} value The object to compare.
+     * @param {Object} object The object to compare.
      * @param {Object} other The other object to compare.
      * @param {string} tag The `toStringTag` of the objects to compare.
      * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
@@ -26934,13 +27710,13 @@ return jQuery;
      * @private
      * @param {number} start The start of the view.
      * @param {number} end The end of the view.
-     * @param {Array} [transforms] The transformations to apply to the view.
+     * @param {Array} transforms The transformations to apply to the view.
      * @returns {Object} Returns an object containing the `start` and `end`
      *  positions of the view.
      */
     function getView(start, end, transforms) {
       var index = -1,
-          length = transforms ? transforms.length : 0;
+          length = transforms.length;
 
       while (++index < length) {
         var data = transforms[index],
@@ -27139,7 +27915,7 @@ return jQuery;
     /**
      * Checks if `value` is a valid array-like length.
      *
-     * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+     * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
      *
      * @private
      * @param {*} value The value to check.
@@ -27229,6 +28005,18 @@ return jQuery;
       data[1] = newBitmask;
 
       return data;
+    }
+
+    /**
+     * Used by `_.defaultsDeep` to customize its `_.merge` use.
+     *
+     * @private
+     * @param {*} objectValue The destination object property value.
+     * @param {*} sourceValue The source object property value.
+     * @returns {*} Returns the value to assign to the destination object.
+     */
+    function mergeDefaults(objectValue, sourceValue) {
+      return objectValue === undefined ? sourceValue : merge(objectValue, sourceValue, mergeDefaults);
     }
 
     /**
@@ -27329,38 +28117,6 @@ return jQuery;
         return baseSetData(key, value);
       };
     }());
-
-    /**
-     * A fallback implementation of `_.isPlainObject` which checks if `value`
-     * is an object created by the `Object` constructor or has a `[[Prototype]]`
-     * of `null`.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
-     */
-    function shimIsPlainObject(value) {
-      var Ctor,
-          support = lodash.support;
-
-      // Exit early for non `Object` objects.
-      if (!(isObjectLike(value) && objToString.call(value) == objectTag) ||
-          (!hasOwnProperty.call(value, 'constructor') &&
-            (Ctor = value.constructor, typeof Ctor == 'function' && !(Ctor instanceof Ctor)))) {
-        return false;
-      }
-      // IE < 9 iterates inherited properties before own properties. If the first
-      // iterated property is an object's own property then there are no inherited
-      // enumerable properties.
-      var result;
-      // In most environments an object's own properties are iterated before
-      // its inherited properties. If the last iterated property is an object's
-      // own property then there are no inherited enumerable properties.
-      baseForIn(value, function(subValue, key) {
-        result = key;
-      });
-      return result === undefined || hasOwnProperty.call(value, result);
-    }
 
     /**
      * A fallback implementation of `Object.keys` which creates an array of the
@@ -27475,12 +28231,12 @@ return jQuery;
       if (guard ? isIterateeCall(array, size, guard) : size == null) {
         size = 1;
       } else {
-        size = nativeMax(+size || 1, 1);
+        size = nativeMax(nativeFloor(size) || 1, 1);
       }
       var index = 0,
           length = array ? array.length : 0,
           resIndex = -1,
-          result = Array(ceil(length / size));
+          result = Array(nativeCeil(length / size));
 
       while (index < length) {
         result[++resIndex] = baseSlice(array, index, (index += size));
@@ -27519,7 +28275,7 @@ return jQuery;
 
     /**
      * Creates an array of unique `array` values not included in the other
-     * provided arrays using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * provided arrays using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons.
      *
      * @static
@@ -27534,7 +28290,7 @@ return jQuery;
      * // => [1, 3]
      */
     var difference = restParam(function(array, values) {
-      return isArrayLike(array)
+      return (isObjectLike(array) && isArrayLike(array))
         ? baseDifference(array, baseFlatten(values, false, true))
         : [];
     });
@@ -27929,7 +28685,7 @@ return jQuery;
 
     /**
      * Gets the index at which the first occurrence of `value` is found in `array`
-     * using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons. If `fromIndex` is negative, it is used as the offset
      * from the end of `array`. If `array` is sorted providing `true` for `fromIndex`
      * performs a faster binary search.
@@ -27963,10 +28719,9 @@ return jQuery;
       if (typeof fromIndex == 'number') {
         fromIndex = fromIndex < 0 ? nativeMax(length + fromIndex, 0) : fromIndex;
       } else if (fromIndex) {
-        var index = binaryIndex(array, value),
-            other = array[index];
-
-        if (value === value ? (value === other) : (other !== other)) {
+        var index = binaryIndex(array, value);
+        if (index < length &&
+            (value === value ? (value === array[index]) : (array[index] !== array[index]))) {
           return index;
         }
         return -1;
@@ -27993,7 +28748,7 @@ return jQuery;
 
     /**
      * Creates an array of unique values that are included in all of the provided
-     * arrays using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * arrays using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons.
      *
      * @static
@@ -28114,7 +28869,7 @@ return jQuery;
 
     /**
      * Removes all provided values from `array` using
-     * [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons.
      *
      * **Note:** Unlike `_.without`, this method mutates `array`.
@@ -28547,7 +29302,7 @@ return jQuery;
 
     /**
      * Creates an array of unique values, in order, from all of the provided arrays
-     * using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons.
      *
      * @static
@@ -28566,7 +29321,7 @@ return jQuery;
 
     /**
      * Creates a duplicate-free version of an array, using
-     * [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons, in which only the first occurence of each element
      * is kept. Providing `true` for `isSorted` performs a faster search algorithm
      * for sorted arrays. If an iteratee function is provided it is invoked for
@@ -28620,7 +29375,7 @@ return jQuery;
       }
       if (isSorted != null && typeof isSorted != 'boolean') {
         thisArg = iteratee;
-        iteratee = isIterateeCall(array, isSorted, thisArg) ? null : isSorted;
+        iteratee = isIterateeCall(array, isSorted, thisArg) ? undefined : isSorted;
         isSorted = false;
       }
       var callback = getCallback();
@@ -28707,7 +29462,7 @@ return jQuery;
 
     /**
      * Creates an array excluding all provided values using
-     * [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons.
      *
      * @static
@@ -28749,7 +29504,7 @@ return jQuery;
         var array = arguments[index];
         if (isArrayLike(array)) {
           var result = result
-            ? baseDifference(result, array).concat(baseDifference(array, result))
+            ? arrayPush(baseDifference(result, array), baseDifference(array, result))
             : array;
         }
       }
@@ -28971,16 +29726,16 @@ return jQuery;
      * @example
      *
      * var array = [1, 2];
-     * var wrapper = _(array).push(3);
+     * var wrapped = _(array).push(3);
      *
      * console.log(array);
      * // => [1, 2]
      *
-     * wrapper = wrapper.commit();
+     * wrapped = wrapped.commit();
      * console.log(array);
      * // => [1, 2, 3]
      *
-     * wrapper.last();
+     * wrapped.last();
      * // => 3
      *
      * console.log(array);
@@ -28989,6 +29744,33 @@ return jQuery;
     function wrapperCommit() {
       return new LodashWrapper(this.value(), this.__chain__);
     }
+
+    /**
+     * Creates a new array joining a wrapped array with any additional arrays
+     * and/or values.
+     *
+     * @name concat
+     * @memberOf _
+     * @category Chain
+     * @param {...*} [values] The values to concatenate.
+     * @returns {Array} Returns the new concatenated array.
+     * @example
+     *
+     * var array = [1];
+     * var wrapped = _(array).concat(2, [3], [[4]]);
+     *
+     * console.log(wrapped.value());
+     * // => [1, 2, 3, [4]]
+     *
+     * console.log(array);
+     * // => [1]
+     */
+    var wrapperConcat = restParam(function(values) {
+      values = baseFlatten(values);
+      return this.thru(function(array) {
+        return arrayConcat(isArray(array) ? array : [toObject(array)], values);
+      });
+    });
 
     /**
      * Creates a clone of the chained sequence planting `value` as the wrapped value.
@@ -29000,17 +29782,17 @@ return jQuery;
      * @example
      *
      * var array = [1, 2];
-     * var wrapper = _(array).map(function(value) {
+     * var wrapped = _(array).map(function(value) {
      *   return Math.pow(value, 2);
      * });
      *
      * var other = [3, 4];
-     * var otherWrapper = wrapper.plant(other);
+     * var otherWrapped = wrapped.plant(other);
      *
-     * otherWrapper.value();
+     * otherWrapped.value();
      * // => [9, 16]
      *
-     * wrapper.value();
+     * wrapped.value();
      * // => [1, 4]
      */
     function wrapperPlant(value) {
@@ -29053,15 +29835,20 @@ return jQuery;
      */
     function wrapperReverse() {
       var value = this.__wrapped__;
+
+      var interceptor = function(value) {
+        return (wrapped && wrapped.__dir__ < 0) ? value : value.reverse();
+      };
       if (value instanceof LazyWrapper) {
+        var wrapped = value;
         if (this.__actions__.length) {
-          value = new LazyWrapper(this);
+          wrapped = new LazyWrapper(this);
         }
-        return new LodashWrapper(value.reverse(), this.__chain__);
+        wrapped = wrapped.reverse();
+        wrapped.__actions__.push({ 'func': thru, 'args': [interceptor], 'thisArg': undefined });
+        return new LodashWrapper(wrapped, this.__chain__);
       }
-      return this.thru(function(value) {
-        return value.reverse();
-      });
+      return this.thru(interceptor);
     }
 
     /**
@@ -29219,7 +30006,7 @@ return jQuery;
     function every(collection, predicate, thisArg) {
       var func = isArray(collection) ? arrayEvery : baseEvery;
       if (thisArg && isIterateeCall(collection, predicate, thisArg)) {
-        predicate = null;
+        predicate = undefined;
       }
       if (typeof predicate != 'function' || thisArg !== undefined) {
         predicate = getCallback(predicate, thisArg, 3);
@@ -29493,7 +30280,7 @@ return jQuery;
 
     /**
      * Checks if `value` is in `collection` using
-     * [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
      * for equality comparisons. If `fromIndex` is negative, it is used as the offset
      * from the end of `collection`.
      *
@@ -29526,17 +30313,14 @@ return jQuery;
         collection = values(collection);
         length = collection.length;
       }
-      if (!length) {
-        return false;
-      }
       if (typeof fromIndex != 'number' || (guard && isIterateeCall(target, fromIndex, guard))) {
         fromIndex = 0;
       } else {
         fromIndex = fromIndex < 0 ? nativeMax(length + fromIndex, 0) : (fromIndex || 0);
       }
       return (typeof collection == 'string' || !isArray(collection) && isString(collection))
-        ? (fromIndex < length && collection.indexOf(target, fromIndex) > -1)
-        : (getIndexOf(collection, target, fromIndex) > -1);
+        ? (fromIndex <= length && collection.indexOf(target, fromIndex) > -1)
+        : (!!length && getIndexOf(collection, target, fromIndex) > -1);
     }
 
     /**
@@ -29618,7 +30402,7 @@ return jQuery;
           result = isArrayLike(collection) ? Array(collection.length) : [];
 
       baseEach(collection, function(value) {
-        var func = isFunc ? path : ((isProp && value != null) ? value[path] : null);
+        var func = isFunc ? path : ((isProp && value != null) ? value[path] : undefined);
         result[++index] = func ? func.apply(value, args) : invokePath(value, path, args);
       });
       return result;
@@ -29788,7 +30572,8 @@ return jQuery;
      * `_.reduce`, `_.reduceRight`, and `_.transform`.
      *
      * The guarded methods are:
-     * `assign`, `defaults`, `includes`, `merge`, `sortByAll`, and `sortByOrder`
+     * `assign`, `defaults`, `defaultsDeep`, `includes`, `merge`, `sortByAll`,
+     * and `sortByOrder`
      *
      * @static
      * @memberOf _
@@ -30018,7 +30803,7 @@ return jQuery;
     function some(collection, predicate, thisArg) {
       var func = isArray(collection) ? arraySome : baseSome;
       if (thisArg && isIterateeCall(collection, predicate, thisArg)) {
-        predicate = null;
+        predicate = undefined;
       }
       if (typeof predicate != 'function' || thisArg !== undefined) {
         predicate = getCallback(predicate, thisArg, 3);
@@ -30079,7 +30864,7 @@ return jQuery;
         return [];
       }
       if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
-        iteratee = null;
+        iteratee = undefined;
       }
       var index = -1;
       iteratee = getCallback(iteratee, thisArg, 3);
@@ -30138,9 +30923,9 @@ return jQuery;
 
     /**
      * This method is like `_.sortByAll` except that it allows specifying the
-     * sort orders of the iteratees to sort by. A truthy value in `orders` will
-     * sort the corresponding property name in ascending order while a falsey
-     * value will sort it in descending order.
+     * sort orders of the iteratees to sort by. If `orders` is unspecified, all
+     * values are sorted in ascending order. Otherwise, a value is sorted in
+     * ascending order if its corresponding order is "asc", and descending if "desc".
      *
      * If a property name is provided for an iteratee the created `_.property`
      * style callback returns the property value of the given element.
@@ -30154,7 +30939,7 @@ return jQuery;
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
      * @param {Function[]|Object[]|string[]} iteratees The iteratees to sort by.
-     * @param {boolean[]} orders The sort orders of `iteratees`.
+     * @param {boolean[]} [orders] The sort orders of `iteratees`.
      * @param- {Object} [guard] Enables use as a callback for functions like `_.reduce`.
      * @returns {Array} Returns the new sorted array.
      * @example
@@ -30167,7 +30952,7 @@ return jQuery;
      * ];
      *
      * // sort by `user` in ascending order and by `age` in descending order
-     * _.map(_.sortByOrder(users, ['user', 'age'], [true, false]), _.values);
+     * _.map(_.sortByOrder(users, ['user', 'age'], ['asc', 'desc']), _.values);
      * // => [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 42]]
      */
     function sortByOrder(collection, iteratees, orders, guard) {
@@ -30175,7 +30960,7 @@ return jQuery;
         return [];
       }
       if (guard && isIterateeCall(iteratees, orders, guard)) {
-        orders = null;
+        orders = undefined;
       }
       if (!isArray(iteratees)) {
         iteratees = iteratees == null ? [] : [iteratees];
@@ -30300,10 +31085,10 @@ return jQuery;
      */
     function ary(func, n, guard) {
       if (guard && isIterateeCall(func, n, guard)) {
-        n = null;
+        n = undefined;
       }
       n = (func && n == null) ? func.length : nativeMax(+n || 0, 0);
-      return createWrapper(func, ARY_FLAG, null, null, null, null, n);
+      return createWrapper(func, ARY_FLAG, undefined, undefined, undefined, undefined, n);
     }
 
     /**
@@ -30338,7 +31123,7 @@ return jQuery;
           result = func.apply(this, arguments);
         }
         if (n <= 1) {
-          func = null;
+          func = undefined;
         }
         return result;
       };
@@ -30646,9 +31431,9 @@ return jQuery;
         var leading = true;
         trailing = false;
       } else if (isObject(options)) {
-        leading = options.leading;
+        leading = !!options.leading;
         maxWait = 'maxWait' in options && nativeMax(+options.maxWait || 0, wait);
-        trailing = 'trailing' in options ? options.trailing : trailing;
+        trailing = 'trailing' in options ? !!options.trailing : trailing;
       }
 
       function cancel() {
@@ -30658,41 +31443,35 @@ return jQuery;
         if (maxTimeoutId) {
           clearTimeout(maxTimeoutId);
         }
+        lastCalled = 0;
         maxTimeoutId = timeoutId = trailingCall = undefined;
+      }
+
+      function complete(isCalled, id) {
+        if (id) {
+          clearTimeout(id);
+        }
+        maxTimeoutId = timeoutId = trailingCall = undefined;
+        if (isCalled) {
+          lastCalled = now();
+          result = func.apply(thisArg, args);
+          if (!timeoutId && !maxTimeoutId) {
+            args = thisArg = undefined;
+          }
+        }
       }
 
       function delayed() {
         var remaining = wait - (now() - stamp);
         if (remaining <= 0 || remaining > wait) {
-          if (maxTimeoutId) {
-            clearTimeout(maxTimeoutId);
-          }
-          var isCalled = trailingCall;
-          maxTimeoutId = timeoutId = trailingCall = undefined;
-          if (isCalled) {
-            lastCalled = now();
-            result = func.apply(thisArg, args);
-            if (!timeoutId && !maxTimeoutId) {
-              args = thisArg = null;
-            }
-          }
+          complete(trailingCall, maxTimeoutId);
         } else {
           timeoutId = setTimeout(delayed, remaining);
         }
       }
 
       function maxDelayed() {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-        maxTimeoutId = timeoutId = trailingCall = undefined;
-        if (trailing || (maxWait !== wait)) {
-          lastCalled = now();
-          result = func.apply(thisArg, args);
-          if (!timeoutId && !maxTimeoutId) {
-            args = thisArg = null;
-          }
-        }
+        complete(trailing, timeoutId);
       }
 
       function debounced() {
@@ -30732,7 +31511,7 @@ return jQuery;
           result = func.apply(thisArg, args);
         }
         if (isCalled && !timeoutId && !maxTimeoutId) {
-          args = thisArg = null;
+          args = thisArg = undefined;
         }
         return result;
       }
@@ -30837,7 +31616,7 @@ return jQuery;
      *
      * **Note:** The cache is exposed as the `cache` property on the memoized
      * function. Its creation may be customized by replacing the `_.memoize.Cache`
-     * constructor with one whose instances implement the [`Map`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-properties-of-the-map-prototype-object)
+     * constructor with one whose instances implement the [`Map`](http://ecma-international.org/ecma-262/6.0/#sec-properties-of-the-map-prototype-object)
      * method interface of `get`, `has`, and `set`.
      *
      * @static
@@ -30897,6 +31676,52 @@ return jQuery;
       memoized.cache = new memoize.Cache;
       return memoized;
     }
+
+    /**
+     * Creates a function that runs each argument through a corresponding
+     * transform function.
+     *
+     * @static
+     * @memberOf _
+     * @category Function
+     * @param {Function} func The function to wrap.
+     * @param {...(Function|Function[])} [transforms] The functions to transform
+     * arguments, specified as individual functions or arrays of functions.
+     * @returns {Function} Returns the new function.
+     * @example
+     *
+     * function doubled(n) {
+     *   return n * 2;
+     * }
+     *
+     * function square(n) {
+     *   return n * n;
+     * }
+     *
+     * var modded = _.modArgs(function(x, y) {
+     *   return [x, y];
+     * }, square, doubled);
+     *
+     * modded(1, 2);
+     * // => [1, 4]
+     *
+     * modded(5, 10);
+     * // => [25, 20]
+     */
+    var modArgs = restParam(function(func, transforms) {
+      transforms = baseFlatten(transforms);
+      if (typeof func != 'function' || !arrayEvery(transforms, baseIsFunction)) {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      var length = transforms.length;
+      return restParam(function(args) {
+        var index = nativeMin(args.length, length);
+        while (index--) {
+          args[index] = transforms[index](args[index]);
+        }
+        return func.apply(this, args);
+      });
+    });
 
     /**
      * Creates a function that negates the result of the predicate `func`. The
@@ -31043,7 +31868,7 @@ return jQuery;
      * // => [3, 6, 9]
      */
     var rearg = restParam(function(func, indexes) {
-      return createWrapper(func, REARG_FLAG, null, null, null, baseFlatten(indexes));
+      return createWrapper(func, REARG_FLAG, undefined, undefined, undefined, baseFlatten(indexes));
     });
 
     /**
@@ -31189,10 +32014,7 @@ return jQuery;
         leading = 'leading' in options ? !!options.leading : leading;
         trailing = 'trailing' in options ? !!options.trailing : trailing;
       }
-      debounceOptions.leading = leading;
-      debounceOptions.maxWait = +wait;
-      debounceOptions.trailing = trailing;
-      return debounce(func, wait, debounceOptions);
+      return debounce(func, wait, { 'leading': leading, 'maxWait': +wait, 'trailing': trailing });
     }
 
     /**
@@ -31218,7 +32040,7 @@ return jQuery;
      */
     function wrap(value, wrapper) {
       wrapper = wrapper == null ? identity : wrapper;
-      return createWrapper(wrapper, PARTIAL_FLAG, null, [value], []);
+      return createWrapper(wrapper, PARTIAL_FLAG, undefined, [value], []);
     }
 
     /*------------------------------------------------------------------------*/
@@ -31404,7 +32226,8 @@ return jQuery;
      * // => false
      */
     function isArguments(value) {
-      return isObjectLike(value) && isArrayLike(value) && objToString.call(value) == argsTag;
+      return isObjectLike(value) && isArrayLike(value) &&
+        hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
     }
 
     /**
@@ -31484,14 +32307,7 @@ return jQuery;
      * // => false
      */
     function isElement(value) {
-      return !!value && value.nodeType === 1 && isObjectLike(value) &&
-        (objToString.call(value).indexOf('Element') > -1);
-    }
-    // Fallback for environments without DOM support.
-    if (!support.dom) {
-      isElement = function(value) {
-        return !!value && value.nodeType === 1 && isObjectLike(value) && !isPlainObject(value);
-      };
+      return !!value && value.nodeType === 1 && isObjectLike(value) && !isPlainObject(value);
     }
 
     /**
@@ -31606,7 +32422,7 @@ return jQuery;
     /**
      * Checks if `value` is a finite primitive number.
      *
-     * **Note:** This method is based on [`Number.isFinite`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.isfinite).
+     * **Note:** This method is based on [`Number.isFinite`](http://ecma-international.org/ecma-262/6.0/#sec-number.isfinite).
      *
      * @static
      * @memberOf _
@@ -31630,9 +32446,9 @@ return jQuery;
      * _.isFinite(Infinity);
      * // => false
      */
-    var isFinite = nativeNumIsFinite || function(value) {
+    function isFinite(value) {
       return typeof value == 'number' && nativeIsFinite(value);
-    };
+    }
 
     /**
      * Checks if `value` is classified as a `Function` object.
@@ -31650,12 +32466,12 @@ return jQuery;
      * _.isFunction(/abc/);
      * // => false
      */
-    var isFunction = !(baseIsFunction(/x/) || (Uint8Array && !baseIsFunction(Uint8Array))) ? baseIsFunction : function(value) {
+    function isFunction(value) {
       // The use of `Object#toString` avoids issues with the `typeof` operator
       // in older versions of Chrome and Safari which return 'function' for regexes
       // and Safari 8 equivalents which return 'object' for typed array constructors.
-      return objToString.call(value) == funcTag;
-    };
+      return isObject(value) && objToString.call(value) == funcTag;
+    }
 
     /**
      * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
@@ -31779,7 +32595,7 @@ return jQuery;
       if (value == null) {
         return false;
       }
-      if (objToString.call(value) == funcTag) {
+      if (isFunction(value)) {
         return reIsNative.test(fnToString.call(value));
       }
       return isObjectLike(value) && reIsHostCtor.test(value);
@@ -31861,17 +32677,26 @@ return jQuery;
      * _.isPlainObject(Object.create(null));
      * // => true
      */
-    var isPlainObject = !getPrototypeOf ? shimIsPlainObject : function(value) {
-      if (!(value && objToString.call(value) == objectTag)) {
+    function isPlainObject(value) {
+      var Ctor;
+
+      // Exit early for non `Object` objects.
+      if (!(isObjectLike(value) && objToString.call(value) == objectTag && !isArguments(value)) ||
+          (!hasOwnProperty.call(value, 'constructor') && (Ctor = value.constructor, typeof Ctor == 'function' && !(Ctor instanceof Ctor)))) {
         return false;
       }
-      var valueOf = getNative(value, 'valueOf'),
-          objProto = valueOf && (objProto = getPrototypeOf(valueOf)) && getPrototypeOf(objProto);
-
-      return objProto
-        ? (value == objProto || getPrototypeOf(value) == objProto)
-        : shimIsPlainObject(value);
-    };
+      // IE < 9 iterates inherited properties before own properties. If the first
+      // iterated property is an object's own property then there are no inherited
+      // enumerable properties.
+      var result;
+      // In most environments an object's own properties are iterated before
+      // its inherited properties. If the last iterated property is an object's
+      // own property then there are no inherited enumerable properties.
+      baseForIn(value, function(subValue, key) {
+        result = key;
+      });
+      return result === undefined || hasOwnProperty.call(value, result);
+    }
 
     /**
      * Checks if `value` is classified as a `RegExp` object.
@@ -31890,7 +32715,7 @@ return jQuery;
      * // => false
      */
     function isRegExp(value) {
-      return isObjectLike(value) && objToString.call(value) == regexpTag;
+      return isObject(value) && objToString.call(value) == regexpTag;
     }
 
     /**
@@ -32057,6 +32882,56 @@ return jQuery;
     /*------------------------------------------------------------------------*/
 
     /**
+     * Recursively merges own enumerable properties of the source object(s), that
+     * don't resolve to `undefined` into the destination object. Subsequent sources
+     * overwrite property assignments of previous sources. If `customizer` is
+     * provided it is invoked to produce the merged values of the destination and
+     * source properties. If `customizer` returns `undefined` merging is handled
+     * by the method instead. The `customizer` is bound to `thisArg` and invoked
+     * with five arguments: (objectValue, sourceValue, key, object, source).
+     *
+     * @static
+     * @memberOf _
+     * @category Object
+     * @param {Object} object The destination object.
+     * @param {...Object} [sources] The source objects.
+     * @param {Function} [customizer] The function to customize assigned values.
+     * @param {*} [thisArg] The `this` binding of `customizer`.
+     * @returns {Object} Returns `object`.
+     * @example
+     *
+     * var users = {
+     *   'data': [{ 'user': 'barney' }, { 'user': 'fred' }]
+     * };
+     *
+     * var ages = {
+     *   'data': [{ 'age': 36 }, { 'age': 40 }]
+     * };
+     *
+     * _.merge(users, ages);
+     * // => { 'data': [{ 'user': 'barney', 'age': 36 }, { 'user': 'fred', 'age': 40 }] }
+     *
+     * // using a customizer callback
+     * var object = {
+     *   'fruits': ['apple'],
+     *   'vegetables': ['beet']
+     * };
+     *
+     * var other = {
+     *   'fruits': ['banana'],
+     *   'vegetables': ['carrot']
+     * };
+     *
+     * _.merge(object, other, function(a, b) {
+     *   if (_.isArray(a)) {
+     *     return a.concat(b);
+     *   }
+     * });
+     * // => { 'fruits': ['apple', 'banana'], 'vegetables': ['beet', 'carrot'] }
+     */
+    var merge = createAssigner(baseMerge);
+
+    /**
      * Assigns own enumerable properties of source object(s) to the destination
      * object. Subsequent sources overwrite property assignments of previous sources.
      * If `customizer` is provided it is invoked to produce the assigned values.
@@ -32064,7 +32939,7 @@ return jQuery;
      * (objectValue, sourceValue, key, object, source).
      *
      * **Note:** This method mutates `object` and is based on
-     * [`Object.assign`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.assign).
+     * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
      *
      * @static
      * @memberOf _
@@ -32131,7 +33006,7 @@ return jQuery;
     function create(prototype, properties, guard) {
       var result = baseCreate(prototype);
       if (guard && isIterateeCall(prototype, properties, guard)) {
-        properties = null;
+        properties = undefined;
       }
       return properties ? baseAssign(result, properties) : result;
     }
@@ -32154,14 +33029,27 @@ return jQuery;
      * _.defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
      * // => { 'user': 'barney', 'age': 36 }
      */
-    var defaults = restParam(function(args) {
-      var object = args[0];
-      if (object == null) {
-        return object;
-      }
-      args.push(assignDefaults);
-      return assign.apply(undefined, args);
-    });
+    var defaults = createDefaults(assign, assignDefaults);
+
+    /**
+     * This method is like `_.defaults` except that it recursively assigns
+     * default properties.
+     *
+     * **Note:** This method mutates `object`.
+     *
+     * @static
+     * @memberOf _
+     * @category Object
+     * @param {Object} object The destination object.
+     * @param {...Object} [sources] The source objects.
+     * @returns {Object} Returns `object`.
+     * @example
+     *
+     * _.defaultsDeep({ 'user': { 'name': 'barney' } }, { 'user': { 'name': 'fred', 'age': 36 } });
+     * // => { 'user': { 'name': 'barney', 'age': 36 } }
+     *
+     */
+    var defaultsDeep = createDefaults(merge, mergeDefaults);
 
     /**
      * This method is like `_.find` except that it returns the key of the first
@@ -32488,7 +33376,7 @@ return jQuery;
      */
     function invert(object, multiValue, guard) {
       if (guard && isIterateeCall(object, multiValue, guard)) {
-        multiValue = null;
+        multiValue = undefined;
       }
       var index = -1,
           props = keys(object),
@@ -32517,7 +33405,7 @@ return jQuery;
      * Creates an array of the own enumerable property names of `object`.
      *
      * **Note:** Non-object values are coerced to objects. See the
-     * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.keys)
+     * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
      * for more details.
      *
      * @static
@@ -32541,7 +33429,7 @@ return jQuery;
      * // => ['0', '1']
      */
     var keys = !nativeKeys ? shimKeys : function(object) {
-      var Ctor = object == null ? null : object.constructor;
+      var Ctor = object == null ? undefined : object.constructor;
       if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
           (typeof object != 'function' && isArrayLike(object))) {
         return shimKeys(object);
@@ -32664,56 +33552,6 @@ return jQuery;
      * // => { 'fred': 40, 'pebbles': 1 } (iteration order is not guaranteed)
      */
     var mapValues = createObjectMapper();
-
-    /**
-     * Recursively merges own enumerable properties of the source object(s), that
-     * don't resolve to `undefined` into the destination object. Subsequent sources
-     * overwrite property assignments of previous sources. If `customizer` is
-     * provided it is invoked to produce the merged values of the destination and
-     * source properties. If `customizer` returns `undefined` merging is handled
-     * by the method instead. The `customizer` is bound to `thisArg` and invoked
-     * with five arguments: (objectValue, sourceValue, key, object, source).
-     *
-     * @static
-     * @memberOf _
-     * @category Object
-     * @param {Object} object The destination object.
-     * @param {...Object} [sources] The source objects.
-     * @param {Function} [customizer] The function to customize assigned values.
-     * @param {*} [thisArg] The `this` binding of `customizer`.
-     * @returns {Object} Returns `object`.
-     * @example
-     *
-     * var users = {
-     *   'data': [{ 'user': 'barney' }, { 'user': 'fred' }]
-     * };
-     *
-     * var ages = {
-     *   'data': [{ 'age': 36 }, { 'age': 40 }]
-     * };
-     *
-     * _.merge(users, ages);
-     * // => { 'data': [{ 'user': 'barney', 'age': 36 }, { 'user': 'fred', 'age': 40 }] }
-     *
-     * // using a customizer callback
-     * var object = {
-     *   'fruits': ['apple'],
-     *   'vegetables': ['beet']
-     * };
-     *
-     * var other = {
-     *   'fruits': ['banana'],
-     *   'vegetables': ['carrot']
-     * };
-     *
-     * _.merge(object, other, function(a, b) {
-     *   if (_.isArray(a)) {
-     *     return a.concat(b);
-     *   }
-     * });
-     * // => { 'fruits': ['apple', 'banana'], 'vegetables': ['beet', 'carrot'] }
-     */
-    var merge = createAssigner(baseMerge);
 
     /**
      * The opposite of `_.pick`; this method creates an object composed of the
@@ -32945,7 +33783,7 @@ return jQuery;
           if (isArr) {
             accumulator = isArray(object) ? new Ctor : [];
           } else {
-            accumulator = baseCreate(isFunction(Ctor) ? Ctor.prototype : null);
+            accumulator = baseCreate(isFunction(Ctor) ? Ctor.prototype : undefined);
           }
         } else {
           accumulator = {};
@@ -33048,7 +33886,7 @@ return jQuery;
      */
     function inRange(value, start, end) {
       start = +start || 0;
-      if (typeof end === 'undefined') {
+      if (end === undefined) {
         end = start;
         start = 0;
       } else {
@@ -33086,7 +33924,7 @@ return jQuery;
      */
     function random(min, max, floating) {
       if (floating && isIterateeCall(min, max, floating)) {
-        max = floating = null;
+        max = floating = undefined;
       }
       var noMin = min == null,
           noMax = max == null;
@@ -33273,8 +34111,8 @@ return jQuery;
     function escapeRegExp(string) {
       string = baseToString(string);
       return (string && reHasRegExpChars.test(string))
-        ? string.replace(reRegExpChars, '\\$&')
-        : string;
+        ? string.replace(reRegExpChars, escapeRegExpChar)
+        : (string || '(?:)');
     }
 
     /**
@@ -33331,8 +34169,8 @@ return jQuery;
         return string;
       }
       var mid = (length - strLength) / 2,
-          leftLength = floor(mid),
-          rightLength = ceil(mid);
+          leftLength = nativeFloor(mid),
+          rightLength = nativeCeil(mid);
 
       chars = createPadding('', rightLength, chars);
       return chars.slice(0, leftLength) + string + chars;
@@ -33410,25 +34248,16 @@ return jQuery;
      * // => [6, 8, 10]
      */
     function parseInt(string, radix, guard) {
-      if (guard && isIterateeCall(string, radix, guard)) {
+      // Firefox < 21 and Opera < 15 follow ES3 for `parseInt`.
+      // Chrome fails to trim leading <BOM> whitespace characters.
+      // See https://code.google.com/p/v8/issues/detail?id=3109 for more details.
+      if (guard ? isIterateeCall(string, radix, guard) : radix == null) {
         radix = 0;
+      } else if (radix) {
+        radix = +radix;
       }
-      return nativeParseInt(string, radix);
-    }
-    // Fallback for environments with pre-ES5 implementations.
-    if (nativeParseInt(whitespace + '08') != 8) {
-      parseInt = function(string, radix, guard) {
-        // Firefox < 21 and Opera < 15 follow ES3 for `parseInt`.
-        // Chrome fails to trim leading <BOM> whitespace characters.
-        // See https://code.google.com/p/v8/issues/detail?id=3109 for more details.
-        if (guard ? isIterateeCall(string, radix, guard) : radix == null) {
-          radix = 0;
-        } else if (radix) {
-          radix = +radix;
-        }
-        string = trim(string);
-        return nativeParseInt(string, radix || (reHasHexPrefix.test(string) ? 16 : 10));
-      };
+      string = trim(string);
+      return nativeParseInt(string, radix || (reHasHexPrefix.test(string) ? 16 : 10));
     }
 
     /**
@@ -33464,7 +34293,7 @@ return jQuery;
         if (n % 2) {
           result += string;
         }
-        n = floor(n / 2);
+        n = nativeFloor(n / 2);
         string += string;
       } while (n);
 
@@ -33649,7 +34478,7 @@ return jQuery;
       var settings = lodash.templateSettings;
 
       if (otherOptions && isIterateeCall(string, options, otherOptions)) {
-        options = otherOptions = null;
+        options = otherOptions = undefined;
       }
       string = baseToString(string);
       options = assignWith(baseAssign({}, otherOptions || options), settings, assignOwnDefaults);
@@ -33885,7 +34714,7 @@ return jQuery;
      */
     function trunc(string, options, guard) {
       if (guard && isIterateeCall(string, options, guard)) {
-        options = null;
+        options = undefined;
       }
       var length = DEFAULT_TRUNC_LENGTH,
           omission = DEFAULT_TRUNC_OMISSION;
@@ -33980,7 +34809,7 @@ return jQuery;
      */
     function words(string, pattern, guard) {
       if (guard && isIterateeCall(string, pattern, guard)) {
-        pattern = null;
+        pattern = undefined;
       }
       string = baseToString(string);
       return string.match(pattern || reWords) || [];
@@ -34056,7 +34885,7 @@ return jQuery;
      */
     function callback(func, thisArg, guard) {
       if (guard && isIterateeCall(func, thisArg, guard)) {
-        thisArg = null;
+        thisArg = undefined;
       }
       return isObjectLike(func)
         ? matches(func)
@@ -34257,8 +35086,8 @@ return jQuery;
     function mixin(object, source, options) {
       if (options == null) {
         var isObj = isObject(source),
-            props = isObj ? keys(source) : null,
-            methodNames = (props && props.length) ? baseFunctions(source, props) : null;
+            props = isObj ? keys(source) : undefined,
+            methodNames = (props && props.length) ? baseFunctions(source, props) : undefined;
 
         if (!(methodNames ? methodNames.length : isObj)) {
           methodNames = false;
@@ -34297,9 +35126,7 @@ return jQuery;
                 result.__chain__ = chainAll;
                 return result;
               }
-              var args = [this.value()];
-              push.apply(args, arguments);
-              return func.apply(object, args);
+              return func.apply(object, arrayPush([this.value()], arguments));
             };
           }(func));
         }
@@ -34320,7 +35147,7 @@ return jQuery;
      * var lodash = _.noConflict();
      */
     function noConflict() {
-      context._ = oldDash;
+      root._ = oldDash;
       return this;
     }
 
@@ -34429,7 +35256,7 @@ return jQuery;
      */
     function range(start, end, step) {
       if (step && isIterateeCall(start, end, step)) {
-        end = step = null;
+        end = step = undefined;
       }
       start = +start || 0;
       step = step == null ? 1 : (+step || 0);
@@ -34443,7 +35270,7 @@ return jQuery;
       // Use `Array(length)` so engines like Chakra and V8 avoid slower modes.
       // See https://youtu.be/XAqIpGU8ZZk#t=17m25s for more details.
       var index = -1,
-          length = nativeMax(ceil((end - start) / (step || 1)), 0),
+          length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
           result = Array(length);
 
       while (++index < length) {
@@ -34481,7 +35308,7 @@ return jQuery;
      * // => also invokes `mage.castSpell(n)` three times
      */
     function times(n, iteratee, thisArg) {
-      n = floor(n);
+      n = nativeFloor(n);
 
       // Exit early to avoid a JSC JIT bug in Safari 8
       // where `Array(0)` is treated as `Array(1)`.
@@ -34542,6 +35369,50 @@ return jQuery;
     function add(augend, addend) {
       return (+augend || 0) + (+addend || 0);
     }
+
+    /**
+     * Calculates `n` rounded up to `precision`.
+     *
+     * @static
+     * @memberOf _
+     * @category Math
+     * @param {number} n The number to round up.
+     * @param {number} [precision=0] The precision to round up to.
+     * @returns {number} Returns the rounded up number.
+     * @example
+     *
+     * _.ceil(4.006);
+     * // => 5
+     *
+     * _.ceil(6.004, 2);
+     * // => 6.01
+     *
+     * _.ceil(6040, -2);
+     * // => 6100
+     */
+    var ceil = createRound('ceil');
+
+    /**
+     * Calculates `n` rounded down to `precision`.
+     *
+     * @static
+     * @memberOf _
+     * @category Math
+     * @param {number} n The number to round down.
+     * @param {number} [precision=0] The precision to round down to.
+     * @returns {number} Returns the rounded down number.
+     * @example
+     *
+     * _.floor(4.006);
+     * // => 4
+     *
+     * _.floor(0.046, 2);
+     * // => 0.04
+     *
+     * _.floor(4060, -2);
+     * // => 4000
+     */
+    var floor = createRound('floor');
 
     /**
      * Gets the maximum value of `collection`. If `collection` is empty or falsey
@@ -34642,6 +35513,28 @@ return jQuery;
     var min = createExtremum(lt, POSITIVE_INFINITY);
 
     /**
+     * Calculates `n` rounded to `precision`.
+     *
+     * @static
+     * @memberOf _
+     * @category Math
+     * @param {number} n The number to round.
+     * @param {number} [precision=0] The precision to round to.
+     * @returns {number} Returns the rounded number.
+     * @example
+     *
+     * _.round(4.006);
+     * // => 4
+     *
+     * _.round(4.006, 2);
+     * // => 4.01
+     *
+     * _.round(4060, -2);
+     * // => 4100
+     */
+    var round = createRound('round');
+
+    /**
      * Gets the sum of the values in `collection`.
      *
      * @static
@@ -34675,17 +35568,11 @@ return jQuery;
      */
     function sum(collection, iteratee, thisArg) {
       if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
-        iteratee = null;
+        iteratee = undefined;
       }
-      var callback = getCallback(),
-          noIteratee = iteratee == null;
-
-      if (!(noIteratee && callback === baseCallback)) {
-        noIteratee = false;
-        iteratee = callback(iteratee, thisArg, 3);
-      }
-      return noIteratee
-        ? arraySum(isArray(collection) ? collection : toIterable(collection))
+      iteratee = getCallback(iteratee, thisArg, 3);
+      return iteratee.length == 1
+        ? arraySum(isArray(collection) ? collection : toIterable(collection), iteratee)
         : baseSum(collection, iteratee);
     }
 
@@ -34732,6 +35619,7 @@ return jQuery;
     lodash.curryRight = curryRight;
     lodash.debounce = debounce;
     lodash.defaults = defaults;
+    lodash.defaultsDeep = defaultsDeep;
     lodash.defer = defer;
     lodash.delay = delay;
     lodash.difference = difference;
@@ -34770,6 +35658,7 @@ return jQuery;
     lodash.method = method;
     lodash.methodOf = methodOf;
     lodash.mixin = mixin;
+    lodash.modArgs = modArgs;
     lodash.negate = negate;
     lodash.omit = omit;
     lodash.once = once;
@@ -34845,6 +35734,7 @@ return jQuery;
     lodash.attempt = attempt;
     lodash.camelCase = camelCase;
     lodash.capitalize = capitalize;
+    lodash.ceil = ceil;
     lodash.clone = clone;
     lodash.cloneDeep = cloneDeep;
     lodash.deburr = deburr;
@@ -34860,6 +35750,7 @@ return jQuery;
     lodash.findLastKey = findLastKey;
     lodash.findWhere = findWhere;
     lodash.first = first;
+    lodash.floor = floor;
     lodash.get = get;
     lodash.gt = gt;
     lodash.gte = gte;
@@ -34908,6 +35799,7 @@ return jQuery;
     lodash.reduceRight = reduceRight;
     lodash.repeat = repeat;
     lodash.result = result;
+    lodash.round = round;
     lodash.runInContext = runInContext;
     lodash.size = size;
     lodash.snakeCase = snakeCase;
@@ -34978,48 +35870,20 @@ return jQuery;
       lodash[methodName].placeholder = lodash;
     });
 
-    // Add `LazyWrapper` methods that accept an `iteratee` value.
-    arrayEach(['dropWhile', 'filter', 'map', 'takeWhile'], function(methodName, type) {
-      var isFilter = type != LAZY_MAP_FLAG,
-          isDropWhile = type == LAZY_DROP_WHILE_FLAG;
-
-      LazyWrapper.prototype[methodName] = function(iteratee, thisArg) {
-        var filtered = this.__filtered__,
-            result = (filtered && isDropWhile) ? new LazyWrapper(this) : this.clone(),
-            iteratees = result.__iteratees__ || (result.__iteratees__ = []);
-
-        iteratees.push({
-          'done': false,
-          'count': 0,
-          'index': 0,
-          'iteratee': getCallback(iteratee, thisArg, 1),
-          'limit': -1,
-          'type': type
-        });
-
-        result.__filtered__ = filtered || isFilter;
-        return result;
-      };
-    });
-
     // Add `LazyWrapper` methods for `_.drop` and `_.take` variants.
     arrayEach(['drop', 'take'], function(methodName, index) {
-      var whileName = methodName + 'While';
-
       LazyWrapper.prototype[methodName] = function(n) {
-        var filtered = this.__filtered__,
-            result = (filtered && !index) ? this.dropWhile() : this.clone();
+        var filtered = this.__filtered__;
+        if (filtered && !index) {
+          return new LazyWrapper(this);
+        }
+        n = n == null ? 1 : nativeMax(nativeFloor(n) || 0, 0);
 
-        n = n == null ? 1 : nativeMax(floor(n) || 0, 0);
+        var result = this.clone();
         if (filtered) {
-          if (index) {
-            result.__takeCount__ = nativeMin(result.__takeCount__, n);
-          } else {
-            last(result.__iteratees__).limit = n;
-          }
+          result.__takeCount__ = nativeMin(result.__takeCount__, n);
         } else {
-          var views = result.__views__ || (result.__views__ = []);
-          views.push({ 'size': n, 'type': methodName + (result.__dir__ < 0 ? 'Right' : '') });
+          result.__views__.push({ 'size': n, 'type': methodName + (result.__dir__ < 0 ? 'Right' : '') });
         }
         return result;
       };
@@ -35027,9 +35891,18 @@ return jQuery;
       LazyWrapper.prototype[methodName + 'Right'] = function(n) {
         return this.reverse()[methodName](n).reverse();
       };
+    });
 
-      LazyWrapper.prototype[methodName + 'RightWhile'] = function(predicate, thisArg) {
-        return this.reverse()[whileName](predicate, thisArg).reverse();
+    // Add `LazyWrapper` methods that accept an `iteratee` value.
+    arrayEach(['filter', 'map', 'takeWhile'], function(methodName, index) {
+      var type = index + 1,
+          isFilter = type != LAZY_MAP_FLAG;
+
+      LazyWrapper.prototype[methodName] = function(iteratee, thisArg) {
+        var result = this.clone();
+        result.__iteratees__.push({ 'iteratee': getCallback(iteratee, thisArg, 1), 'type': type });
+        result.__filtered__ = result.__filtered__ || isFilter;
+        return result;
       };
     });
 
@@ -35047,7 +35920,7 @@ return jQuery;
       var dropName = 'drop' + (index ? '' : 'Right');
 
       LazyWrapper.prototype[methodName] = function() {
-        return this[dropName](1);
+        return this.__filtered__ ? new LazyWrapper(this) : this[dropName](1);
       };
     });
 
@@ -35076,10 +35949,13 @@ return jQuery;
       start = start == null ? 0 : (+start || 0);
 
       var result = this;
+      if (result.__filtered__ && (start > 0 || end < 0)) {
+        return new LazyWrapper(result);
+      }
       if (start < 0) {
-        result = this.takeRight(-start);
+        result = result.takeRight(-start);
       } else if (start) {
-        result = this.drop(start);
+        result = result.drop(start);
       }
       if (end !== undefined) {
         end = (+end || 0);
@@ -35088,21 +35964,25 @@ return jQuery;
       return result;
     };
 
+    LazyWrapper.prototype.takeRightWhile = function(predicate, thisArg) {
+      return this.reverse().takeWhile(predicate, thisArg).reverse();
+    };
+
     LazyWrapper.prototype.toArray = function() {
-      return this.drop(0);
+      return this.take(POSITIVE_INFINITY);
     };
 
     // Add `LazyWrapper` methods to `lodash.prototype`.
     baseForOwn(LazyWrapper.prototype, function(func, methodName) {
-      var lodashFunc = lodash[methodName];
+      var checkIteratee = /^(?:filter|map|reject)|While$/.test(methodName),
+          retUnwrapped = /^(?:first|last)$/.test(methodName),
+          lodashFunc = lodash[retUnwrapped ? ('take' + (methodName == 'last' ? 'Right' : '')) : methodName];
+
       if (!lodashFunc) {
         return;
       }
-      var checkIteratee = /^(?:filter|map|reject)|While$/.test(methodName),
-          retUnwrapped = /^(?:first|last)$/.test(methodName);
-
       lodash.prototype[methodName] = function() {
-        var args = arguments,
+        var args = retUnwrapped ? [1] : arguments,
             chainAll = this.__chain__,
             value = this.__wrapped__,
             isHybrid = !!this.__actions__.length,
@@ -35111,28 +35991,30 @@ return jQuery;
             useLazy = isLazy || isArray(value);
 
         if (useLazy && checkIteratee && typeof iteratee == 'function' && iteratee.length != 1) {
-          // avoid lazy use if the iteratee has a "length" value other than `1`
+          // Avoid lazy use if the iteratee has a "length" value other than `1`.
           isLazy = useLazy = false;
         }
-        var onlyLazy = isLazy && !isHybrid;
-        if (retUnwrapped && !chainAll) {
-          return onlyLazy
-            ? func.call(value)
-            : lodashFunc.call(lodash, this.value());
-        }
         var interceptor = function(value) {
-          var otherArgs = [value];
-          push.apply(otherArgs, args);
-          return lodashFunc.apply(lodash, otherArgs);
+          return (retUnwrapped && chainAll)
+            ? lodashFunc(value, 1)[0]
+            : lodashFunc.apply(undefined, arrayPush([value], args));
         };
-        if (useLazy) {
-          var wrapper = onlyLazy ? value : new LazyWrapper(this),
-              result = func.apply(wrapper, args);
 
-          if (!retUnwrapped && (isHybrid || result.__actions__)) {
-            var actions = result.__actions__ || (result.__actions__ = []);
-            actions.push({ 'func': thru, 'args': [interceptor], 'thisArg': lodash });
+        var action = { 'func': thru, 'args': [interceptor], 'thisArg': undefined },
+            onlyLazy = isLazy && !isHybrid;
+
+        if (retUnwrapped && !chainAll) {
+          if (onlyLazy) {
+            value = value.clone();
+            value.__actions__.push(action);
+            return func.call(value);
           }
+          return lodashFunc.call(undefined, this.value())[0];
+        }
+        if (!retUnwrapped && useLazy) {
+          value = onlyLazy ? value : new LazyWrapper(this);
+          var result = func.apply(value, args);
+          result.__actions__.push(action);
           return new LodashWrapper(result, chainAll);
         }
         return this.thru(interceptor);
@@ -35140,7 +36022,7 @@ return jQuery;
     });
 
     // Add `Array` and `String` methods to `lodash.prototype`.
-    arrayEach(['concat', 'join', 'pop', 'push', 'replace', 'shift', 'sort', 'splice', 'split', 'unshift'], function(methodName) {
+    arrayEach(['join', 'pop', 'push', 'replace', 'shift', 'sort', 'splice', 'split', 'unshift'], function(methodName) {
       var func = (/^(?:replace|split)$/.test(methodName) ? stringProto : arrayProto)[methodName],
           chainName = /^(?:push|sort|unshift)$/.test(methodName) ? 'tap' : 'thru',
           retUnwrapped = /^(?:join|pop|replace|shift)$/.test(methodName);
@@ -35167,7 +36049,7 @@ return jQuery;
       }
     });
 
-    realNames[createHybridWrapper(null, BIND_KEY_FLAG).name] = [{ 'name': 'wrapper', 'func': null }];
+    realNames[createHybridWrapper(undefined, BIND_KEY_FLAG).name] = [{ 'name': 'wrapper', 'func': undefined }];
 
     // Add functions to the lazy wrapper.
     LazyWrapper.prototype.clone = lazyClone;
@@ -35177,6 +36059,7 @@ return jQuery;
     // Add chaining functions to the `lodash` wrapper.
     lodash.prototype.chain = wrapperChain;
     lodash.prototype.commit = wrapperCommit;
+    lodash.prototype.concat = wrapperConcat;
     lodash.prototype.plant = wrapperPlant;
     lodash.prototype.reverse = wrapperReverse;
     lodash.prototype.toString = wrapperToString;
@@ -35238,13 +36121,13 @@ return jQuery;
 /*global define: false Mustache: true*/
 
 (function defineMustache (global, factory) {
-  if (typeof exports === 'object' && exports) {
+  if (typeof exports === 'object' && exports && typeof exports.nodeName !== 'string') {
     factory(exports); // CommonJS
   } else if (typeof define === 'function' && define.amd) {
     define(['exports'], factory); // AMD
   } else {
     global.Mustache = {};
-    factory(Mustache); // script, wsh, asp
+    factory(global.Mustache); // script, wsh, asp
   }
 }(this, function mustacheFactory (mustache) {
 
@@ -35255,6 +36138,14 @@ return jQuery;
 
   function isFunction (object) {
     return typeof object === 'function';
+  }
+
+  /**
+   * More correct typeof string handling array
+   * which normally returns typeof 'object'
+   */
+  function typeStr (obj) {
+    return isArray(obj) ? 'array' : typeof obj;
   }
 
   function escapeRegExp (string) {
@@ -35287,11 +36178,13 @@ return jQuery;
     '>': '&gt;',
     '"': '&quot;',
     "'": '&#39;',
-    '/': '&#x2F;'
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
   };
 
   function escapeHtml (string) {
-    return String(string).replace(/[&<>"'\/]/g, function fromEntityMap (s) {
+    return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap (s) {
       return entityMap[s];
     });
   }
@@ -35491,19 +36384,19 @@ return jQuery;
       token = tokens[i];
 
       switch (token[0]) {
-      case '#':
-      case '^':
-        collector.push(token);
-        sections.push(token);
-        collector = token[4] = [];
-        break;
-      case '/':
-        section = sections.pop();
-        section[5] = token[2];
-        collector = sections.length > 0 ? sections[sections.length - 1][4] : nestedTokens;
-        break;
-      default:
-        collector.push(token);
+        case '#':
+        case '^':
+          collector.push(token);
+          sections.push(token);
+          collector = token[4] = [];
+          break;
+        case '/':
+          section = sections.pop();
+          section[5] = token[2];
+          collector = sections.length > 0 ? sections[sections.length - 1][4] : nestedTokens;
+          break;
+        default:
+          collector.push(token);
       }
     }
 
@@ -35553,16 +36446,16 @@ return jQuery;
     var index = this.tail.search(re), match;
 
     switch (index) {
-    case -1:
-      match = this.tail;
-      this.tail = '';
-      break;
-    case 0:
-      match = '';
-      break;
-    default:
-      match = this.tail.substring(0, index);
-      this.tail = this.tail.substring(index);
+      case -1:
+        match = this.tail;
+        this.tail = '';
+        break;
+      case 0:
+        match = '';
+        break;
+      default:
+        match = this.tail.substring(0, index);
+        this.tail = this.tail.substring(index);
     }
 
     this.pos += match.length;
@@ -35789,7 +36682,7 @@ return jQuery;
   };
 
   mustache.name = 'mustache.js';
-  mustache.version = '2.1.2';
+  mustache.version = '2.3.0';
   mustache.tags = [ '{{', '}}' ];
 
   // All high-level mustache.* functions use this writer.
@@ -35816,6 +36709,12 @@ return jQuery;
    * default writer.
    */
   mustache.render = function render (template, view, partials) {
+    if (typeof template !== 'string') {
+      throw new TypeError('Invalid template! Template should be a "string" ' +
+                          'but "' + typeStr(template) + '" was given as the first ' +
+                          'argument for mustache#render(template, view, partials)');
+    }
+
     return defaultWriter.render(template, view, partials);
   };
 
@@ -35842,6 +36741,7 @@ return jQuery;
   mustache.Context = Context;
   mustache.Writer = Writer;
 
+  return mustache;
 }));
 
 },{}],26:[function(require,module,exports){
@@ -35941,11 +36841,11 @@ function truncate(string, length, suffix, terminal) {
 },{}],27:[function(require,module,exports){
 /*!
  * ZeroClipboard
- * The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.
- * Copyright (c) 2009-2014 Jon Rohan, James M. Greene
+ * The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface
+ * Copyright (c) 2009-2016 Jon Rohan, James M. Greene
  * Licensed MIT
  * http://zeroclipboard.org/
- * v2.2.0
+ * v2.3.0
  */
 (function(window, undefined) {
   "use strict";
@@ -35953,7 +36853,7 @@ function truncate(string, length, suffix, terminal) {
  * Store references to critically important global functions that may be
  * overridden on certain web pages.
  */
-  var _window = window, _document = _window.document, _navigator = _window.navigator, _setTimeout = _window.setTimeout, _clearTimeout = _window.clearTimeout, _setInterval = _window.setInterval, _clearInterval = _window.clearInterval, _getComputedStyle = _window.getComputedStyle, _encodeURIComponent = _window.encodeURIComponent, _ActiveXObject = _window.ActiveXObject, _Error = _window.Error, _parseInt = _window.Number.parseInt || _window.parseInt, _parseFloat = _window.Number.parseFloat || _window.parseFloat, _isNaN = _window.Number.isNaN || _window.isNaN, _now = _window.Date.now, _keys = _window.Object.keys, _defineProperty = _window.Object.defineProperty, _hasOwn = _window.Object.prototype.hasOwnProperty, _slice = _window.Array.prototype.slice, _unwrap = function() {
+  var _window = window, _document = _window.document, _navigator = _window.navigator, _setTimeout = _window.setTimeout, _clearTimeout = _window.clearTimeout, _setInterval = _window.setInterval, _clearInterval = _window.clearInterval, _getComputedStyle = _window.getComputedStyle, _encodeURIComponent = _window.encodeURIComponent, _ActiveXObject = _window.ActiveXObject, _Error = _window.Error, _parseInt = _window.Number.parseInt || _window.parseInt, _parseFloat = _window.Number.parseFloat || _window.parseFloat, _isNaN = _window.Number.isNaN || _window.isNaN, _now = _window.Date.now, _keys = _window.Object.keys, _hasOwn = _window.Object.prototype.hasOwnProperty, _slice = _window.Array.prototype.slice, _unwrap = function() {
     var unwrapper = function(el) {
       return el;
     };
@@ -36161,7 +37061,7 @@ function truncate(string, length, suffix, terminal) {
     if (scripts.length === 1) {
       return scripts[0].src || undefined;
     }
-    if ("readyState" in scripts[0]) {
+    if ("readyState" in (scripts[0] || document.createElement("script"))) {
       for (i = scripts.length; i--; ) {
         if (scripts[i].readyState === "interactive" && (jsPath = scripts[i].src)) {
           return jsPath;
@@ -36213,12 +37113,28 @@ function truncate(string, length, suffix, terminal) {
     return jsDir + "ZeroClipboard.swf";
   };
   /**
+ * Is the client's operating system some version of Windows?
+ *
+ * @returns Boolean
+ * @private
+ */
+  var _isWindows = function() {
+    var isWindowsRegex = /win(dows|[\s]?(nt|me|ce|xp|vista|[\d]+))/i;
+    return !!_navigator && (isWindowsRegex.test(_navigator.appVersion || "") || isWindowsRegex.test(_navigator.platform || "") || (_navigator.userAgent || "").indexOf("Windows") !== -1);
+  };
+  /**
  * Keep track of if the page is framed (in an `iframe`). This can never change.
  * @private
  */
   var _pageIsFramed = function() {
-    return window.opener == null && (!!window.top && window != window.top || !!window.parent && window != window.parent);
+    return _window.opener == null && (!!_window.top && _window != _window.top || !!_window.parent && _window != _window.parent);
   }();
+  /**
+ * Keep track of if the page is XHTML (vs. HTML), which requires that everything
+ * be rendering in XML mode.
+ * @private
+ */
+  var _pageIsXhtml = _document.documentElement.nodeName === "html";
   /**
  * Keep track of the state of the Flash object.
  * @private
@@ -36227,9 +37143,10 @@ function truncate(string, length, suffix, terminal) {
     bridge: null,
     version: "0.0.0",
     pluginType: "unknown",
+    sandboxed: null,
     disabled: null,
     outdated: null,
-    sandboxed: null,
+    insecure: null,
     unavailable: null,
     degraded: null,
     deactivated: null,
@@ -36288,9 +37205,10 @@ function truncate(string, length, suffix, terminal) {
   var _eventMessages = {
     ready: "Flash communication is established",
     error: {
+      "flash-sandboxed": "Attempting to run Flash in a sandboxed iframe, which is impossible",
       "flash-disabled": "Flash is disabled or not installed. May also be attempting to run Flash in a sandboxed iframe, which is impossible.",
       "flash-outdated": "Flash is too outdated to support ZeroClipboard",
-      "flash-sandboxed": "Attempting to run Flash in a sandboxed iframe, which is impossible",
+      "flash-insecure": "Flash will be unable to communicate due to a protocol mismatch between your `swfPath` configuration and the page",
       "flash-unavailable": "Flash is unable to communicate bidirectionally with JavaScript",
       "flash-degraded": "Flash is unable to preserve data fidelity when communicating with JavaScript",
       "flash-deactivated": "Flash is too outdated for your browser and/or is configured as click-to-activate.\nThis may also mean that the ZeroClipboard SWF object could not be loaded, so please check your `swfPath` configuration and/or network connectivity.\nMay also be attempting to run Flash in a sandboxed iframe, which is impossible.",
@@ -36298,7 +37216,8 @@ function truncate(string, length, suffix, terminal) {
       "version-mismatch": "ZeroClipboard JS version number does not match ZeroClipboard SWF version number",
       "clipboard-error": "At least one error was thrown while ZeroClipboard was attempting to inject your data into the clipboard",
       "config-mismatch": "ZeroClipboard configuration does not match Flash's reality",
-      "swf-not-found": "The ZeroClipboard SWF object could not be loaded, so please check your `swfPath` configuration and/or network connectivity"
+      "swf-not-found": "The ZeroClipboard SWF object could not be loaded, so please check your `swfPath` configuration and/or network connectivity",
+      "browser-unsupported": "The browser does not support the required HTML DOM and JavaScript features"
     }
   };
   /**
@@ -36312,7 +37231,7 @@ function truncate(string, length, suffix, terminal) {
  * variable's property values being updated.
  * @private
  */
-  var _flashStateErrorNames = [ "flash-disabled", "flash-outdated", "flash-sandboxed", "flash-unavailable", "flash-degraded", "flash-deactivated", "flash-overdue" ];
+  var _flashStateErrorNames = [ "flash-sandboxed", "flash-disabled", "flash-outdated", "flash-insecure", "flash-unavailable", "flash-degraded", "flash-deactivated", "flash-overdue" ];
   /**
  * A RegExp to match the `name` property of `error` events related to Flash.
  * @private
@@ -36325,7 +37244,9 @@ function truncate(string, length, suffix, terminal) {
  * which is enabled.
  * @private
  */
-  var _flashStateEnabledErrorNameMatchingRegex = new RegExp("^flash-(" + _flashStateErrorNames.slice(1).map(function(errorName) {
+  var _flashStateEnabledErrorNameMatchingRegex = new RegExp("^flash-(" + _flashStateErrorNames.filter(function(errorName) {
+    return errorName !== "flash-disabled";
+  }).map(function(errorName) {
     return errorName.replace(/^flash-/, "");
   }).join("|") + ")$");
   /**
@@ -36334,12 +37255,13 @@ function truncate(string, length, suffix, terminal) {
  */
   var _globalConfig = {
     swfPath: _getDefaultSwfPath(),
-    trustedDomains: window.location.host ? [ window.location.host ] : [],
+    trustedDomains: _window.location.host ? [ _window.location.host ] : [],
     cacheBust: true,
     forceEnhancedClipboard: false,
     flashLoadTimeout: 3e4,
     autoActivate: true,
     bubbleEvents: true,
+    fixLineEndings: true,
     containerId: "global-zeroclipboard-html-bridge",
     containerClass: "global-zeroclipboard-container",
     swfObjectId: "global-zeroclipboard-flash-bridge",
@@ -36354,24 +37276,22 @@ function truncate(string, length, suffix, terminal) {
  * @private
  */
   var _config = function(options) {
-    if (typeof options === "object" && options !== null) {
-      for (var prop in options) {
-        if (_hasOwn.call(options, prop)) {
-          if (/^(?:forceHandCursor|title|zIndex|bubbleEvents)$/.test(prop)) {
-            _globalConfig[prop] = options[prop];
-          } else if (_flashState.bridge == null) {
-            if (prop === "containerId" || prop === "swfObjectId") {
-              if (_isValidHtml4Id(options[prop])) {
-                _globalConfig[prop] = options[prop];
-              } else {
-                throw new Error("The specified `" + prop + "` value is not valid as an HTML4 Element ID");
-              }
-            } else {
+    if (typeof options === "object" && options && !("length" in options)) {
+      _keys(options).forEach(function(prop) {
+        if (/^(?:forceHandCursor|title|zIndex|bubbleEvents|fixLineEndings)$/.test(prop)) {
+          _globalConfig[prop] = options[prop];
+        } else if (_flashState.bridge == null) {
+          if (prop === "containerId" || prop === "swfObjectId") {
+            if (_isValidHtml4Id(options[prop])) {
               _globalConfig[prop] = options[prop];
+            } else {
+              throw new Error("The specified `" + prop + "` value is not valid as an HTML4 Element ID");
             }
+          } else {
+            _globalConfig[prop] = options[prop];
           }
         }
-      }
+      });
     }
     if (typeof options === "string" && options) {
       if (_hasOwn.call(_globalConfig, options)) {
@@ -36388,7 +37308,9 @@ function truncate(string, length, suffix, terminal) {
   var _state = function() {
     _detectSandbox();
     return {
-      browser: _pick(_navigator, [ "userAgent", "platform", "appName" ]),
+      browser: _extend(_pick(_navigator, [ "userAgent", "platform", "appName", "appVersion" ]), {
+        isSupported: _isBrowserSupported()
+      }),
       flash: _omit(_flashState, [ "bridge" ]),
       zeroclipboard: {
         version: ZeroClipboard.version,
@@ -36397,11 +37319,18 @@ function truncate(string, length, suffix, terminal) {
     };
   };
   /**
+ * Does this browser support all of the necessary DOM and JS features necessary?
+ * @private
+ */
+  var _isBrowserSupported = function() {
+    return !!(_document.addEventListener && _window.Object.keys && _window.Array.prototype.map);
+  };
+  /**
  * The underlying implementation of `ZeroClipboard.isFlashUnusable`.
  * @private
  */
   var _isFlashUnusable = function() {
-    return !!(_flashState.disabled || _flashState.outdated || _flashState.sandboxed || _flashState.unavailable || _flashState.degraded || _flashState.deactivated);
+    return !!(_flashState.sandboxed || _flashState.disabled || _flashState.outdated || _flashState.unavailable || _flashState.degraded || _flashState.deactivated);
   };
   /**
  * The underlying implementation of `ZeroClipboard.on`.
@@ -36411,14 +37340,15 @@ function truncate(string, length, suffix, terminal) {
     var i, len, events, added = {};
     if (typeof eventType === "string" && eventType) {
       events = eventType.toLowerCase().split(/\s+/);
-    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
-      for (i in eventType) {
-        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-          ZeroClipboard.on(i, eventType[i]);
+    } else if (typeof eventType === "object" && eventType && !("length" in eventType) && typeof listener === "undefined") {
+      _keys(eventType).forEach(function(key) {
+        var listener = eventType[key];
+        if (typeof listener === "function") {
+          ZeroClipboard.on(key, listener);
         }
-      }
+      });
     }
-    if (events && events.length) {
+    if (events && events.length && listener) {
       for (i = 0, len = events.length; i < len; i++) {
         eventType = events[i].replace(/^on/, "");
         added[eventType] = true;
@@ -36433,6 +37363,12 @@ function truncate(string, length, suffix, terminal) {
         });
       }
       if (added.error) {
+        if (!_isBrowserSupported()) {
+          ZeroClipboard.emit({
+            type: "error",
+            name: "browser-unsupported"
+          });
+        }
         for (i = 0, len = _flashStateErrorNames.length; i < len; i++) {
           if (_flashState[_flashStateErrorNames[i].replace(/^flash-/, "")] === true) {
             ZeroClipboard.emit({
@@ -36463,17 +37399,18 @@ function truncate(string, length, suffix, terminal) {
     if (arguments.length === 0) {
       events = _keys(_handlers);
     } else if (typeof eventType === "string" && eventType) {
-      events = eventType.split(/\s+/);
-    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
-      for (i in eventType) {
-        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-          ZeroClipboard.off(i, eventType[i]);
+      events = eventType.toLowerCase().split(/\s+/);
+    } else if (typeof eventType === "object" && eventType && !("length" in eventType) && typeof listener === "undefined") {
+      _keys(eventType).forEach(function(key) {
+        var listener = eventType[key];
+        if (typeof listener === "function") {
+          ZeroClipboard.off(key, listener);
         }
-      }
+      });
     }
     if (events && events.length) {
       for (i = 0, len = events.length; i < len; i++) {
-        eventType = events[i].toLowerCase().replace(/^on/, "");
+        eventType = events[i].replace(/^on/, "");
         perEventHandlers = _handlers[eventType];
         if (perEventHandlers && perEventHandlers.length) {
           if (listener) {
@@ -36532,11 +37469,27 @@ function truncate(string, length, suffix, terminal) {
     return returnVal;
   };
   /**
+ * Get the protocol of the configured SWF path.
+ * @private
+ */
+  var _getSwfPathProtocol = function() {
+    var swfPath = _globalConfig.swfPath || "", swfPathFirstTwoChars = swfPath.slice(0, 2), swfProtocol = swfPath.slice(0, swfPath.indexOf("://") + 1);
+    return swfPathFirstTwoChars === "\\\\" ? "file:" : swfPathFirstTwoChars === "//" || swfProtocol === "" ? _window.location.protocol : swfProtocol;
+  };
+  /**
  * The underlying implementation of `ZeroClipboard.create`.
  * @private
  */
   var _create = function() {
-    var previousState = _flashState.sandboxed;
+    var maxWait, swfProtocol, previousState = _flashState.sandboxed;
+    if (!_isBrowserSupported()) {
+      _flashState.ready = false;
+      ZeroClipboard.emit({
+        type: "error",
+        name: "browser-unsupported"
+      });
+      return;
+    }
     _detectSandbox();
     if (typeof _flashState.ready !== "boolean") {
       _flashState.ready = false;
@@ -36548,22 +37501,30 @@ function truncate(string, length, suffix, terminal) {
         name: "flash-sandboxed"
       });
     } else if (!ZeroClipboard.isFlashUnusable() && _flashState.bridge === null) {
-      var maxWait = _globalConfig.flashLoadTimeout;
-      if (typeof maxWait === "number" && maxWait >= 0) {
-        _flashCheckTimeout = _setTimeout(function() {
-          if (typeof _flashState.deactivated !== "boolean") {
-            _flashState.deactivated = true;
-          }
-          if (_flashState.deactivated === true) {
-            ZeroClipboard.emit({
-              type: "error",
-              name: "flash-deactivated"
-            });
-          }
-        }, maxWait);
+      swfProtocol = _getSwfPathProtocol();
+      if (swfProtocol && swfProtocol !== _window.location.protocol) {
+        ZeroClipboard.emit({
+          type: "error",
+          name: "flash-insecure"
+        });
+      } else {
+        maxWait = _globalConfig.flashLoadTimeout;
+        if (typeof maxWait === "number" && maxWait >= 0) {
+          _flashCheckTimeout = _setTimeout(function() {
+            if (typeof _flashState.deactivated !== "boolean") {
+              _flashState.deactivated = true;
+            }
+            if (_flashState.deactivated === true) {
+              ZeroClipboard.emit({
+                type: "error",
+                name: "flash-deactivated"
+              });
+            }
+          }, maxWait);
+        }
+        _flashState.overdue = false;
+        _embedSwf();
       }
-      _flashState.overdue = false;
-      _embedSwf();
     }
   };
   /**
@@ -36594,7 +37555,7 @@ function truncate(string, length, suffix, terminal) {
     }
     for (var dataFormat in dataObj) {
       if (typeof dataFormat === "string" && dataFormat && _hasOwn.call(dataObj, dataFormat) && typeof dataObj[dataFormat] === "string" && dataObj[dataFormat]) {
-        _clipData[dataFormat] = dataObj[dataFormat];
+        _clipData[dataFormat] = _fixLineEndings(dataObj[dataFormat]);
       }
     }
   };
@@ -36730,6 +37691,12 @@ function truncate(string, length, suffix, terminal) {
       if (_flashStateEnabledErrorNameMatchingRegex.test(event.name)) {
         _extend(event, {
           version: _flashState.version
+        });
+      }
+      if (event.name === "flash-insecure") {
+        _extend(event, {
+          pageProtocol: _window.location.protocol,
+          swfProtocol: _getSwfPathProtocol()
         });
       }
     }
@@ -36887,10 +37854,21 @@ function truncate(string, length, suffix, terminal) {
       if (typeof isSandboxed === "boolean") {
         _flashState.sandboxed = isSandboxed;
       }
-      if (_flashStateErrorNames.indexOf(event.name) !== -1) {
+      if (event.name === "browser-unsupported") {
+        _extend(_flashState, {
+          disabled: false,
+          outdated: false,
+          unavailable: false,
+          degraded: false,
+          deactivated: false,
+          overdue: false,
+          ready: false
+        });
+      } else if (_flashStateErrorNames.indexOf(event.name) !== -1) {
         _extend(_flashState, {
           disabled: event.name === "flash-disabled",
           outdated: event.name === "flash-outdated",
+          insecure: event.name === "flash-insecure",
           unavailable: event.name === "flash-unavailable",
           degraded: event.name === "flash-degraded",
           deactivated: event.name === "flash-deactivated",
@@ -36902,6 +37880,7 @@ function truncate(string, length, suffix, terminal) {
         _extend(_flashState, {
           disabled: false,
           outdated: false,
+          insecure: false,
           unavailable: false,
           degraded: false,
           deactivated: false,
@@ -36916,9 +37895,10 @@ function truncate(string, length, suffix, terminal) {
       _zcSwfVersion = event.swfVersion;
       var wasDeactivated = _flashState.deactivated === true;
       _extend(_flashState, {
+        sandboxed: false,
         disabled: false,
         outdated: false,
-        sandboxed: false,
+        insecure: false,
         unavailable: false,
         degraded: false,
         deactivated: false,
@@ -37134,6 +38114,36 @@ function truncate(string, length, suffix, terminal) {
     return htmlBridge || null;
   };
   /**
+ *
+ * @private
+ */
+  var _escapeXmlValue = function(val) {
+    if (typeof val !== "string" || !val) {
+      return val;
+    }
+    return val.replace(/["&'<>]/g, function(chr) {
+      switch (chr) {
+       case '"':
+        return "&quot;";
+
+       case "&":
+        return "&amp;";
+
+       case "'":
+        return "&apos;";
+
+       case "<":
+        return "&lt;";
+
+       case ">":
+        return "&gt;";
+
+       default:
+        return chr;
+      }
+    });
+  };
+  /**
  * Create the SWF object.
  *
  * @returns The SWF object reference.
@@ -37148,6 +38158,9 @@ function truncate(string, length, suffix, terminal) {
         jsVersion: ZeroClipboard.version
       }, _globalConfig));
       var swfUrl = _globalConfig.swfPath + _cacheBust(_globalConfig.swfPath, _globalConfig);
+      if (_pageIsXhtml) {
+        swfUrl = _escapeXmlValue(swfUrl);
+      }
       container = _createHtmlBridge();
       var divToBeReplaced = _document.createElement("div");
       container.appendChild(divToBeReplaced);
@@ -37214,6 +38227,7 @@ function truncate(string, length, suffix, terminal) {
       _flashState.ready = null;
       _flashState.bridge = null;
       _flashState.deactivated = null;
+      _flashState.insecure = null;
       _zcSwfVersion = undefined;
     }
   };
@@ -37461,18 +38475,15 @@ function truncate(string, length, suffix, terminal) {
       classNames = value.split(/\s+/);
     }
     if (element && element.nodeType === 1 && classNames.length > 0) {
-      if (element.classList) {
-        for (c = 0, cl = classNames.length; c < cl; c++) {
-          element.classList.add(classNames[c]);
+      className = (" " + (element.className || "") + " ").replace(/[\t\r\n\f]/g, " ");
+      for (c = 0, cl = classNames.length; c < cl; c++) {
+        if (className.indexOf(" " + classNames[c] + " ") === -1) {
+          className += classNames[c] + " ";
         }
-      } else if (element.hasOwnProperty("className")) {
-        className = " " + element.className + " ";
-        for (c = 0, cl = classNames.length; c < cl; c++) {
-          if (className.indexOf(" " + classNames[c] + " ") === -1) {
-            className += classNames[c] + " ";
-          }
-        }
-        element.className = className.replace(/^\s+|\s+$/g, "");
+      }
+      className = className.replace(/^\s+|\s+$/g, "");
+      if (className !== element.className) {
+        element.className = className;
       }
     }
     return element;
@@ -37489,16 +38500,15 @@ function truncate(string, length, suffix, terminal) {
       classNames = value.split(/\s+/);
     }
     if (element && element.nodeType === 1 && classNames.length > 0) {
-      if (element.classList && element.classList.length > 0) {
-        for (c = 0, cl = classNames.length; c < cl; c++) {
-          element.classList.remove(classNames[c]);
-        }
-      } else if (element.className) {
-        className = (" " + element.className + " ").replace(/[\r\n\t]/g, " ");
+      if (element.className) {
+        className = (" " + element.className + " ").replace(/[\t\r\n\f]/g, " ");
         for (c = 0, cl = classNames.length; c < cl; c++) {
           className = className.replace(" " + classNames[c] + " ", " ");
         }
-        element.className = className.replace(/^\s+|\s+$/g, "");
+        className = className.replace(/^\s+|\s+$/g, "");
+        if (className !== element.className) {
+          element.className = className;
+        }
       }
     }
     return element;
@@ -37567,6 +38577,9 @@ function truncate(string, length, suffix, terminal) {
       return false;
     }
     var styles = _getComputedStyle(el, null);
+    if (!styles) {
+      return false;
+    }
     var hasCssHeight = _parseFloat(styles.height) > 0;
     var hasCssWidth = _parseFloat(styles.width) > 0;
     var hasCssTop = _parseFloat(styles.top) >= 0;
@@ -37641,6 +38654,25 @@ function truncate(string, length, suffix, terminal) {
     return typeof zIndex === "number" ? zIndex : "auto";
   };
   /**
+ * Ensure OS-compliant line endings, i.e. "\r\n" on Windows, "\n" elsewhere
+ *
+ * @returns string
+ * @private
+ */
+  var _fixLineEndings = function(content) {
+    var replaceRegex = /(\r\n|\r|\n)/g;
+    if (typeof content === "string" && _globalConfig.fixLineEndings === true) {
+      if (_isWindows()) {
+        if (/((^|[^\r])\n|\r([^\n]|$))/.test(content)) {
+          content = content.replace(replaceRegex, "\r\n");
+        }
+      } else if (/\r/.test(content)) {
+        content = content.replace(replaceRegex, "\n");
+      }
+    }
+    return content;
+  };
+  /**
  * Attempt to detect if ZeroClipboard is executing inside of a sandboxed iframe.
  * If it is, Flash Player cannot be used, so ZeroClipboard is dead in the water.
  *
@@ -37648,7 +38680,7 @@ function truncate(string, length, suffix, terminal) {
  * @see {@link https://github.com/zeroclipboard/zeroclipboard/issues/511}
  * @see {@link http://zeroclipboard.org/test-iframes.html}
  *
- * @returns `true` (is sandboxed), `false` (is not sandboxed), or `null` (uncertain) 
+ * @returns `true` (is sandboxed), `false` (is not sandboxed), or `null` (uncertain)
  * @private
  */
   var _detectSandbox = function(doNotReassessFlashSupport) {
@@ -37793,12 +38825,7 @@ function truncate(string, length, suffix, terminal) {
  * @readonly
  * @property {string}
  */
-  _defineProperty(ZeroClipboard, "version", {
-    value: "2.2.0",
-    writable: false,
-    configurable: true,
-    enumerable: true
-  });
+  ZeroClipboard.version = "2.3.0";
   /**
  * Update or get a copy of the ZeroClipboard global configuration.
  * Returns a copy of the current/updated configuration.
@@ -37955,7 +38982,8 @@ function truncate(string, length, suffix, terminal) {
  *   _clientMeta[client.id] = {
  *     instance: client,
  *     elements: [],
- *     handlers: {}
+ *     handlers: {},
+ *     coreWildcardHandler: function(event) { return client.emit(event); }
  *   };
  */
   var _clientMeta = {};
@@ -37994,19 +39022,21 @@ function truncate(string, length, suffix, terminal) {
  * @private
  */
   var _clientConstructor = function(elements) {
-    var client = this;
+    var meta, client = this;
     client.id = "" + _clientIdCounter++;
-    _clientMeta[client.id] = {
+    meta = {
       instance: client,
       elements: [],
-      handlers: {}
+      handlers: {},
+      coreWildcardHandler: function(event) {
+        return client.emit(event);
+      }
     };
+    _clientMeta[client.id] = meta;
     if (elements) {
       client.clip(elements);
     }
-    ZeroClipboard.on("*", function(event) {
-      return client.emit(event);
-    });
+    ZeroClipboard.on("*", meta.coreWildcardHandler);
     ZeroClipboard.on("destroy", function() {
       client.destroy();
     });
@@ -38017,20 +39047,21 @@ function truncate(string, length, suffix, terminal) {
  * @private
  */
   var _clientOn = function(eventType, listener) {
-    var i, len, events, added = {}, meta = _clientMeta[this.id], handlers = meta && meta.handlers;
+    var i, len, events, added = {}, client = this, meta = _clientMeta[client.id], handlers = meta && meta.handlers;
     if (!meta) {
       throw new Error("Attempted to add new listener(s) to a destroyed ZeroClipboard client instance");
     }
     if (typeof eventType === "string" && eventType) {
       events = eventType.toLowerCase().split(/\s+/);
-    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
-      for (i in eventType) {
-        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-          this.on(i, eventType[i]);
+    } else if (typeof eventType === "object" && eventType && !("length" in eventType) && typeof listener === "undefined") {
+      _keys(eventType).forEach(function(key) {
+        var listener = eventType[key];
+        if (typeof listener === "function") {
+          client.on(key, listener);
         }
-      }
+      });
     }
-    if (events && events.length) {
+    if (events && events.length && listener) {
       for (i = 0, len = events.length; i < len; i++) {
         eventType = events[i].replace(/^on/, "");
         added[eventType] = true;
@@ -38066,27 +39097,28 @@ function truncate(string, length, suffix, terminal) {
         }
       }
     }
-    return this;
+    return client;
   };
   /**
  * The underlying implementation of `ZeroClipboard.Client.prototype.off`.
  * @private
  */
   var _clientOff = function(eventType, listener) {
-    var i, len, foundIndex, events, perEventHandlers, meta = _clientMeta[this.id], handlers = meta && meta.handlers;
+    var i, len, foundIndex, events, perEventHandlers, client = this, meta = _clientMeta[client.id], handlers = meta && meta.handlers;
     if (!handlers) {
-      return this;
+      return client;
     }
     if (arguments.length === 0) {
       events = _keys(handlers);
     } else if (typeof eventType === "string" && eventType) {
       events = eventType.split(/\s+/);
-    } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
-      for (i in eventType) {
-        if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-          this.off(i, eventType[i]);
+    } else if (typeof eventType === "object" && eventType && !("length" in eventType) && typeof listener === "undefined") {
+      _keys(eventType).forEach(function(key) {
+        var listener = eventType[key];
+        if (typeof listener === "function") {
+          client.off(key, listener);
         }
-      }
+      });
     }
     if (events && events.length) {
       for (i = 0, len = events.length; i < len; i++) {
@@ -38105,7 +39137,7 @@ function truncate(string, length, suffix, terminal) {
         }
       }
     }
-    return this;
+    return client;
   };
   /**
  * The underlying implementation of `ZeroClipboard.Client.prototype.handlers`.
@@ -38127,16 +39159,17 @@ function truncate(string, length, suffix, terminal) {
  * @private
  */
   var _clientEmit = function(event) {
-    if (_clientShouldEmit.call(this, event)) {
+    var eventCopy, client = this;
+    if (_clientShouldEmit.call(client, event)) {
       if (typeof event === "object" && event && typeof event.type === "string" && event.type) {
         event = _extend({}, event);
       }
-      var eventCopy = _extend({}, _createEvent(event), {
-        client: this
+      eventCopy = _extend({}, _createEvent(event), {
+        client: client
       });
-      _clientDispatchCallbacks.call(this, eventCopy);
+      _clientDispatchCallbacks.call(client, eventCopy);
     }
-    return this;
+    return client;
   };
   /**
  * The underlying implementation of `ZeroClipboard.Client.prototype.clip`.
@@ -38218,11 +39251,13 @@ function truncate(string, length, suffix, terminal) {
  * @private
  */
   var _clientDestroy = function() {
-    if (!_clientMeta[this.id]) {
+    var meta = _clientMeta[this.id];
+    if (!meta) {
       return;
     }
     this.unclip();
     this.off();
+    ZeroClipboard.off("*", meta.coreWildcardHandler);
     delete _clientMeta[this.id];
   };
   /**
@@ -38521,6 +39556,5 @@ function truncate(string, length, suffix, terminal) {
   return this || window;
 }());
 },{}]},{},[5])
-
 
 //# sourceMappingURL=bundle.js.map
