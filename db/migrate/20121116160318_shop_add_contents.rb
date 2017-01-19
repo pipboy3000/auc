@@ -1,4 +1,4 @@
-class ShopAddContents < ActiveRecord::Migration
+class ShopAddContents < ActiveRecord::Migration[4.2]
   def up
     change_table :shops do |t|
       t.rename :contents, :contents1
@@ -6,7 +6,6 @@ class ShopAddContents < ActiveRecord::Migration
     (2..9).each do |i|
       add_column :shops, "contents#{i}".to_sym, :string
     end
-
   end
 
   def down

@@ -14,7 +14,7 @@ class ShopTest < Test::Unit::TestCase
 
   test 'shop name should be uniq' do
     s = Shop.new
-    s.name = "Shop 1"
+    s.name = 'Shop 1'
     s.contents1 = 'aa'
     assert !s.valid?
   end
