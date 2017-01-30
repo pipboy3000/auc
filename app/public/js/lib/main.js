@@ -1,14 +1,14 @@
-window.jQuery     = require('jquery');
-var _             = require('lodash');
-var Bacon         = require('baconjs');
-var mustache      = require('mustache');
-var ZeroClipboard = require('zeroclipboard');
-var Util          = require('./util');
-var Auc           = require('./auc');
-var AucList       = require('./auclist');
-var AucInfo       = require('./aucinfo');
-var AucCSV        = require('./auccsv');
-var vw            = require('visualwidth');
+window.jQuery = require('jquery');
+var _         = require('lodash');
+var Bacon     = require('baconjs');
+var mustache  = require('mustache');
+var Clipboard = require('clipboard');
+var Util      = require('./util');
+var Auc       = require('./auc');
+var AucList   = require('./auclist');
+var AucInfo   = require('./aucinfo');
+var AucCSV    = require('./auccsv');
+var vw        = require('visualwidth');
 require('bootstrap');
 require('../vendor/jquery.minicolors');
 
@@ -280,26 +280,27 @@ $(function() {
   $('.color-picker').minicolors({ theme: 'bootstrap' });
 
   /**
-   * ZeroClipboard
+   * Clipboard
    */
-  ZeroClipboard.config({swfPath: '/ZeroClipboard.swf'});
-  var $copyButton = $('.copy-button');
+  let clipboard = new Clipboard('.copy-button', {
+    text: () => {
+      return auc.render()
+    }
+  });
+
+  clipboard.on('success', e => {
+    $copyButton.tooltip('show');
+  });
+
+  let $copyButton = $('.copy-button');
   $copyButton
     .tooltip({
-      title: "Copy!!!",
+      title: 'Copy!!!!',
       trigger: 'manual'
     })
     .on('shown.bs.tooltip', () => {
       setTimeout(() => $copyButton.tooltip('hide'), 1000);
-    });
-
-  var zeroclip = new ZeroClipboard($copyButton);
-  zeroclip.on('copy', e => {
-    var clipboard = e.clipboardData;
-    var htmlsource = auc.render();
-    clipboard.setData('text/plain', htmlsource);
-    $copyButton.tooltip('show');
-  });
+    })
 
   /**
    * 昨日分のデータをlocalStorageから削除
