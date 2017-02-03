@@ -242,6 +242,7 @@ class AucCSV {
     data[1]  = auc.category;
     data[2]  = `"${auc.shohin_title}"`;
     data[3]  = `"${detail}"`;
+    data[5]  = auc.keyword;
     data[9]  = auc.term;
     data[15] = auc.payment;
     data[16] = auc.tax;

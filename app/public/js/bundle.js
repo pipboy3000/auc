@@ -279,6 +279,7 @@ var AucCSV = (function () {
       data[1] = auc.category;
       data[2] = '"' + auc.shohin_title + '"';
       data[3] = '"' + detail + '"';
+      data[5] = auc.keyword;
       data[9] = auc.term;
       data[15] = auc.payment;
       data[16] = auc.tax;
@@ -669,7 +670,7 @@ require('../vendor/jquery.minicolors');
     var $itemList = $('#item-list .content');
 
     function renderLists(items) {
-      var template = '\n  <div class="panel panel-default">\n    <div class="panel-heading">\n      <b>{{shohin_title}}</b>\n      <div class="pull-right">\n        <small>{{tmpl_date}}</small>\n        <a href="#" data-uuid="{{uuid}}" class="btn btn-danger btn-xs">削除</a>\n      </div>\n    </div>\n    <div class="panel-body">{{{shohin_detail}}}</div>\n    <table class="table">\n      <tr>\n        <th>カテゴリID</th>\n        <th>画像数</th>\n        <th>消費税</th>\n        <th>決済方法</th>\n        <th>開催期間</th>\n      </tr>\n      <tr>\n        <td>{{category}}</td>\n        <td>{{attachments.length}}</td>\n        <td>{{tax}}</td>\n        <td>{{payment}}</td>\n        <td>{{term}}日</td>\n      </tr>\n      <tr>\n        <th colspan="2">店舗</th>\n        <th>カラー</th>\n        <th>HTMLテンプレート</th>\n        <th>テキストテンプレート</th>\n      </tr>\n      <tr>\n        <td colspan="2">{{shop.name}}</td>\n        <td>{{color.name}}</td>\n        <td>{{html_template.name}}</td>\n        <td>{{text_template.name}}</td>\n      </tr>\n    </table>\n  </div>\n    ';
+      var template = '\n  <div class="panel panel-default">\n    <div class="panel-heading">\n      <b>{{shohin_title}}</b>\n      <div class="pull-right">\n        <small>{{tmpl_date}}</small>\n        <a href="#" data-uuid="{{uuid}}" class="btn btn-danger btn-xs">削除</a>\n      </div>\n    </div>\n    <div class="panel-body">{{{shohin_detail}}}</div>\n    <table class="table">\n      <tr>\n        <th>カテゴリID</th>\n        <th>画像数</th>\n        <th>消費税</th>\n        <th>決済方法</th>\n        <th>開催期間</th>\n      </tr>\n      <tr>\n        <td>{{category}}</td>\n        <td>{{attachments.length}}</td>\n        <td>{{tax}}</td>\n        <td>{{payment}}</td>\n        <td>{{term}}日</td>\n      </tr>\n      <tr>\n        <th>店舗</th>\n        <th>カラー</th>\n        <th>HTMLテンプレート</th>\n        <th>テキストテンプレート</th>\n        <th>商品検索用キーワード</th>\n      </tr>\n      <tr>\n        <td>{{shop.name}}</td>\n        <td>{{color.name}}</td>\n        <td>{{html_template.name}}</td>\n        <td>{{text_template.name}}</td>\n        <td>{{keyword}}</td>\n      </tr>\n    </table>\n  </div>\n    ';
       $itemList.empty();
       items.forEach(function (item) {
         item.__proto__ = Auc.prototype;
@@ -753,6 +754,10 @@ require('../vendor/jquery.minicolors');
 
     var inputCategory = inputValue($('#input #category'), 'keyup').map(function (val) {
       return auc.category = val;
+    });
+
+    var inputKeyword = inputValue($('#input #keyword'), 'keyup').map(function (val) {
+      return auc.keyword = val;
     });
 
     /**
@@ -954,8 +959,16 @@ require('../vendor/jquery.minicolors');
       return vw.width(val) <= 130;
     }).assign(inputTitleWrap, 'removeClass', 'has-error');
 
+    var inputKeywordWrap = $('#keyword').parents('.form-group');
+    inputKeyword.filter(function (val) {
+      return vw.width(val) > 40;
+    }).assign(inputKeywordWrap, 'addClass', 'has-error');
+    inputKeyword.filter(function (val) {
+      return vw.width(val) <= 40;
+    }).assign(inputKeywordWrap, 'removeClass', 'has-error');
+
     // 入力されたらプレビュー更新
-    var inputs = Bacon.mergeAll(inputClear, inputTitle, inputTitleBlur, inputDetail, inputCategory, addItemStream);
+    var inputs = Bacon.mergeAll(inputClear, inputTitle, inputTitleBlur, inputDetail, inputCategory, inputKeyword, addItemStream);
     var inputBus = new Bacon.Bus();
     inputBus.plug(inputs);
     inputBus.onValue(updatePreview);

@@ -237,16 +237,18 @@ $(function() {
         <td>{{term}}日</td>
       </tr>
       <tr>
-        <th colspan="2">店舗</th>
+        <th>店舗</th>
         <th>カラー</th>
         <th>HTMLテンプレート</th>
         <th>テキストテンプレート</th>
+        <th>商品検索用キーワード</th>
       </tr>
       <tr>
-        <td colspan="2">{{shop.name}}</td>
+        <td>{{shop.name}}</td>
         <td>{{color.name}}</td>
         <td>{{html_template.name}}</td>
         <td>{{text_template.name}}</td>
+        <td>{{keyword}}</td>
       </tr>
     </table>
   </div>
@@ -331,6 +333,9 @@ $(function() {
 
   var inputCategory = inputValue($('#input #category'), 'keyup')
                         .map(val => auc.category = val);
+
+  var inputKeyword = inputValue($('#input #keyword'), 'keyup')
+                        .map(val => auc.keyword = val);
 
   /**
    * 店舗、カラー、HTML、テキストのテンプレート選択
@@ -538,6 +543,12 @@ $(function() {
   title.filter(val => vw.width(val) <= 130)
        .assign(inputTitleWrap, 'removeClass', 'has-error');
 
+  var inputKeywordWrap = $('#keyword').parents('.form-group');
+  inputKeyword.filter(val => vw.width(val) > 40)
+              .assign(inputKeywordWrap, 'addClass', 'has-error');
+  inputKeyword.filter(val => vw.width(val) <= 40)
+              .assign(inputKeywordWrap, 'removeClass', 'has-error');
+
   // 入力されたらプレビュー更新
   var inputs = Bacon.mergeAll(
     inputClear,
@@ -545,6 +556,7 @@ $(function() {
     inputTitleBlur,
     inputDetail,
     inputCategory,
+    inputKeyword,
     addItemStream
   );
   var inputBus = new Bacon.Bus();
