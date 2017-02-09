@@ -18,6 +18,7 @@ var Auc = (function () {
     this.text_template = false;
     this.shohin_title = '';
     this.shohin_detail = '';
+    this.keyword = '';
     this.attachments = [];
     this.uuid = '';
     this.created_at = '';
@@ -52,7 +53,7 @@ var Auc = (function () {
         return;
       }
 
-      if (key === ('shohin_title' || 'shohin_detail' || 'category')) {
+      if (key === ('shohin_title' || 'shohin_detail' || 'category' || 'keyword')) {
         this[key] = '';
         return;
       }
@@ -81,7 +82,7 @@ var Auc = (function () {
   }, {
     key: 'clearDetail',
     value: function clearDetail() {
-      this.shohin_detail = this.shohin_title = this.category = '';
+      this.shohin_detail = this.shohin_title = this.category = this.keyword = '';
       this.attachments = [];
     }
   }, {
