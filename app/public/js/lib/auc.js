@@ -3,21 +3,22 @@ var mustache = require('mustache');
 
 class Auc {
   constructor() {
-    this.shop           = false;
-    this.color          = false;
-    this.html_template  = false;
-    this.text_template  = false;
-    this.shohin_title   = '';
-    this.shohin_detail  = '';
-    this.attachments    = [];
-    this.uuid           = '';
-    this.created_at     = '';
-    this.category       = false;
-    this.tax            = false;
-    this.term           = 5;
-    this.payment        = false;
-    this.kanri_no_prefix   = false;
-    this.kanri_no_index = 1;
+    this.shop            = false;
+    this.color           = false;
+    this.html_template   = false;
+    this.text_template   = false;
+    this.shohin_title    = '';
+    this.shohin_detail   = '';
+    this.keyword         = '';
+    this.attachments     = [];
+    this.uuid            = '';
+    this.created_at      = '';
+    this.category        = false;
+    this.tax             = false;
+    this.term            = 5;
+    this.payment         = false;
+    this.kanri_no_prefix = false;
+    this.kanri_no_index  = 1;
   }
 
   isEntered() {
@@ -48,7 +49,7 @@ class Auc {
       return;
     }
 
-    if (key === ('shohin_title' || 'shohin_detail' || 'category')) {
+    if (key === ('shohin_title' || 'shohin_detail' || 'category' || 'keyword')) {
       this[key] = '';
       return;
     }
@@ -71,7 +72,7 @@ class Auc {
   }
 
   clearDetail() {
-    this.shohin_detail = this.shohin_title = this.category = '';
+    this.shohin_detail = this.shohin_title = this.category = this.keyword = '';
     this.attachments = [];
   }
 
