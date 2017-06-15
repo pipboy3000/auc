@@ -31,7 +31,8 @@ class Auc {
       this.shop,
       this.color,
       this.html_template,
-      this.text_template
+      this.text_template,
+      this.keyword
     ], Boolean);
   }
 

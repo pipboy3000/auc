@@ -10,6 +10,7 @@ describe('Auc test', () => {
     auc.shohin_title = "title";
     auc.shohin_detail = "detail";
     auc.category = auc.tax = auc.payment = auc.shop = auc.kanri_prefix = auc.color = auc.html_template = auc.text_template = true;
+    auc.keyword = 'keyword'
     assert(auc.isEntered() === true);
 
     auc.shohin_detail = "";
@@ -22,6 +23,7 @@ describe('Auc test', () => {
     auc.shohin_title = "title";
     auc.shohin_detail = "detail";
     auc.category = auc.tax = auc.payment = auc.shop = auc.kanri_prefix = auc.color = auc.html_template = auc.text_template = true;
+    auc.keyword = 'keyword'
     assert(auc.isNotEntered() === false);
 
     auc.shohin_detail = "";
