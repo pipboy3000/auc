@@ -19,7 +19,10 @@ module.exports = function(config) {
         'test/*.js'
       ],
       transform: [
-        ['babelify', {plugins: ['babel-plugin-espower']}]
+        ['babelify', {
+          plugins: ['babel-plugin-espower'],
+          presets: ['es2015']
+        }]
       ]
     },
     reporters: ['mocha'],

@@ -16,7 +16,7 @@ var argv         = require('yargs').argv;
 
 function compile(watch) {
   var bundler = watchify(browserify('./app/public/js/lib/main.js', {debug: true})
-                         .transform(babel));
+                         .transform(babel, { presets: "es2015" }));
 
   function rebundle() {
     bundler.bundle()

@@ -1,14 +1,14 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _ = require('lodash');
 var mustache = require('mustache');
 
-var Auc = (function () {
+var Auc = function () {
   function Auc() {
     _classCallCheck(this, Auc);
 
@@ -33,7 +33,7 @@ var Auc = (function () {
   _createClass(Auc, [{
     key: 'isEntered',
     value: function isEntered() {
-      return _.every([this.shohin_title, this.shohin_detail, this.category, this.tax, this.payment, this.shop, this.color, this.html_template, this.text_template], Boolean);
+      return _.every([this.shohin_title, this.shohin_detail, this.category, this.tax, this.payment, this.shop, this.color, this.html_template, this.text_template, this.keyword], Boolean);
     }
   }, {
     key: 'isNotEntered',
@@ -108,21 +108,21 @@ var Auc = (function () {
   }]);
 
   return Auc;
-})();
+}();
 
 module.exports = Auc;
 
 },{"lodash":30,"mustache":31}],2:[function(require,module,exports){
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _ = require('lodash');
 var Encoding = require('encoding-japanese');
 
-var AucCSV = (function () {
+var AucCSV = function () {
   function AucCSV() {
     _classCallCheck(this, AucCSV);
 
@@ -272,7 +272,6 @@ var AucCSV = (function () {
       '', // '画像10',
       '', // '画像10コメント',
       'いいえ'];
-      // '海外発送'
       var data = [];
       var detail = auc.render().replace(/"/g, '""');
 
@@ -300,20 +299,20 @@ var AucCSV = (function () {
   }]);
 
   return AucCSV;
-})();
+}();
 
 module.exports = AucCSV;
 
 },{"encoding-japanese":26,"lodash":30}],3:[function(require,module,exports){
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _ = require('lodash');
 
-var AucInfo = (function () {
+var AucInfo = function () {
   function AucInfo() {
     _classCallCheck(this, AucInfo);
 
@@ -369,20 +368,20 @@ var AucInfo = (function () {
   }]);
 
   return AucInfo;
-})();
+}();
 
 module.exports = AucInfo;
 
 },{"lodash":30}],4:[function(require,module,exports){
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _ = require('lodash');
 
-var AucList = (function () {
+var AucList = function () {
   function AucList() {
     _classCallCheck(this, AucList);
 
@@ -453,7 +452,7 @@ var AucList = (function () {
   }]);
 
   return AucList;
-})();
+}();
 
 module.exports = AucList;
 
@@ -481,6 +480,7 @@ require('../vendor/jquery.minicolors');
   /**
    * auc object
    */
+
   var auc = new Auc();
   var aucList = new AucList();
   var aucInfo = new AucInfo();
@@ -540,7 +540,7 @@ require('../vendor/jquery.minicolors');
     function termUpdate(val) {
       auc.term = val;
       label.attr('class', 'label label-primary');
-      el.text(val + '日');
+      el.text(val + '\u65E5');
       return;
     }
 
@@ -632,9 +632,9 @@ require('../vendor/jquery.minicolors');
       return input.val();
     };
     // var notEmpty = val => val.replace(/[\n\r]/g, '').length > 0;
-    return input.asEventStream(event).map(value)
+    return input.asEventStream(event).map(value
     // .filter(notEmpty)
-    .map(Util.nl2br).toProperty('');
+    ).map(Util.nl2br).toProperty('');
   }
 
   var allKeyUps = $(document).asEventStream('keyup');
@@ -671,7 +671,7 @@ require('../vendor/jquery.minicolors');
     var $itemList = $('#item-list .content');
 
     function renderLists(items) {
-      var template = '\n  <div class="panel panel-default">\n    <div class="panel-heading">\n      <b>{{shohin_title}}</b>\n      <div class="pull-right">\n        <small>{{tmpl_date}}</small>\n        <a href="#" data-uuid="{{uuid}}" class="btn btn-danger btn-xs">削除</a>\n      </div>\n    </div>\n    <div class="panel-body">{{{shohin_detail}}}</div>\n    <table class="table">\n      <tr>\n        <th>カテゴリID</th>\n        <th>画像数</th>\n        <th>消費税</th>\n        <th>決済方法</th>\n        <th>開催期間</th>\n      </tr>\n      <tr>\n        <td>{{category}}</td>\n        <td>{{attachments.length}}</td>\n        <td>{{tax}}</td>\n        <td>{{payment}}</td>\n        <td>{{term}}日</td>\n      </tr>\n      <tr>\n        <th>店舗</th>\n        <th>カラー</th>\n        <th>HTMLテンプレート</th>\n        <th>テキストテンプレート</th>\n        <th>商品検索用キーワード</th>\n      </tr>\n      <tr>\n        <td>{{shop.name}}</td>\n        <td>{{color.name}}</td>\n        <td>{{html_template.name}}</td>\n        <td>{{text_template.name}}</td>\n        <td>{{keyword}}</td>\n      </tr>\n    </table>\n  </div>\n    ';
+      var template = '\n  <div class="panel panel-default">\n    <div class="panel-heading">\n      <b>{{shohin_title}}</b>\n      <div class="pull-right">\n        <small>{{tmpl_date}}</small>\n        <a href="#" data-uuid="{{uuid}}" class="btn btn-danger btn-xs">\u524A\u9664</a>\n      </div>\n    </div>\n    <div class="panel-body">{{{shohin_detail}}}</div>\n    <table class="table">\n      <tr>\n        <th>\u30AB\u30C6\u30B4\u30EAID</th>\n        <th>\u753B\u50CF\u6570</th>\n        <th>\u6D88\u8CBB\u7A0E</th>\n        <th>\u6C7A\u6E08\u65B9\u6CD5</th>\n        <th>\u958B\u50AC\u671F\u9593</th>\n      </tr>\n      <tr>\n        <td>{{category}}</td>\n        <td>{{attachments.length}}</td>\n        <td>{{tax}}</td>\n        <td>{{payment}}</td>\n        <td>{{term}}\u65E5</td>\n      </tr>\n      <tr>\n        <th>\u5E97\u8217</th>\n        <th>\u30AB\u30E9\u30FC</th>\n        <th>HTML\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8</th>\n        <th>\u30C6\u30AD\u30B9\u30C8\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8</th>\n        <th>\u5546\u54C1\u691C\u7D22\u7528\u30AD\u30FC\u30EF\u30FC\u30C9</th>\n      </tr>\n      <tr>\n        <td>{{shop.name}}</td>\n        <td>{{color.name}}</td>\n        <td>{{html_template.name}}</td>\n        <td>{{text_template.name}}</td>\n        <td>{{keyword}}</td>\n      </tr>\n    </table>\n  </div>\n    ';
       $itemList.empty();
       items.forEach(function (item) {
         item.__proto__ = Auc.prototype;
@@ -721,12 +721,12 @@ require('../vendor/jquery.minicolors');
       setTimeout(function () {
         return $copyButton.tooltip('hide');
       }, 1000);
-    });
+    }
 
     /**
      * 昨日分のデータをlocalStorageから削除
      */
-    _.forEach(aucList.toJSON(), function (item) {
+    );_.forEach(aucList.toJSON(), function (item) {
       var now = new Date().getTime();
       var item_created = new Date(item.created_at);
       if (now - item_created > 60 * 60 * 18 * 1000) aucList.removeByUUID(item.uuid);
@@ -1018,11 +1018,11 @@ require('../vendor/jquery.minicolors');
 },{"../vendor/jquery.minicolors":7,"./auc":1,"./auccsv":2,"./aucinfo":3,"./auclist":4,"./util":6,"baconjs":8,"bootstrap":9,"clipboard":23,"jquery":29,"lodash":30,"mustache":31,"visualwidth":34}],6:[function(require,module,exports){
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Util = (function () {
+var Util = function () {
   function Util() {
     _classCallCheck(this, Util);
   }
@@ -1044,11 +1044,15 @@ var Util = (function () {
   }]);
 
   return Util;
-})();
+}();
 
 module.exports = Util;
 
 },{}],7:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 /*
  * jQuery MiniColors: A tiny color picker built on jQuery
  *
@@ -1059,14 +1063,12 @@ module.exports = Util;
  * @license: http://opensource.org/licenses/MIT
  *
  */
-'use strict';
-
 (function (factory) {
     /* jshint ignore:start */
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(['jquery'], factory);
-    } else if (typeof exports === 'object') {
+    } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
         // Node/CommonJS
         module.exports = factory(require('jquery'));
     } else {
@@ -1364,20 +1366,24 @@ module.exports = Util;
             hex = input.val(),
             opacity = input.attr('data-opacity'),
 
+
         // Helpful references
         minicolors = input.parent(),
             settings = input.data('minicolors-settings'),
             swatch = minicolors.find('.minicolors-swatch'),
+
 
         // Panel objects
         grid = minicolors.find('.minicolors-grid'),
             slider = minicolors.find('.minicolors-slider'),
             opacitySlider = minicolors.find('.minicolors-opacity-slider'),
 
+
         // Picker objects
         gridPicker = grid.find('[class$=-picker]'),
             sliderPicker = slider.find('[class$=-picker]'),
             opacityPicker = opacitySlider.find('[class$=-picker]'),
+
 
         // Picker positions
         gridPos = getCoords(gridPicker, grid),
@@ -1499,15 +1505,18 @@ module.exports = Util;
             r,
             phi,
 
+
         // Helpful references
         minicolors = input.parent(),
             settings = input.data('minicolors-settings'),
             swatch = minicolors.find('.minicolors-swatch'),
 
+
         // Panel objects
         grid = minicolors.find('.minicolors-grid'),
             slider = minicolors.find('.minicolors-slider'),
             opacitySlider = minicolors.find('.minicolors-opacity-slider'),
+
 
         // Picker objects
         gridPicker = grid.find('[class$=-picker]'),
@@ -1800,43 +1809,43 @@ module.exports = Util;
     }
 
     // Handle events
-    $(document)
+    $(document
     // Hide on clicks outside of the control
-    .on('mousedown.minicolors touchstart.minicolors', function (event) {
+    ).on('mousedown.minicolors touchstart.minicolors', function (event) {
         if (!$(event.target).parents().add(event.target).hasClass('minicolors')) {
             hide();
         }
-    })
+    }
     // Start moving
-    .on('mousedown.minicolors touchstart.minicolors', '.minicolors-grid, .minicolors-slider, .minicolors-opacity-slider', function (event) {
+    ).on('mousedown.minicolors touchstart.minicolors', '.minicolors-grid, .minicolors-slider, .minicolors-opacity-slider', function (event) {
         var target = $(this);
         event.preventDefault();
         $(document).data('minicolors-target', target);
         move(target, event, true);
-    })
+    }
     // Move pickers
-    .on('mousemove.minicolors touchmove.minicolors', function (event) {
+    ).on('mousemove.minicolors touchmove.minicolors', function (event) {
         var target = $(document).data('minicolors-target');
         if (target) move(target, event);
-    })
+    }
     // Stop moving
-    .on('mouseup.minicolors touchend.minicolors', function () {
+    ).on('mouseup.minicolors touchend.minicolors', function () {
         $(this).removeData('minicolors-target');
-    })
+    }
     // Show panel when swatch is clicked
-    .on('mousedown.minicolors touchstart.minicolors', '.minicolors-swatch', function (event) {
+    ).on('mousedown.minicolors touchstart.minicolors', '.minicolors-swatch', function (event) {
         var input = $(this).parent().find('.minicolors-input');
         event.preventDefault();
         show(input);
-    })
+    }
     // Show on focus
-    .on('focus.minicolors', '.minicolors-input', function () {
+    ).on('focus.minicolors', '.minicolors-input', function () {
         var input = $(this);
         if (!input.data('minicolors-initialized')) return;
         show(input);
-    })
+    }
     // Fix hex on blur
-    .on('blur.minicolors', '.minicolors-input', function () {
+    ).on('blur.minicolors', '.minicolors-input', function () {
         var input = $(this),
             settings = input.data('minicolors-settings');
         if (!input.data('minicolors-initialized')) return;
@@ -1849,9 +1858,9 @@ module.exports = Util;
 
         // Adjust case
         input.val(convertCase(input.val(), settings.letterCase));
-    })
+    }
     // Handle keypresses
-    .on('keydown.minicolors', '.minicolors-input', function (event) {
+    ).on('keydown.minicolors', '.minicolors-input', function (event) {
         var input = $(this);
         if (!input.data('minicolors-initialized')) return;
         switch (event.keyCode) {
@@ -1866,15 +1875,15 @@ module.exports = Util;
                 input.blur();
                 break;
         }
-    })
+    }
     // Update on keyup
-    .on('keyup.minicolors', '.minicolors-input', function () {
+    ).on('keyup.minicolors', '.minicolors-input', function () {
         var input = $(this);
         if (!input.data('minicolors-initialized')) return;
         updateFromInput(input, true);
-    })
+    }
     // Update on paste
-    .on('paste.minicolors', '.minicolors-input', function () {
+    ).on('paste.minicolors', '.minicolors-input', function () {
         var input = $(this);
         if (!input.data('minicolors-initialized')) return;
         setTimeout(function () {
@@ -1893,7 +1902,7 @@ var Bacon = {
   }
 };
 
-Bacon.version = '0.7.89';
+Bacon.version = '0.7.93';
 
 var Exception = (typeof global !== "undefined" && global !== null ? global : this).Error;
 var nop = function () {};
@@ -1971,6 +1980,16 @@ var inherit = function (child, parent) {
     }
   }
   return child;
+};
+
+var symbol = function (key) {
+  if (typeof Symbol !== "undefined" && Symbol[key]) {
+    return Symbol[key];
+  } else if (typeof Symbol !== "undefined" && typeof Symbol["for"] === "function") {
+    return Symbol[key] = Symbol["for"](key);
+  } else {
+    return "@@" + key;
+  }
 };
 
 var _ = {
@@ -2176,17 +2195,81 @@ var UpdateBarrier = Bacon.UpdateBarrier = (function () {
   var rootEvent;
   var waiterObs = [];
   var waiters = {};
-  var afters = [];
-  var aftersIndex = 0;
+  var aftersStack = [];
+  var aftersStackHeight = 0;
   var flushed = {};
 
-  var afterTransaction = function (f) {
-    if (rootEvent) {
-      return afters.push(f);
-    } else {
-      return f();
+  function ensureStackHeight(h) {
+    if (h <= aftersStackHeight) return;
+    if (!aftersStack[h - 1]) {
+      aftersStack[h - 1] = [[], 0];
     }
+    aftersStackHeight = h;
+  }
+
+  var afterTransaction = function (obs, f) {
+    if (rootEvent || aftersStack.length) {
+      ensureStackHeight(1);
+      var stackIndexForThisObs = 0;
+      while (stackIndexForThisObs < aftersStackHeight - 1) {
+        if (containsObs(obs, aftersStack[stackIndexForThisObs][0])) {
+          break;
+        }
+        stackIndexForThisObs++;
+      }
+      var listFromStack = aftersStack[stackIndexForThisObs][0];
+      listFromStack.push([obs, f]);
+      if (!rootEvent) {
+        processAfters();
+      }
+    } else {
+        return f();
+      }
   };
+
+  function containsObs(obs, aftersList) {
+    for (var i in aftersList) {
+      if (aftersList[i][0].id == obs.id) return true;
+    }
+    return false;
+  }
+
+  function processAfters() {
+    var stackSizeAtStart = aftersStackHeight;
+    if (!stackSizeAtStart) return;
+    while (aftersStackHeight >= stackSizeAtStart) {
+      var topOfStack = aftersStack[aftersStackHeight - 1];
+      if (!topOfStack) throw new Error("Unexpected stack top: " + topOfStack);
+      var topAfters = topOfStack[0];
+      var index = topOfStack[1];
+
+      if (index < topAfters.length) {
+        var _topAfters$index = topAfters[index];
+        var obs = _topAfters$index[0];
+        var after = _topAfters$index[1];
+
+        topOfStack[1]++;
+        ensureStackHeight(aftersStackHeight + 1);
+        var callSuccess = false;
+        try {
+          after();
+          callSuccess = true;
+          while (aftersStackHeight > stackSizeAtStart && aftersStack[aftersStackHeight - 1][0].length == 0) {
+            aftersStackHeight--;
+          }
+        } finally {
+          if (!callSuccess) {
+            aftersStack = [];
+            aftersStackHeight = 0;
+          }
+        }
+      } else {
+          topOfStack[0] = [];
+          topOfStack[1] = 0;
+          break;
+        }
+    }
+  }
 
   var whenDoneWith = function (obs, f) {
     if (rootEvent) {
@@ -2249,13 +2332,7 @@ var UpdateBarrier = Bacon.UpdateBarrier = (function () {
         flush();
       } finally {
         rootEvent = undefined;
-        while (aftersIndex < afters.length) {
-          var after = afters[aftersIndex];
-          aftersIndex++;
-          after();
-        }
-        aftersIndex = 0;
-        afters = [];
+        processAfters();
       }
       return result;
     }
@@ -2277,7 +2354,7 @@ var UpdateBarrier = Bacon.UpdateBarrier = (function () {
       return doUnsub();
     };
     doUnsub = obs.dispatcher.subscribe(function (event) {
-      return afterTransaction(function () {
+      return afterTransaction(obs, function () {
         if (!unsubd) {
           var reply = sink(event);
           if (reply === Bacon.noMore) {
@@ -3903,7 +3980,7 @@ Bacon.EventStream.prototype.concat = function (right) {
       }
     });
     return function () {
-      return unsubLeft(), unsubRight();
+      return (unsubLeft(), unsubRight());
     };
   });
 };
@@ -4143,7 +4220,28 @@ extend(Bus.prototype, {
 
   push: function (value) {
     if (!this.ended && typeof this.sink === "function") {
-      return this.sink(nextEvent(value));
+      var rootPush = !this.pushing;
+      if (!rootPush) {
+        if (!this.pushQueue) this.pushQueue = [];
+        this.pushQueue.push(value);
+
+        return;
+      }
+      this.pushing = true;
+      try {
+        return this.sink(nextEvent(value));
+      } finally {
+        if (rootPush && this.pushQueue) {
+          var i = 0;
+          while (i < this.pushQueue.length) {
+            var value = this.pushQueue[i];
+            this.sink(nextEvent(value));
+            i++;
+          }
+          this.pushQueue = null;
+        }
+        this.pushing = false;
+      }
     }
   },
 
@@ -4357,39 +4455,31 @@ Bacon.Property.prototype.delayChanges = function (desc, f) {
   return withDesc(desc, addPropertyInitValueToStream(this, f(this.changes())));
 };
 
-Bacon.EventStream.prototype.delay = function (delay) {
-  return withDesc(new Bacon.Desc(this, "delay", [delay]), this.flatMap(function (value) {
-    return Bacon.later(delay, value);
-  }));
+Bacon.EventStream.prototype.delayChanges = function (desc, f) {
+  return withDesc(desc, f(this));
 };
 
-Bacon.Property.prototype.delay = function (delay) {
+Bacon.Observable.prototype.delay = function (delay) {
   return this.delayChanges(new Bacon.Desc(this, "delay", [delay]), function (changes) {
-    return changes.delay(delay);
+    return changes.flatMap(function (value) {
+      return Bacon.later(delay, value);
+    });
   });
 };
 
-Bacon.EventStream.prototype.debounce = function (delay) {
-  return withDesc(new Bacon.Desc(this, "debounce", [delay]), this.flatMapLatest(function (value) {
-    return Bacon.later(delay, value);
-  }));
-};
-
-Bacon.Property.prototype.debounce = function (delay) {
+Bacon.Observable.prototype.debounce = function (delay) {
   return this.delayChanges(new Bacon.Desc(this, "debounce", [delay]), function (changes) {
-    return changes.debounce(delay);
+    return changes.flatMapLatest(function (value) {
+      return Bacon.later(delay, value);
+    });
   });
 };
 
-Bacon.EventStream.prototype.debounceImmediate = function (delay) {
-  return withDesc(new Bacon.Desc(this, "debounceImmediate", [delay]), this.flatMapFirst(function (value) {
-    return Bacon.once(value).concat(Bacon.later(delay).filter(false));
-  }));
-};
-
-Bacon.Property.prototype.debounceImmediate = function (delay) {
+Bacon.Observable.prototype.debounceImmediate = function (delay) {
   return this.delayChanges(new Bacon.Desc(this, "debounceImmediate", [delay]), function (changes) {
-    return changes.debounceImmediate(delay);
+    return changes.flatMapFirst(function (value) {
+      return Bacon.once(value).concat(Bacon.later(delay).filter(false));
+    });
   });
 };
 
@@ -4589,6 +4679,15 @@ Bacon.Observable.prototype.flatMapError = function (fn) {
   }));
 };
 
+Bacon.EventStream.prototype.flatScan = function (seed, f) {
+  var current = seed;
+  return this.flatMapConcat(function (next) {
+    return makeObservable(f(current, next)).doAction(function (updated) {
+      return current = updated;
+    });
+  }).toProperty(seed);
+};
+
 Bacon.EventStream.prototype.sampledBy = function (sampler, combinator) {
   return withDesc(new Bacon.Desc(this, "sampledBy", [sampler, combinator]), this.toProperty().sampledBy(sampler, combinator));
 };
@@ -4741,12 +4840,12 @@ Bacon.fromArray = function (values) {
     return withDesc(new Bacon.Desc(Bacon, "fromArray", values), Bacon.never());
   } else {
     var i = 0;
-    return new EventStream(new Bacon.Desc(Bacon, "fromArray", [values]), function (sink) {
+    var stream = new EventStream(new Bacon.Desc(Bacon, "fromArray", [values]), function (sink) {
       var unsubd = false;
       var reply = Bacon.more;
       var pushing = false;
       var pushNeeded = false;
-      var push = function () {
+      function push() {
         pushNeeded = true;
         if (pushing) {
           return;
@@ -4761,7 +4860,7 @@ Bacon.fromArray = function (values) {
               if (i === values.length) {
                 sink(endEvent());
               } else {
-                UpdateBarrier.afterTransaction(push);
+                UpdateBarrier.afterTransaction(stream, push);
               }
             }
           }
@@ -4776,6 +4875,7 @@ Bacon.fromArray = function (values) {
         return unsubd;
       };
     });
+    return stream;
   }
 };
 
@@ -5002,9 +5102,9 @@ Bacon.retry = function (options) {
   var finished = false;
   var error = null;
 
-  return withDesc(new Bacon.Desc(Bacon, "retry", [options]), Bacon.repeat(function () {
+  return withDesc(new Bacon.Desc(Bacon, "retry", [options]), Bacon.repeat(function (count) {
     function valueStream() {
-      return source().endOnError().withHandler(function (event) {
+      return source(count).endOnError().withHandler(function (event) {
         if (event.isError()) {
           error = event;
           if (!(isRetryable(error.error) && (retries === 0 || retriesDone < retries))) {
@@ -5150,15 +5250,11 @@ Bacon.Observable.prototype.takeWhile = function (f) {
   });
 };
 
-Bacon.EventStream.prototype.throttle = function (delay) {
-  return withDesc(new Bacon.Desc(this, "throttle", [delay]), this.bufferWithTime(delay).map(function (values) {
-    return values[values.length - 1];
-  }));
-};
-
-Bacon.Property.prototype.throttle = function (delay) {
+Bacon.Observable.prototype.throttle = function (delay) {
   return this.delayChanges(new Bacon.Desc(this, "throttle", [delay]), function (changes) {
-    return changes.throttle(delay);
+    return changes.bufferWithTime(delay).map(function (values) {
+      return values[values.length - 1];
+    });
   });
 };
 
@@ -5263,6 +5359,77 @@ Bacon.zipWith = function () {
 
 Bacon.Observable.prototype.zip = function (other, f) {
   return withDesc(new Bacon.Desc(this, "zip", [other]), Bacon.zipWith([this, other], f || Array));
+};
+
+function ESObservable(observable) {
+  this.observable = observable;
+}
+
+ESObservable.prototype.subscribe = function (observerOrOnNext, onError, onComplete) {
+  var observer = typeof observerOrOnNext === 'function' ? { next: observerOrOnNext, error: onError, complete: onComplete } : observerOrOnNext;
+  var subscription = {
+    closed: false,
+    unsubscribe: function () {
+      subscription.closed = true;
+      cancel();
+    }
+  };
+
+  var cancel = this.observable.subscribe(function (event) {
+    if (event.isError()) {
+      if (observer.error) observer.error(event.error);
+      subscription.unsubscribe();
+    } else if (event.isEnd()) {
+      subscription.closed = true;
+      if (observer.complete) observer.complete();
+    } else if (observer.next) {
+      observer.next(event.value());
+    }
+  });
+  return subscription;
+};
+
+ESObservable.prototype[symbol('observable')] = function () {
+  return this;
+};
+
+Bacon.Observable.prototype.toESObservable = function () {
+  return new ESObservable(this);
+};
+
+Bacon.Observable.prototype[symbol('observable')] = Bacon.Observable.prototype.toESObservable;
+
+Bacon.fromESObservable = function (_observable) {
+  var observable;
+  if (_observable[symbol("observable")]) {
+    observable = _observable[symbol("observable")]();
+  } else {
+    observable = _observable;
+  }
+
+  var desc = new Bacon.Desc(Bacon, "fromESObservable", [observable]);
+  return new Bacon.EventStream(desc, function (sink) {
+    var cancel = observable.subscribe({
+      error: function () {
+        sink(new Bacon.Error());
+        sink(new Bacon.End());
+      },
+      next: function (value) {
+        sink(new Bacon.Next(value, true));
+      },
+      complete: function () {
+        sink(new Bacon.End());
+      }
+    });
+
+    if (cancel.unsubscribe) {
+      return function () {
+        cancel.unsubscribe();
+      };
+    } else {
+      return cancel;
+    }
+  });
 };
 
 if (typeof define !== "undefined" && define !== null && define.amd != null) {
@@ -7745,6 +7912,7 @@ require('../../js/affix.js')
                 var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
                 this.action = options.action;
+                this.container = options.container;
                 this.emitter = options.emitter;
                 this.target = options.target;
                 this.text = options.text;
@@ -7773,7 +7941,7 @@ require('../../js/affix.js')
                 this.fakeHandlerCallback = function () {
                     return _this.removeFake();
                 };
-                this.fakeHandler = document.body.addEventListener('click', this.fakeHandlerCallback) || true;
+                this.fakeHandler = this.container.addEventListener('click', this.fakeHandlerCallback) || true;
 
                 this.fakeElem = document.createElement('textarea');
                 // Prevent zooming on iOS
@@ -7787,13 +7955,12 @@ require('../../js/affix.js')
                 this.fakeElem.style[isRTL ? 'right' : 'left'] = '-9999px';
                 // Move element to the same position vertically
                 var yPosition = window.pageYOffset || document.documentElement.scrollTop;
-                this.fakeElem.addEventListener('focus', window.scrollTo(0, yPosition));
                 this.fakeElem.style.top = yPosition + 'px';
 
                 this.fakeElem.setAttribute('readonly', '');
                 this.fakeElem.value = this.text;
 
-                document.body.appendChild(this.fakeElem);
+                this.container.appendChild(this.fakeElem);
 
                 this.selectedText = (0, _select2.default)(this.fakeElem);
                 this.copyText();
@@ -7802,13 +7969,13 @@ require('../../js/affix.js')
             key: 'removeFake',
             value: function removeFake() {
                 if (this.fakeHandler) {
-                    document.body.removeEventListener('click', this.fakeHandlerCallback);
+                    this.container.removeEventListener('click', this.fakeHandlerCallback);
                     this.fakeHandler = null;
                     this.fakeHandlerCallback = null;
                 }
 
                 if (this.fakeElem) {
-                    document.body.removeChild(this.fakeElem);
+                    this.container.removeChild(this.fakeElem);
                     this.fakeElem = null;
                 }
             }
@@ -7844,8 +8011,8 @@ require('../../js/affix.js')
         }, {
             key: 'clearSelection',
             value: function clearSelection() {
-                if (this.target) {
-                    this.target.blur();
+                if (this.trigger) {
+                    this.trigger.focus();
                 }
 
                 window.getSelection().removeAllRanges();
@@ -7925,6 +8092,12 @@ require('../../js/affix.js')
             default: obj
         };
     }
+
+    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+        return typeof obj;
+    } : function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -8006,6 +8179,7 @@ require('../../js/affix.js')
                 this.action = typeof options.action === 'function' ? options.action : this.defaultAction;
                 this.target = typeof options.target === 'function' ? options.target : this.defaultTarget;
                 this.text = typeof options.text === 'function' ? options.text : this.defaultText;
+                this.container = _typeof(options.container) === 'object' ? options.container : document.body;
             }
         }, {
             key: 'listenClick',
@@ -8029,6 +8203,7 @@ require('../../js/affix.js')
                     action: this.action(trigger),
                     target: this.target(trigger),
                     text: this.text(trigger),
+                    container: this.container,
                     trigger: trigger,
                     emitter: this
                 });
@@ -8062,6 +8237,20 @@ require('../../js/affix.js')
                     this.clipboardAction = null;
                 }
             }
+        }], [{
+            key: 'isSupported',
+            value: function isSupported() {
+                var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ['copy', 'cut'];
+
+                var actions = typeof action === 'string' ? [action] : action;
+                var support = !!document.queryCommandSupported;
+
+                actions.forEach(function (action) {
+                    support = support && !!document.queryCommandSupported(action);
+                });
+
+                return support;
+            }
         }]);
 
         return Clipboard;
@@ -8090,7 +8279,7 @@ var DOCUMENT_NODE_TYPE = 9;
 /**
  * A polyfill for Element.matches()
  */
-if (Element && !Element.prototype.matches) {
+if (typeof Element !== 'undefined' && !Element.prototype.matches) {
     var proto = Element.prototype;
 
     proto.matches = proto.matchesSelector ||
@@ -8109,7 +8298,10 @@ if (Element && !Element.prototype.matches) {
  */
 function closest (element, selector) {
     while (element && element.nodeType !== DOCUMENT_NODE_TYPE) {
-        if (element.matches(selector)) return element;
+        if (typeof element.matches === 'function' &&
+            element.matches(selector)) {
+          return element;
+        }
         element = element.parentNode;
     }
 }
@@ -37411,8 +37603,18 @@ function select(element) {
         selectedText = element.value;
     }
     else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
-        element.focus();
+        var isReadOnly = element.hasAttribute('readonly');
+
+        if (!isReadOnly) {
+            element.setAttribute('readonly', '');
+        }
+
+        element.select();
         element.setSelectionRange(0, element.value.length);
+
+        if (!isReadOnly) {
+            element.removeAttribute('readonly');
+        }
 
         selectedText = element.value;
     }
